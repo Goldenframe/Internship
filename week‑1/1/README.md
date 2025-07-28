@@ -11,6 +11,7 @@
 
 ## Структура проекта
 
+```text
 src/
 ├── algorithms/ 
 │ ├── bubble-sort.js
@@ -26,6 +27,7 @@ src/
 │ └── index.js
 ├── data.js 
 └── main.js 
+```
 
 ## Запуск
 
