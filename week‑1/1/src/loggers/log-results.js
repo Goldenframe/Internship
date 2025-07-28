@@ -1,6 +1,6 @@
 import { measureTime } from '../utils/index.js';
 import { bubbleSort, quickSort } from '../algorithms/index.js';
-import { arrays } from '../data.js';
+import { arrays } from './log-arrays.js';
 
 export function logResults() {
     const results = {
