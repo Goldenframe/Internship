@@ -1,6 +1,11 @@
 import { generateArray } from '../utils/index.js';
 import { bubbleSort, quickSort } from '../algorithms/index.js';
-import { arrays } from '../data.js';
+
+export const arrays = {
+    array1: [],
+    array2: [],
+    array3: []
+};
 
 export function logArrays() {
 
