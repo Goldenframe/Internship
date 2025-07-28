@@ -38,30 +38,37 @@ function bubbleSort(arr) {
 }
 
 function qSort(arr, start = 0, end = arr.length - 1) {
-    const arrCopy = [...arr]; 
     if (start >= end) return arrCopy; 
 
-    const pivot = arrCopy[Math.floor((start + end) / 2)]; 
+    const pivot = arr[Math.floor((start + end) / 2)]; 
     let left = start;
     let right = end;
 
     while (left <= right) {
-        while (arrCopy[left] < pivot) left++;
-        while (arrCopy[right] > pivot) right--;
+        while (arr[left] < pivot) left++;
+        while (arr[right] > pivot) right--;
 
         if (left <= right) {
-            let temp = arrCopy[left];
-            arrCopy[left] = arrCopy[right];
-            arrCopy[right] = temp;
+            let temp = arr[left];
+            arr[left] = arr[right];
+            arr[right] = temp;
             left++;
             right--;
         }
     }
 
-    if (start < right) qSort(arrCopy, start, right);
-    if (left < end) qSort(arrCopy, left, end);
-    return arrCopy;
+    if (start < right) qSort(arr, start, right);
+    if (left < end) qSort(arr, left, end);
+    return arr;
 }
+
+const copy1 = [...array1];
+const copy2 = [...array1];
+
+console.log(array1);
+console.log(bubbleSort(copy1));
+console.log(qSort(copy2));
+
 
 const results = {
     array1: {
