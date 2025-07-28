@@ -2,19 +2,18 @@ const array1 = [];
 const array2 = [];
 const array3 = [];
 
-function generateArray(arr) {
-    const arrLength = Math.round(Math.random() * 20);
-    
-    for (let i = 0; i < arrLength; i++) {
+function generateArray(arr, length) {
+
+    for (let i = 0; i < length; i++) {
         arr.push(Math.round(Math.random() * 100));
     }
     
     return arr;
 }
 
-generateArray(array1);
-generateArray(array2);
-generateArray(array3);
+generateArray(array1, 10);
+generateArray(array2, 100);
+generateArray(array3, 1000);
 
 function measureTime(sortFunction, arr) {
     const arrCopy = [...arr]; 
@@ -66,26 +65,17 @@ function qSort(arr, start = 0, end = arr.length - 1) {
 
 const results = {
     array1: {
-        notSortedArr: [...array1], 
         length: array1.length,
-        bubbleSortedArray: bubbleSort(array1),
-        qSortedArray: qSort(array1),
         bubbleSortTime: measureTime(bubbleSort, array1),
         qSortTime: measureTime(qSort, array1),
     },
     array2: {
-        notSortedArr: [...array2],
         length: array2.length,
-        bubbleSortedArray: bubbleSort(array2),
-        qSortedArray: qSort(array2),
         bubbleSortTime: measureTime(bubbleSort, array2),
         qSortTime: measureTime(qSort, array2),
     },
     array3: {
-        notSortedArr: [...array3],
         length: array3.length,
-        bubbleSortedArray: bubbleSort(array3),
-        qSortedArray: qSort(array3),
         bubbleSortTime: measureTime(bubbleSort, array3),
         qSortTime: measureTime(qSort, array3),
     }
