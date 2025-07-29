@@ -1,7 +1,4 @@
-import { stackDemo } from './demos/stack-demo.js';
-import { queueDemo } from './demos/queue-demo.js';
-import { hanoiTowersDemo } from './demos/hanoi-tower-demo.js';
-
+import { stackDemo, queueDemo, hanoiTowersDemo } from './demos/index.js';
 
   console.log('Демонстрация стека');
   stackDemo();
