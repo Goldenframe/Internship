@@ -5,13 +5,8 @@ export class Queue {
 
     enqueue(item) {
         this.items = [...this.items, item];
-        return this.items;
+        return [...this.items];
     }
-
-    // enqueue(item) {
-    //     this.items.push(item);
-    //     return this.items.length;
-    // }
 
     dequeue() {
 
@@ -20,11 +15,7 @@ export class Queue {
         this.items = this.items.slice(1);
         return firstItem;
     }
-
-    // dequeue() {
-    //     return this.items.shift();
-    // }
-
+    
     peek() {
         if (this.isEmpty()) return undefined;
         return this.items[0];
@@ -40,5 +31,6 @@ export class Queue {
 
     clear() {
         this.items = [];
+        return [];
     }
 }

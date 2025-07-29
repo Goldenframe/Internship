@@ -6,12 +6,8 @@ export class Stack {
 
     push(item) {
         this.items = [...this.items, item];
-        return this.items;
+        return [...this.items];
     }
-
-    // push(item) {
-    //     return this.items.push(item);
-    // }
 
     pop() {
         if (this.isEmpty()) return undefined;
@@ -20,11 +16,6 @@ export class Stack {
         this.items = this.items.slice(0, -1);
         return lastItem;
     }
-
-    // pop() {
-    //     return this.items.pop();
-    // }
-
 
     peek() {
         if (this.isEmpty()) return undefined;
@@ -41,6 +32,7 @@ export class Stack {
 
     clear() {
         this.items = [];
+        return [];
     }
 
 }
