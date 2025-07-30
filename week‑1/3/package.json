@@ -8,7 +8,7 @@
   "scripts": {
     "test": "jest",
     "test:bubble": "jest bubble-sort",
-    "test:quick": "jest quick-sort", 
+    "test:quick": "jest quick-sort",
     "test:hanoi": "jest hanoi-towers"
   },
   "type": "module",
@@ -17,6 +17,9 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@babel/plugin-transform-modules-commonjs": "^7.27.1",
+    "@babel/preset-env": "^7.28.0",
+    "babel-jest": "^30.0.5",
     "jest": "^30.0.5"
   }
 }
