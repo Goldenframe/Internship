@@ -23,6 +23,9 @@ tests/
 └── hanoi-towers.test.js
 package.json
 package-lock.json
+.babelrc
+.gitignore
+jest.config.mjs
 ```
 
 ## Запуск
