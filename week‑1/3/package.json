@@ -1,0 +1,22 @@
+{
+  "name": "3",
+  "version": "1.0.0",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "jest",
+    "test:bubble": "jest bubble-sort",
+    "test:quick": "jest quick-sort", 
+    "test:hanoi": "jest hanoi-towers"
+  },
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "jest": "^30.0.5"
+  }
+}
