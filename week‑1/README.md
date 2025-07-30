@@ -12,3 +12,10 @@
 4. Клиент-серверное взаимодействие. Протокол HTTP, архитектурный стиль REST и понимание его принципов. Имитация двухстороннего взаимодействия между клиентом и сервером (Long Polling, Short Polling). Полноценное двухстороннее взаимодействие (WebSocket).
 
 5. Что происходит, когда пользователь вводит поисковой запрос в Google и нажимает Enter? Какие промежуточные сущности обрабатывают этот запрос и что происходит перед тем, как на экране отрисовывается изображение с точки зрения сетевого взаимодействия? Модели OSI и TCP/IP, TCP-handshake, DNS-серверы.
+
+Ссылки:
+
+- [Grokking Algorithms](https://github.com/mohnatus/grokking-algorithms?tab=readme-ov-file)
+- [javascript-algorithms](https://github.com/trekhleb/javascript-algorithms)
+- [Модули в JavaScript](https://habr.com/ru/companies/domclick/articles/532084/)
+- [Пропуск файлов](https://docs.github.com/ru/get-started/git-basics/ignoring-files)
