@@ -1,4 +1,4 @@
-const { quickSort } = require('../src/algorithms/index.js');
+import { quickSort } from  '../src/algorithms/index.js';
 
 describe('quick-sort', () => {
     test('sorts an unsorted array', () => {

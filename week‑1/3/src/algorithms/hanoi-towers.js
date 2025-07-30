@@ -1,4 +1,4 @@
-function hanoiTowers(disksNum, fromPeg, toPeg, steps = []) {
+export function hanoiTowers(disksNum, fromPeg, toPeg, steps = []) {
     if (disksNum <= 0) return [];
 
     if (![1, 2, 3].includes(fromPeg) || ![1, 2, 3].includes(toPeg) || fromPeg === toPeg){
@@ -17,5 +17,3 @@ function hanoiTowers(disksNum, fromPeg, toPeg, steps = []) {
 
     return steps;
 }
-
-module.exports = { hanoiTowers }

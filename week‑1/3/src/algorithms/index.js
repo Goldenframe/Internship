@@ -1,9 +1,3 @@
-const { bubbleSort } = require('./bubble-sort');
-const { quickSort } = require('./quick-sort');
-const { hanoiTowers } = require('./hanoi-towers');
-
-module.exports = {
-    bubbleSort,
-    quickSort,
-    hanoiTowers
-};
+export * from './bubble-sort.js';
+export * from './quick-sort.js';
+export * from './hanoi-towers.js';

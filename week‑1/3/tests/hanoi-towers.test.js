@@ -1,4 +1,5 @@
-const { hanoiTowers } = require('../src/algorithms/index.js');
+import { hanoiTowers } from  '../src/algorithms/index.js';
+
 
 describe('hanoi-towers', () => {
 

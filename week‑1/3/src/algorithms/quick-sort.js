@@ -1,4 +1,4 @@
-function quickSort(originalArr, start = 0, end = originalArr.length - 1, arr = [...originalArr]) {
+export function quickSort(originalArr, start = 0, end = originalArr.length - 1, arr = [...originalArr]) {
 
 
     if (start >= end) return arr;
@@ -24,5 +24,3 @@ function quickSort(originalArr, start = 0, end = originalArr.length - 1, arr = [
     if (left < end) quickSort(originalArr, left, end, arr);
     return arr;
 }
-
-module.exports = { quickSort };

@@ -1,4 +1,4 @@
-const { bubbleSort } = require('../src/algorithms/index.js');
+import { bubbleSort } from  '../src/algorithms/index.js';
 
 
 describe('bubble-sort', () => {
