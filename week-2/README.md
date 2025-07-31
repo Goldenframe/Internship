@@ -8,6 +8,7 @@
 
 Ссылки:
 
+- [TypeScript от Назара](https://disk.yandex.ru/i/6iOip3fz0itdgA)
 - [TypeScript](https://www.typescriptlang.org/)
 - [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/intro.html)
 - [Everyday Types](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html)
