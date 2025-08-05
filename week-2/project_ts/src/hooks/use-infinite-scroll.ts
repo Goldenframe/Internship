@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-export default function useInfiniteScroll<T>(callback: () => void, hasMore: boolean, loading: boolean){
+export default function useInfiniteScroll(callback: () => void, hasMore: boolean, loading: boolean){
     useEffect(() => {
         const handleScroll = () => {
             if (
@@ -15,5 +15,5 @@ export default function useInfiniteScroll<T>(callback: () => void, hasMore: bool
 
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
-    }, [hasMore, loading]);
+    }, [hasMore, loading, callback]);
 }

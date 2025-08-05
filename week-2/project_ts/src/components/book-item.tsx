@@ -1,15 +1,18 @@
+import DOMPurify from "dompurify";
 import React, { useState } from "react";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { FaHeart, FaRegHeart } from "react-icons/fa";
-import DOMPurify from "dompurify";
-import type { Book, VolumeInfo } from "../interfaces/books";
+
+import type { Book, VolumeInfo } from "../types/books";
 
 interface BookItemProps {
   book: Book,
   favourites: Book[],
   setFavourites: React.Dispatch<React.SetStateAction<Book[]>>;
 }
+
+type BookCardInfo = Pick<VolumeInfo, "title" | "authors" | "imageLinks" | "description">
 
 export default function BookItem({ book, favourites, setFavourites }: BookItemProps) {
 
@@ -31,7 +34,12 @@ export default function BookItem({ book, favourites, setFavourites }: BookItemPr
     setIsFavourite(willBeFavourite);
   };
 
-  const bookInfo: Partial<VolumeInfo> = book.volumeInfo;
+  const bookInfo: BookCardInfo = {
+    title: book.volumeInfo?.title || '',
+    authors: book.volumeInfo?.authors || [],
+    imageLinks: book.volumeInfo?.imageLinks || {},
+    description: book.volumeInfo?.description || '',
+  };
   if (!bookInfo) return null;
 
   const shortDescription =
@@ -52,7 +60,7 @@ export default function BookItem({ book, favourites, setFavourites }: BookItemPr
           {bookInfo.imageLinks ? (
             <img
               src={bookInfo.imageLinks.thumbnail ? bookInfo.imageLinks.thumbnail.replace("http://", "https://") : ""}
-              alt={bookInfo.title}
+              alt={bookInfo.title ? bookInfo.title : ""}
               className="book-item-image"
               onError={(e) => {
                 const target = e.target as HTMLImageElement
