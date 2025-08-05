@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
-import Home from './pages/Home.tsx';
-import Favourites from './pages/Favourites.jsx';
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
-import BookDetails from './pages/BookDetails.tsx';
 import { ToastContainer } from 'react-toastify';
-import { getFavourites, addFavourites  } from './utils/localStorage.js';
+
+import BookDetails from './pages/book-details';
+import Favourites from './pages/favourites';
+import Home from './pages/home';
+import { Book } from './types/books';
+import { getFavourites, addFavourites  } from './utils/local-storage'
 
 function App() {
 
-  const [favourites, setFavourites] = useState(getFavourites());
+  const [favourites, setFavourites] = useState<Book[]>(getFavourites());
 
   useEffect(() => {
     addFavourites(favourites);
@@ -19,12 +21,12 @@ function App() {
       <div className='App'>
         <nav>
           <Link to={'/'}>Home</Link>
-          <Link to={'/favorites'}>Favorites</Link>
+          <Link to={'/favourites'}>Favourites</Link>
         </nav>
       </div>
       <Routes>
         <Route path="/" element={<Home favourites={favourites} setFavourites={setFavourites} />} />
-        <Route path="/favorites" element={<Favourites favourites={favourites} setFavourites={setFavourites} />} />
+        <Route path="/favourites" element={<Favourites favourites={favourites} setFavourites={setFavourites} />} />
         <Route path="/book/:bookId" element={<BookDetails favourites={favourites} setFavourites={setFavourites} />} />
       </Routes>
       <ToastContainer
