@@ -1,15 +1,17 @@
+import DOMPurify from 'dompurify';
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import {
   FaHeart,
   FaArrowLeft,
   FaBookOpen,
   FaCalendarAlt,
 } from "react-icons/fa";
-import DOMPurify from 'dompurify';
-import { fetchJSON } from "../api/bookService";
-import type { Book, VolumeInfo } from "../interfaces/books";
+import { useParams, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
+import { fetchJSON } from "../api/book-service";
+
+import type { Book, VolumeInfo } from "../types/books";
 
 interface BookDetailsProps {
   favourites: Book[],
@@ -89,10 +91,8 @@ export default function BookDetails({ favourites, setFavourites }: BookDetailsPr
           </div>
         )}
       </div>
-
       <div className="book-info">
-        <h1 className="book-title">{book.title}</h1>
-
+        <h1 className="book-title">{book.title ? book.title : "No title"}</h1>
         {book.authors && book.authors?.length > 0 && (
           <div className="book-authors">
             {book.authors.map((author, index) => (

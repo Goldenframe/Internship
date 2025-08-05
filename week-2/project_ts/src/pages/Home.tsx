@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
-import BookItem from "../components/BookItem";
 import { toast } from "react-toastify";
-import useInfiniteScroll from "../hooks/useInfiniteScroll";
-import { fetchJSON } from "../api/bookService";
-import type { Book, SearchResponse } from "../interfaces/books";
+
+import BookItem from "@/components/book-item";
+import BookList from "@/components/book-list";
+
+import { fetchJSON } from "../api/book-service";
+import useInfiniteScroll from "../hooks/use-infinite-scroll";
+
+import type { Book, SearchResponse } from "../types/books";
 
 interface HomeProps {
   favourites: Book[];
@@ -18,16 +22,15 @@ export default function Home({ favourites, setFavourites }: HomeProps) {
   const [startIndex, setStartIndex] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [filter, setFilter] = useState("");
+  const maxResult = 20;
 
   const BASE_URL = import.meta.env.VITE_BASE_URL;
-  const MAX_RESULT = import.meta.env.VITE_MAX_RESULT;
-
 
   const fetchData = async (query: string, startIndex: number) => {
     if (loading) return;
     setLoading(true);
     try {
-      let url = `${BASE_URL}?q=${query}&startIndex=${startIndex}&maxResults=${MAX_RESULT}`
+      let url = `${BASE_URL}?q=${query}&startIndex=${startIndex}&maxResults=${maxResult}`
       if (filter) url += `&filter=${filter}`;
 
       const fetchPromise = fetchJSON<SearchResponse>(url, 'No books found');
@@ -53,18 +56,18 @@ export default function Home({ favourites, setFavourites }: HomeProps) {
 
       const data = await fetchPromise;
 
-      console.log(data);
+      const newBooks = data.items || [];
 
-      if (!data.items) {
-        setBooks([]);
+      if (newBooks.length === 0 && startIndex !== 0) {
         setHasMore(false);
         return;
       }
 
-      if (data.items.length < MAX_RESULT) setHasMore(false);
+      if (newBooks.length < maxResult) setHasMore(false);
 
-      const newBooks = data.items || [];
-      setBooks(prev => startIndex === 0 ? newBooks : [...prev, ...newBooks]);
+      setBooks((prev) =>
+        startIndex === 0 ? newBooks : [...prev, ...newBooks]
+      );
     } catch (err) {
       setBooks([]);
       setHasMore(false);
@@ -97,7 +100,7 @@ export default function Home({ favourites, setFavourites }: HomeProps) {
 
   useInfiniteScroll(() => {
     if (hasMore && !loading) {
-      setStartIndex((prev) => prev + MAX_RESULT);
+      setStartIndex((prev) => prev + maxResult);
     }
   }, hasMore, loading);
 
@@ -131,9 +134,17 @@ export default function Home({ favourites, setFavourites }: HomeProps) {
           <option value="partial">partial</option>
         </select>
       </label>
-      <div className="books-container">
+      <BookList
+        loading={loading}
+        hasMore={hasMore}
+        onLoadMore={() => {
+          if (hasMore && !loading) {
+            setStartIndex((prev) => prev + maxResult);
+          }
+        }}
+      >
         {books.length > 0
-          ? books.map((book) => (
+          ? books.map((book: Book) => (
             <BookItem
               key={book.id}
               book={book}
@@ -142,7 +153,8 @@ export default function Home({ favourites, setFavourites }: HomeProps) {
             />
           ))
           : !loading && <div className="no-books-message">No books found</div>}
-      </div>
+
+      </BookList>
     </div>
   );
 }
