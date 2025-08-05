@@ -5,7 +5,6 @@ import BookItem from "@/components/book-item";
 import BookList from "@/components/book-list";
 
 import { fetchJSON } from "../api/book-service";
-import useInfiniteScroll from "../hooks/use-infinite-scroll";
 
 import type { Book, SearchResponse } from "../types/books";
 
@@ -98,11 +97,6 @@ export default function Home({ favourites, setFavourites }: HomeProps) {
     setFilter(e.target.value);
   };
 
-  useInfiniteScroll(() => {
-    if (hasMore && !loading) {
-      setStartIndex((prev) => prev + maxResult);
-    }
-  }, hasMore, loading);
 
   return (
     <div>
