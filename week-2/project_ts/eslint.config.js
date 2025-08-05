@@ -1,52 +1,31 @@
-import js from '@eslint/js';
-import globals from 'globals';
-import reactHooks from 'eslint-plugin-react-hooks';
-import reactRefresh from 'eslint-plugin-react-refresh';
-import tseslint from 'typescript-eslint';
+import eslint from 'eslint/use-at-your-own-risk';
+import tsParser from '@typescript-eslint/parser';
+import tsPlugin from '@typescript-eslint/eslint-plugin';
+import reactHooksPlugin from 'eslint-plugin-react-hooks';
+import reactRefreshPlugin from 'eslint-plugin-react-refresh';
 import importPlugin from 'eslint-plugin-import';
-import prettierConfig from 'eslint-config-prettier';
 
-export default tseslint.config(
+export default [
   {
-    ignores: [
-      '**/dist/**',
-      '**/node_modules/**',
-      '**/*.config.js',
-      '**/*.config.ts'
-    ]
-  },
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      js.configs.recommended,
-      ...tseslint.configs.recommended,
-      reactHooks.configs['recommended-latest'],
-      reactRefresh.configs.vite,
-      'plugin:import/recommended',
-      'plugin:import/typescript',
-      prettierConfig
-    ],
-    plugins: {
-      'import': importPlugin,
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh
-    },
+    files: ["**/*.ts", "**/*.tsx"],
     languageOptions: {
-      ecmaVersion: 2020,
-      sourceType: 'module',
-      globals: {
-        ...globals.browser,
-        ...globals.node
-      },
+      parser: tsParser,
       parserOptions: {
-        project: true,
-        tsconfigRootDir: import.meta.dirname
-      }
+        project: './tsconfig.json',
+        tsconfigRootDir: import.meta.dirname,
+        ecmaVersion: 2020,
+        sourceType: 'module',
+      },
+    },
+    plugins: {
+      '@typescript-eslint': tsPlugin,
+      'react-hooks': reactHooksPlugin,
+      'react-refresh': reactRefreshPlugin,
+      'import': importPlugin,
     },
     rules: {
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
-      
       'import/order': [
         'error',
         {
@@ -85,6 +64,14 @@ export default tseslint.config(
           project: './tsconfig.json'
         }
       }
-    }
+    },
+  },
+  {
+    ignores: [
+      '**/dist/**',
+      '**/node_modules/**',
+      '**/*.config.js',
+      '**/*.config.ts'
+    ],
   }
-);
+];
