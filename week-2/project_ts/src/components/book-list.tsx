@@ -5,7 +5,8 @@ import useInfiniteScroll from "../hooks/use-infinite-scroll";
 interface BookListProps {
   loading: boolean,
   hasMore: boolean,
-  onLoadMore: () => void,
+  onLoadMore: (startIndex: number) => void,
+  startIndex: number
 }
 
 
@@ -13,10 +14,11 @@ export default function BookList({
   loading,
   hasMore,
   onLoadMore,
+  startIndex,
   children
 }: PropsWithChildren<BookListProps>) {
 
-  useInfiniteScroll(onLoadMore, hasMore, loading);
+  useInfiniteScroll(onLoadMore, startIndex, hasMore, loading);
 
   return (
     <div className="books-container">
