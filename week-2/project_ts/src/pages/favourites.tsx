@@ -1,7 +1,14 @@
-import React from "react";
-import BookItem from "../components/BookItem";
+import { Book } from "@/types/books";
 
-export default function Favourites({ favourites, setFavourites }) {
+import BookItem from "../components/book-item";
+
+interface FavouritesProps {
+  favourites: Book[],
+  setFavourites: React.Dispatch<React.SetStateAction<Book[]>>;
+}
+
+
+export default function Favourites({ favourites, setFavourites }: FavouritesProps) {
   if (!favourites || favourites.length === 0) {
     return <p>No favourites yet</p>;
   }
