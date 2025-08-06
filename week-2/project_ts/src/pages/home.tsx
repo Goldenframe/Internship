@@ -131,11 +131,12 @@ export default function Home({ favourites, setFavourites }: HomeProps) {
       <BookList
         loading={loading}
         hasMore={hasMore}
-        onLoadMore={() => {
+        onLoadMore={(currentStartIndex: number) => {
           if (hasMore && !loading) {
-            setStartIndex((prev) => prev + maxResult);
+            setStartIndex(currentStartIndex + maxResult);
           }
         }}
+        startIndex={startIndex}
       >
         {books.length > 0
           ? books.map((book: Book) => (

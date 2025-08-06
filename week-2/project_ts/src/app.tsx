@@ -4,7 +4,7 @@ import { ToastContainer } from 'react-toastify';
 
 import BookDetails from './pages/book-details';
 import Favourites from './pages/favourites';
-import Home from './pages/home-page';
+import Home from './pages/home';
 import { Book } from './types/books';
 import { getFavourites, addFavourites  } from './utils/local-storage'
 
