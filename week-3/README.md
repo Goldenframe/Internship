@@ -85,3 +85,26 @@ Suspense – React
 - Для демонстрации загрузки вставь искусственную задержку (импортируй util `sleep(600)` в `lazy`-компонент)
 
 *Что должен изучить/применить:* code-splitting, Suspense boundaries
+
+### По‑дням
+
+### Пн
+
+- Врезка Effect Logger
+- README-раздел про flow effect-ов и SSR-заметку
+
+### Вт
+
+- Профилирование → `React.memo`, `useMemo`, `useCallback`
+
+### Ср
+
+- Реализация `ThemeContext`, `LangContext`, сохранение в localStorage
+
+### Чт
+
+- Перенос деталей книги в Modal-портал + Dropdown портал, обработка событий
+
+### Пт
+
+- `React.lazy` + `Suspense`, финальная полировка, скриншоты из Profiler, PR
