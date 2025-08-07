@@ -23,12 +23,12 @@ export function getFavourites() {
 
         if (!favouriteBooks) return []
         else {
-            const parsedBooks = JSON.parse(favouriteBooks)
+            const parsedBooks: Book[] = JSON.parse(favouriteBooks)
             return parsedBooks.filter((book: unknown): book is Book => isBook(book));
         }
 
     }
-    catch (err) {
+    catch (err: unknown) {
         console.log('Error while getting favourite books ', err);
         return [];
     }

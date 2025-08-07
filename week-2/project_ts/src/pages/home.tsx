@@ -23,7 +23,7 @@ export default function Home({ favourites, setFavourites }: HomeProps) {
   const [filter, setFilter] = useState("");
   const maxResult = 20;
 
-  const BASE_URL = import.meta.env.VITE_BASE_URL;
+  const BASE_URL: string = import.meta.env.VITE_BASE_URL;
 
   const fetchData = async (query: string, startIndex: number) => {
     if (loading) return;
