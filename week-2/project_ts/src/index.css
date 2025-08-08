@@ -281,12 +281,12 @@ select:focus {
   background-color: var(--dark-red);
 }
 
-.favourite-icon {
+.favorite-icon {
   font-size: var(--text-xl);
   color: var(--red);
 }
 
-.book-item .favourite-icon {
+.book-item .favorite-icon {
   color: var(--white);
 }
 
@@ -388,7 +388,7 @@ select:focus {
   border-color: #ccc;
 }
 
-.book-item-favourite-icon {
+.book-item-favorite-icon {
   position: absolute;
   top: var(--gap-sm);
   right: var(--gap-sm);

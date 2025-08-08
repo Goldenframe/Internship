@@ -4,34 +4,34 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import type { Book, VolumeInfo } from "../types/books";
+import type { Book, VolumeInfo } from "@/types/books";
 
 interface BookItemProps {
   book: Book,
-  favourites: Book[],
-  setFavourites: React.Dispatch<React.SetStateAction<Book[]>>;
+  favorites: Book[],
+  setFavorites: React.Dispatch<React.SetStateAction<Book[]>>;
 }
 
 type BookCardInfo = Pick<VolumeInfo, "title" | "authors" | "imageLinks" | "description">
 
-export default function BookItem({ book, favourites, setFavourites }: BookItemProps) {
+export function BookItem({ book, favorites, setFavorites }: BookItemProps) {
 
-  const [isFavourite, setIsFavourite] = useState(
-    favourites.some((el) => el.id === book.id)
+  const [isFavorite, setIsFavorite] = useState(
+    favorites.some((el) => el.id === book.id)
   );
 
   const handleClick = () => {
-    const willBeFavourite = !isFavourite;
+    const willBeFavorite = !isFavorite;
 
-    if (willBeFavourite) {
-      setFavourites((prev) => [...prev, book]);
-      toast.success("Added to favourites!");
+    if (willBeFavorite) {
+      setFavorites((prev) => [...prev, book]);
+      toast.success("Added to favorites!");
     } else {
-      setFavourites((prev) => prev.filter((el) => el.id !== book.id));
-      toast.warning("Removed from favourites!");
+      setFavorites((prev) => prev.filter((el) => el.id !== book.id));
+      toast.warning("Removed from favorites!");
     }
 
-    setIsFavourite(willBeFavourite);
+    setIsFavorite(willBeFavorite);
   };
 
   const bookInfo: BookCardInfo = {
@@ -49,8 +49,8 @@ export default function BookItem({ book, favourites, setFavourites }: BookItemPr
 
   return (
     <div className="book-item">
-      {isFavourite && (
-        <div className="book-item-favourite-icon">
+      {isFavorite && (
+        <div className="book-item-favorite-icon">
           <FaHeart />
         </div>
       )}
@@ -90,12 +90,12 @@ export default function BookItem({ book, favourites, setFavourites }: BookItemPr
 
       <div className="book-item-actions">
         <button
-          className={`book-item-button like ${isFavourite ? "liked" : ""}`}
+          className={`book-item-button like ${isFavorite ? "liked" : ""}`}
           onClick={handleClick}
         >
-          {isFavourite ? (
+          {isFavorite ? (
             <>
-              <FaHeart className="favourite-icon" />
+              <FaHeart className="favorite-icon" />
               Liked
             </>
           ) : (

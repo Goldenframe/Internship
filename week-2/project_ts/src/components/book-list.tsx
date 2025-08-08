@@ -1,6 +1,6 @@
 import { PropsWithChildren } from "react";
 
-import useInfiniteScroll from "../hooks/use-infinite-scroll";
+import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
 
 interface BookListProps {
   loading: boolean,
@@ -10,7 +10,7 @@ interface BookListProps {
 }
 
 
-export default function BookList({
+export function BookList({
   loading,
   hasMore,
   onLoadMore,

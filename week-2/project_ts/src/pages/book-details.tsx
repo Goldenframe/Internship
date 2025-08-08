@@ -9,21 +9,20 @@ import {
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import { fetchJSON } from "../api/book-service";
-
-import type { Book, VolumeInfo } from "../types/books";
+import { fetchJSON } from '@/api/book-service';
+import type { Book, VolumeInfo } from '@/types/books';
 
 interface BookDetailsProps {
-  favourites: Book[],
-  setFavourites: React.Dispatch<React.SetStateAction<Book[]>>;
+  favorites: Book[],
+  setFavorites: React.Dispatch<React.SetStateAction<Book[]>>;
 }
 
-export default function BookDetails({ favourites, setFavourites }: BookDetailsProps) {
+export function BookDetails({ favorites, setFavorites }: BookDetailsProps) {
   const { bookId } = useParams();
   const navigate = useNavigate();
   const [bookDetails, setBookDetails] = useState<Book | null>(null);
-  const [isFavourite, setIsFavourite] = useState(
-    favourites.some((el) => el.id === bookId)
+  const [isFavorite, setIsFavorite] = useState(
+    favorites.some((el) => el.id === bookId)
   );
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   const url = `${BASE_URL}${bookId}`
@@ -52,22 +51,22 @@ export default function BookDetails({ favourites, setFavourites }: BookDetailsPr
     };
 
     fetchBookDetails();
-  }, [bookId]);
+  }, [bookId, url]);
 
   if (!bookDetails) {
     return null;
   }
 
-  const handleFavouriteClick = () => {
-    const willBeFavourite = !isFavourite;
-    if (willBeFavourite) {
-      setFavourites((prev) => [...prev, bookDetails]);
-      toast.success("Added to favourites");
+  const handleFavoriteClick = () => {
+    const willBeFavorite = !isFavorite;
+    if (willBeFavorite) {
+      setFavorites((prev) => [...prev, bookDetails]);
+      toast.success("Added to favorites");
     } else {
-      setFavourites((prev) => prev.filter((el) => el.id !== bookDetails.id));
-      toast.info("Removed from favourites");
+      setFavorites((prev) => prev.filter((el) => el.id !== bookDetails.id));
+      toast.info("Removed from favorites");
     }
-    setIsFavourite(willBeFavourite);
+    setIsFavorite(willBeFavorite);
   };
 
   const book: Partial<VolumeInfo> = bookDetails.volumeInfo;
@@ -138,12 +137,12 @@ export default function BookDetails({ favourites, setFavourites }: BookDetailsPr
 
         <div className="book-actions">
           <button
-            className={`action-button like-button ${isFavourite ? "liked" : ""
+            className={`action-button like-button ${isFavorite ? "liked" : ""
               }`}
-            onClick={handleFavouriteClick}
+            onClick={handleFavoriteClick}
           >
-            <FaHeart className="favourite-icon" />
-            {isFavourite ? "Remove from Favourites" : "Add to Favourites"}
+            <FaHeart className="favorite-icon" />
+            {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
           </button>
 
           <button
