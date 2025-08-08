@@ -1,7 +1,7 @@
 import { Book } from "@/types/books";
 
 enum StorageKey {
-    FAVOURITE_BOOKS = 'favouriteBooks',
+    FAVORITE_BOOKS = 'favoriteBooks',
 }
 
 function isBook(obj: unknown): obj is Book {
@@ -12,34 +12,33 @@ function isBook(obj: unknown): obj is Book {
         "id" in obj &&
         "etag" in obj &&
         "selfLink" in obj &&
-        "volumeInfo" in obj &&
         "volumeInfo" in obj);
 }
 
 
-export function getFavourites() {
+export function getFavorites() {
     try {
-        const favouriteBooks = localStorage.getItem(StorageKey.FAVOURITE_BOOKS);
+        const favoriteBooks = localStorage.getItem(StorageKey.FAVORITE_BOOKS);
 
-        if (!favouriteBooks) return []
+        if (!favoriteBooks) return []
         else {
-            const parsedBooks: Book[] = JSON.parse(favouriteBooks)
+            const parsedBooks: Book[] = JSON.parse(favoriteBooks)
             return parsedBooks.filter((book: unknown): book is Book => isBook(book));
         }
 
     }
     catch (err: unknown) {
-        console.log('Error while getting favourite books ', err);
+        console.log('Error while getting favorite books ', err);
         return [];
     }
 }
 
-export function addFavourites(favourites: Book[]) {
+export function addFavorites(favorites: Book[]) {
     try {
-        localStorage.setItem(StorageKey.FAVOURITE_BOOKS, JSON.stringify(favourites));
+        localStorage.setItem(StorageKey.FAVORITE_BOOKS, JSON.stringify(favorites));
     }
     catch (err) {
-        console.error('Error while saving favourites to localStorage:', err);
+        console.error('Error while saving favorites to localStorage:', err);
         return [];
     }
 }
