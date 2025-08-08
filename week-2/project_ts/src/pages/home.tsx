@@ -1,19 +1,17 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-import BookItem from "@/components/book-item";
-import BookList from "@/components/book-list";
-
-import { fetchJSON } from "../api/book-service";
-
-import type { Book, SearchResponse } from "../types/books";
+import { fetchJSON } from "@/api/book-service";
+import { BookItem } from "@/components/book-item";
+import { BookList } from "@/components/book-list";
+import type { Book, SearchResponse } from "@/types/books";
 
 interface HomeProps {
-  favourites: Book[];
-  setFavourites: React.Dispatch<React.SetStateAction<Book[]>>;
+  favorites: Book[];
+  setFavorites: React.Dispatch<React.SetStateAction<Book[]>>;
 }
 
-export default function Home({ favourites, setFavourites }: HomeProps) {
+export function Home({ favorites, setFavorites }: HomeProps) {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchInput, setSearchInput] = useState("JavaScript");
@@ -25,8 +23,7 @@ export default function Home({ favourites, setFavourites }: HomeProps) {
 
   const BASE_URL: string = import.meta.env.VITE_BASE_URL;
 
-  const fetchData = async (query: string, startIndex: number) => {
-    if (loading) return;
+  const fetchData = useCallback(async (query: string, startIndex: number) => {
     setLoading(true);
     try {
       let url = `${BASE_URL}?q=${query}&startIndex=${startIndex}&maxResults=${maxResult}`
@@ -73,10 +70,12 @@ export default function Home({ favourites, setFavourites }: HomeProps) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [BASE_URL, filter]);
+
   useEffect(() => {
     fetchData(query, startIndex);
-  }, [query, startIndex, filter]);
+  }, [fetchData, query, startIndex]);
+
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -143,8 +142,8 @@ export default function Home({ favourites, setFavourites }: HomeProps) {
             <BookItem
               key={book.id}
               book={book}
-              favourites={favourites}
-              setFavourites={setFavourites}
+              favorites={favorites}
+              setFavorites={setFavorites}
             />
           ))
           : !loading && <div className="no-books-message">No books found</div>}
