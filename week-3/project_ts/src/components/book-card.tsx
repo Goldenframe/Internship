@@ -1,26 +1,30 @@
-import DOMPurify from "dompurify";
-import React, { useState } from "react";
+import React, { useState, Suspense, useCallback, memo } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
+import { BookDescripton } from "@/components/book-description";
+import { Loading } from "@/components/loading";
 import type { Book, VolumeInfo } from "@/types/books";
+
+
 
 interface BookCardProps {
   book: Book,
   favorites: Book[],
   setFavorites: React.Dispatch<React.SetStateAction<Book[]>>;
+  setBookClicked: React.Dispatch<React.SetStateAction<Book | null>>;
 }
 
 type BookCardInfo = Pick<VolumeInfo, "title" | "authors" | "imageLinks" | "description">
 
-export function BookCard({ book, favorites, setFavorites }: BookCardProps) {
+export const BookCard = memo(function BookCard({ book, favorites, setFavorites, setBookClicked }: BookCardProps) {
 
   const [isFavorite, setIsFavorite] = useState(
     favorites.some((el) => el.id === book.id)
   );
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     const willBeFavorite = !isFavorite;
 
     if (willBeFavorite) {
@@ -32,7 +36,7 @@ export function BookCard({ book, favorites, setFavorites }: BookCardProps) {
     }
 
     setIsFavorite(willBeFavorite);
-  };
+  }, [book, isFavorite, setFavorites]);
 
   const bookInfo: BookCardInfo = {
     title: book.volumeInfo?.title || '',
@@ -48,7 +52,7 @@ export function BookCard({ book, favorites, setFavorites }: BookCardProps) {
     "No description available";
 
   return (
-    <div className="book-item">
+    <div className="book-item" onClick={()=>{setBookClicked(book)}}>
       {isFavorite && (
         <div className="book-item-favorite-icon">
           <FaHeart />
@@ -79,13 +83,9 @@ export function BookCard({ book, favorites, setFavorites }: BookCardProps) {
         <p className="book-item-authors">
           {bookInfo.authors?.join(", ") || "Author unknown"}
         </p>
-
-        <div
-          className="book-item-description"
-          dangerouslySetInnerHTML={{
-            __html: DOMPurify.sanitize(shortDescription),
-          }}
-        />
+        <Suspense fallback={<Loading />}>
+          <BookDescripton shortDescription={shortDescription} />
+        </Suspense>
       </Link>
 
       <div className="book-item-actions">
@@ -108,4 +108,4 @@ export function BookCard({ book, favorites, setFavorites }: BookCardProps) {
       </div>
     </div>
   );
-}
+})
