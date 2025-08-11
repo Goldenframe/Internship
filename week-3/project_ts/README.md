@@ -1,26 +1,11 @@
-# Миграция проекта на Vite
+# Flow Effect
 
 ## Задания
 
-### 1. Инфраструктура (Vite)
+(SSR: добавь короткий комментарий в README, почему `useLayoutEffect` предупреждает в SSR и как это чинят `useEffect`/`useInsertionEffect`)
 
-- Создай проект через `vite` **или** мигрируй текущий репозиторий на Vite (удали webpack/Cra‑артефакты)
-- Проверь, что `tsconfig.json` в корне и `"strict": true`
-- Добавь ESLint + Prettier c `@typescript-eslint/parser`, `eslint-plugin-react-hooks`, `eslint-plugin-import`, `eslint-config-prettier`
-- Конфиг можно хранить в `eslint.config.js` или `.eslintrc.cjs`
-- Настрой aliases (`@/components`, `@/hooks`, …) в `vite.config.ts` + `tsconfig.paths.json`
+## Ответ
 
-**Ключевые темы:** setup Vite, strict TS
+Это происходит потому, что `useLayoutEffect` синхронно выполняется после отрисовки в браузере, а на сервере отрисовки DOM нет
 
-### 2. Модели и сервисы
-
-- Опиши интерфейсы/типы ответа Google Books: `Book`, `VolumeInfo`, `SearchResponse`
-- API‑слой (`booksService.ts`) возвращает строго типизированные данные, используй generic‑хелпер `fetchJSON<T>`
-- Все переменные окружения через `.env` → `import.meta.env.VITE_*`
-
-**Ключевые темы:** interfaces vs type, generics, `Partial`
-
-### 3. Компоненты‑карточки
-
-- Переведи **две** ключевые части в `.tsx`: `BookCard`, `BookDetails`
-- Опиши пропсы через `PropsWithChildren` и `Pick<VolumeInfo, 'title' | 'authors'>`
+Если нужно, чтобы код корректно работал в браузере и на сервере, обычно используют `useEffect`, а `useInsertionEffect` применяют в основном для синхронной вставки стилей иди скриптов перед рендером, но на сервере он тоже не выполняется

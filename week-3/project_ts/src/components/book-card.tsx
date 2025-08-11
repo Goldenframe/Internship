@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 
 import type { Book, VolumeInfo } from "@/types/books";
 
-interface BookItemProps {
+interface BookCardProps {
   book: Book,
   favorites: Book[],
   setFavorites: React.Dispatch<React.SetStateAction<Book[]>>;
@@ -14,7 +14,7 @@ interface BookItemProps {
 
 type BookCardInfo = Pick<VolumeInfo, "title" | "authors" | "imageLinks" | "description">
 
-export function BookItem({ book, favorites, setFavorites }: BookItemProps) {
+export function BookCard({ book, favorites, setFavorites }: BookCardProps) {
 
   const [isFavorite, setIsFavorite] = useState(
     favorites.some((el) => el.id === book.id)

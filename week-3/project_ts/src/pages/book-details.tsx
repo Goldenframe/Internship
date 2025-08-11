@@ -43,8 +43,6 @@ export function BookDetails({ favorites, setFavorites }: BookDetailsProps) {
         });
 
         const data: Book = await fetchPromise;
-        console.log(data)
-
         setBookDetails(data);
       } catch (err) {
       }

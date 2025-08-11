@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 import { fetchJSON } from "@/api/book-service";
-import { BookItem } from "@/components/book-item";
+import { BookCard } from "@/components/book-card";
 import { BookList } from "@/components/book-list";
 import type { Book, SearchResponse } from "@/types/books";
 
@@ -139,7 +139,7 @@ export function Home({ favorites, setFavorites }: HomeProps) {
       >
         {books.length > 0
           ? books.map((book: Book) => (
-            <BookItem
+            <BookCard
               key={book.id}
               book={book}
               favorites={favorites}
