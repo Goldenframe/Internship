@@ -13,34 +13,34 @@ export function EffectLogger({ bookClicked }: EffectLoggerProps) {
   console.log(' Render');
 
   useLayoutEffect(() => {
-    console.log('useLayoutEffect no dependency');
+    console.log('1 useLayoutEffect no dependency');
 
     return () => {
-      console.log('cleanup useLayoutEffect no dependency');
+      console.log('1 cleanup useLayoutEffect no dependency');
     };
   }, []);
 
   useEffect(() => {
-    console.log('useEffect no dependency');
+    console.log('2 useEffect no dependency');
 
     return () => {
-      console.log('cleanup useEffect no dependency');
+      console.log('2 cleanup useEffect no dependency');
     };
   }, []);
 
   useLayoutEffect(() => {
-    console.log('useLayoutEffect with dependency');
+    console.log('3 useLayoutEffect with dependency');
 
     return () => {
-      console.log('cleanup useLayoutEffect with dependency');
+      console.log('3 cleanup useLayoutEffect with dependency');
     };
   }, [dependency]);
 
   useEffect(() => {
-    console.log('useEffect with dependency');
+    console.log('4 useEffect with dependency');
 
     return () => {
-      console.log('cleanup useEffect with dependency');
+      console.log('4 cleanup useEffect with dependency');
     };
   }, [dependency]);
 
