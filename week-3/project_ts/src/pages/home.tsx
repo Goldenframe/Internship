@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 
 import { fetchJSON } from "@/api/book-service";
@@ -28,7 +28,6 @@ export function Home({ favorites, setFavorites, setBookClicked }: HomeProps) {
     setLoading(true);
     try {
       let url = `${BASE_URL}?q=${query}&startIndex=${startIndex}&maxResults=${maxResult}`
-      if (filter) url += `&filter=${filter}`;
 
       const fetchPromise = fetchJSON<SearchResponse>(url, 'No books found');
 
@@ -71,32 +70,55 @@ export function Home({ favorites, setFavorites, setBookClicked }: HomeProps) {
     } finally {
       setLoading(false);
     }
-  }, [BASE_URL, filter]);
+  }, [BASE_URL]);
 
   useEffect(() => {
     fetchData(query, startIndex);
   }, [fetchData, query, startIndex]);
 
+const processedBooks = useMemo(() => {
+  let result = [...books];
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setBooks([]);
-    setStartIndex(0);
-    setHasMore(true);
-    if (searchInput !== query) {
-      setQuery(searchInput);
-    } else {
-      fetchData(query, 0);
-    }
-  };
+  if (filter) {
+    result = result.filter(book => {
+      if (filter === "ebooks") {
+        return book.accessInfo?.epub?.isAvailable || book.accessInfo?.pdf?.isAvailable;
+      }
+      if (filter === "free-ebooks") {
+        return book.saleInfo?.saleability === "FREE";
+      }
+      if (filter === "paid-ebooks") {
+        return book.saleInfo?.saleability === "FOR_SALE";
+      }
+      if (filter === "full") {
+        return book.accessInfo?.viewability === "ALL_PAGES";
+      }
+      if (filter === "partial") {
+        return book.accessInfo?.viewability === "PARTIAL";
+      }
+      return true;
+    });
+  }
+  return result; 
+}, [books, filter]);
 
-  const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setBooks([]);
-    setStartIndex(0);
-    setHasMore(true);
-    setFilter(e.target.value);
-  };
+const handleSubmit = useCallback((e: React.FormEvent) => {
+  e.preventDefault();
+  setBooks([]);
+  setStartIndex(0);
+  setHasMore(true);
+  if (searchInput !== query) {
+    setQuery(searchInput);
+  } else {
+    fetchData(query, 0);
+  }
+}, [searchInput, query, fetchData]);
 
+const handleSelect = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+  setStartIndex(0);
+  setHasMore(true);
+  setFilter(e.target.value);
+}, []);
 
   return (
     <div>
@@ -111,7 +133,7 @@ export function Home({ favorites, setFavorites, setBookClicked }: HomeProps) {
           />
         </label>
 
-        <button>Search</button>
+        <button type="submit">Search</button>
       </form>
       <label htmlFor="book-filter" className="visually-hidden">
         <select
@@ -138,8 +160,8 @@ export function Home({ favorites, setFavorites, setBookClicked }: HomeProps) {
         }}
         startIndex={startIndex}
       >
-        {books.length > 0
-          ? books.map((book: Book) => (
+        {processedBooks.length > 0
+          ? processedBooks.map((book: Book) => (
             <BookCard
               key={book.id}
               book={book}
