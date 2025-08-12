@@ -10,11 +10,13 @@ interface BookCardProps {
   book: Book,
   favorites: Book[],
   setFavorites: React.Dispatch<React.SetStateAction<Book[]>>;
+  setBookClicked: React.Dispatch<React.SetStateAction<Book | null>>;
+
 }
 
 type BookCardInfo = Pick<VolumeInfo, "title" | "authors" | "imageLinks" | "description">
 
-export function BookCard({ book, favorites, setFavorites }: BookCardProps) {
+export function BookCard({ book, favorites, setFavorites, setBookClicked }: BookCardProps) {
 
   const [isFavorite, setIsFavorite] = useState(
     favorites.some((el) => el.id === book.id)
@@ -48,7 +50,7 @@ export function BookCard({ book, favorites, setFavorites }: BookCardProps) {
     "No description available";
 
   return (
-    <div className="book-item">
+    <div className="book-item" onClick={() => { setBookClicked(book) }}>
       {isFavorite && (
         <div className="book-item-favorite-icon">
           <FaHeart />
