@@ -6,7 +6,7 @@ interface EffectLoggerProps {
   bookClicked: Book | null
 }
 
-export function EffectLogger({ bookClicked }: EffectLoggerProps) {
+export const EffectLogger = ({ bookClicked }: EffectLoggerProps) => {
   const [dependency, setDependency] = useState(false)
 
 
@@ -46,7 +46,7 @@ export function EffectLogger({ bookClicked }: EffectLoggerProps) {
 
   useEffect(() => {
     if (bookClicked) {
-        console.log('Props changed', bookClicked);
+      console.log('Props changed', bookClicked);
     }
     return () => {
       console.log('cleanup Props Changed');

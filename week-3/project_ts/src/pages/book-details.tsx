@@ -1,5 +1,5 @@
 import DOMPurify from 'dompurify';
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   FaHeart,
   FaArrowLeft,
@@ -17,7 +17,7 @@ interface BookDetailsProps {
   setFavorites: React.Dispatch<React.SetStateAction<Book[]>>;
 }
 
-export function BookDetails({ favorites, setFavorites }: BookDetailsProps) {
+export const BookDetails = ({ favorites, setFavorites }: BookDetailsProps) => {
   const { bookId } = useParams();
   const navigate = useNavigate();
   const [bookDetails, setBookDetails] = useState<Book | null>(null);
@@ -51,11 +51,9 @@ export function BookDetails({ favorites, setFavorites }: BookDetailsProps) {
     fetchBookDetails();
   }, [bookId, url]);
 
-  if (!bookDetails) {
-    return null;
-  }
-
-  const handleFavoriteClick = () => {
+  const handleFavoriteClick = useCallback(() => {
+    if (!bookDetails) return;
+    
     const willBeFavorite = !isFavorite;
     if (willBeFavorite) {
       setFavorites((prev) => [...prev, bookDetails]);
@@ -65,7 +63,11 @@ export function BookDetails({ favorites, setFavorites }: BookDetailsProps) {
       toast.info("Removed from favorites");
     }
     setIsFavorite(willBeFavorite);
-  };
+  }, [bookDetails, isFavorite, setFavorites]);
+
+  if (!bookDetails) {
+    return null;
+  }
 
   const book: Partial<VolumeInfo> = bookDetails.volumeInfo;
 
