@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { fetchJSON } from "@/api/book-service";
 import { BookCard } from "@/components/book-card";
 import { BookList } from "@/components/book-list";
-import type { Book, SearchResponse } from "@/types/books";
+import { FILTER_TYPES, type Book, type SearchResponse } from "@/types/books";
 
 interface HomeProps {
   favorites: Book[];
@@ -81,19 +81,19 @@ const processedBooks = useMemo(() => {
 
   if (filter) {
     result = result.filter(book => {
-      if (filter === "ebooks") {
+      if (filter === FILTER_TYPES.EBOOKS) {
         return book.accessInfo?.epub?.isAvailable || book.accessInfo?.pdf?.isAvailable;
       }
-      if (filter === "free-ebooks") {
+      if (filter === FILTER_TYPES.FREE_EBOOKS) {
         return book.saleInfo?.saleability === "FREE";
       }
-      if (filter === "paid-ebooks") {
+      if (filter === FILTER_TYPES.PAID_EBOOKS) {
         return book.saleInfo?.saleability === "FOR_SALE";
       }
-      if (filter === "full") {
+      if (filter === FILTER_TYPES.FULL) {
         return book.accessInfo?.viewability === "ALL_PAGES";
       }
-      if (filter === "partial") {
+      if (filter === FILTER_TYPES.PARTIAL) {
         return book.accessInfo?.viewability === "PARTIAL";
       }
       return true;

@@ -138,3 +138,11 @@ export interface SearchResponse {
     totalItems: number;
     items?: Book[];
 }
+
+export const FILTER_TYPES = {
+  EBOOKS: "ebooks",
+  FREE_EBOOKS: "free-ebooks",
+  PAID_EBOOKS: "paid-ebooks",
+  FULL: "full",
+  PARTIAL: "partial",
+} as const;
