@@ -9,7 +9,7 @@ import { Home } from '@/pages/home';
 import { Book } from '@/types/books';
 import { getFavorites, addFavorites } from '@/utils/local-storage';
 
-function App() {
+const App = () => {
 
   const [favorites, setFavorites] = useState<Book[]>(getFavorites());
   const [isLogging, setIsLogging] = useState(false);

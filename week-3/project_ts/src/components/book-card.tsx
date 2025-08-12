@@ -18,7 +18,7 @@ interface BookCardProps {
 
 type BookCardInfo = Pick<VolumeInfo, "title" | "authors" | "imageLinks" | "description">
 
-export const BookCard = memo(function BookCard({ book, favorites, setFavorites, setBookClicked }: BookCardProps) {
+export const BookCard = memo(({ book, favorites, setFavorites, setBookClicked }: BookCardProps) => {
 
   const [isFavorite, setIsFavorite] = useState(
     favorites.some((el) => el.id === book.id)

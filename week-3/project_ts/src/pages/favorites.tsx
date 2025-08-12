@@ -11,7 +11,7 @@ interface FavoritesProps {
 }
 
 
-export function Favorites({ favorites, setFavorites, setBookClicked }: FavoritesProps) {
+export const Favorites = ({ favorites, setFavorites, setBookClicked }: FavoritesProps) => {
   if (!favorites || favorites.length === 0) {
     return <p>No favorites yet</p>;
   }

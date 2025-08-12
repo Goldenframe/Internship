@@ -1,16 +1,15 @@
 import DOMPurify from "dompurify";
 
 interface BookDescriptonProps {
-  shortDescription: string;  
+    shortDescription: string;
 };
 
-export function BookDescripton({shortDescription}: BookDescriptonProps) {
-    return (
-        <div
-            className="book-item-description"
-            dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(shortDescription),
-            }}
-        />
-    )
-}
+export const BookDescripton = ({ shortDescription }: BookDescriptonProps) =>
+(
+    <div
+        className="book-item-description"
+        dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(shortDescription),
+        }}
+    />
+)

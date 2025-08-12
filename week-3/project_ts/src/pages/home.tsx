@@ -12,7 +12,7 @@ interface HomeProps {
   setBookClicked: React.Dispatch<React.SetStateAction<Book | null>>;
 }
 
-export function Home({ favorites, setFavorites, setBookClicked }: HomeProps) {
+export const Home = ({ favorites, setFavorites, setBookClicked }: HomeProps) => {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchInput, setSearchInput] = useState("JavaScript");

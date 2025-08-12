@@ -17,7 +17,7 @@ interface BookDetailsProps {
   setFavorites: React.Dispatch<React.SetStateAction<Book[]>>;
 }
 
-export function BookDetails({ favorites, setFavorites }: BookDetailsProps) {
+export const BookDetails = ({ favorites, setFavorites }: BookDetailsProps) => {
   const { bookId } = useParams();
   const navigate = useNavigate();
   const [bookDetails, setBookDetails] = useState<Book | null>(null);

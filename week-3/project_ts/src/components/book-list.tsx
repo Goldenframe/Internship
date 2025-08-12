@@ -10,13 +10,13 @@ interface BookListProps {
 }
 
 
-export function BookList({
+export const BookList = ({
   loading,
   hasMore,
   onLoadMore,
   startIndex,
   children
-}: PropsWithChildren<BookListProps>) {
+}: PropsWithChildren<BookListProps>) => {
 
   useInfiniteScroll(onLoadMore, startIndex, hasMore, loading);
 
