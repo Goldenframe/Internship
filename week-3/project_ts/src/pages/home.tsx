@@ -9,9 +9,10 @@ import type { Book, SearchResponse } from "@/types/books";
 interface HomeProps {
   favorites: Book[];
   setFavorites: React.Dispatch<React.SetStateAction<Book[]>>;
+  setBookClicked: React.Dispatch<React.SetStateAction<Book | null>>;
 }
 
-export function Home({ favorites, setFavorites }: HomeProps) {
+export function Home({ favorites, setFavorites, setBookClicked }: HomeProps) {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchInput, setSearchInput] = useState("JavaScript");
@@ -144,6 +145,7 @@ export function Home({ favorites, setFavorites }: HomeProps) {
               book={book}
               favorites={favorites}
               setFavorites={setFavorites}
+              setBookClicked={setBookClicked}
             />
           ))
           : !loading && <div className="no-books-message">No books found</div>}
