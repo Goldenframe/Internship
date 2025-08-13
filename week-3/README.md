@@ -108,3 +108,11 @@ Suspense – React
 ### Пт
 
 - `React.lazy` + `Suspense`, финальная полировка, скриншоты из Profiler, PR
+
+## Опционально
+
+### Добавить архитектуру [fsd](https://feature-sliced.github.io/documentation/ru/docs/get-started/overview)
+
+- достаточно будет папок верхнего уровня  app, pages и shared
+
+### Добавить scss модули
