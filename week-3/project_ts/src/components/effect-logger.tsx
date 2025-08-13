@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
+import { useTranslation } from 'react-i18next';
 
 import { Book } from "@/types/books";
 
@@ -7,6 +8,8 @@ interface EffectLoggerProps {
 }
 
 export const EffectLogger = ({ bookClicked }: EffectLoggerProps) => {
+  const { t } = useTranslation();
+
   const [dependency, setDependency] = useState(false)
 
 
@@ -55,14 +58,14 @@ export const EffectLogger = ({ bookClicked }: EffectLoggerProps) => {
 
   return (
     <aside className="effect-logger-container">
-      <strong>Effect Logger</strong>
+      <strong>{t('header.effectLogger')}</strong>
       <label>
         <input
           type="checkbox"
           checked={dependency}
           onChange={(e) => setDependency(e.target.checked)}
         />
-        Toggle Dependency
+        {t('common.toggle')} Dependency
       </label>
     </aside>
   );
