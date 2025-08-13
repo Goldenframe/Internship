@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
+import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
 import { fetchJSON } from "@/api/book-service";
@@ -7,19 +9,32 @@ import { BookList } from "@/components/book-list";
 import { FILTER_TYPES, type Book, type SearchResponse } from "@/types/books";
 
 interface HomeProps {
-  favorites: Book[];
-  setFavorites: React.Dispatch<React.SetStateAction<Book[]>>;
-  setBookClicked: React.Dispatch<React.SetStateAction<Book | null>>;
+  favorites: Book[],
+  setFavorites: React.Dispatch<React.SetStateAction<Book[]>>,
+  setBookClicked: React.Dispatch<React.SetStateAction<Book | null>>,
+  filter: string,
+  startIndex: number,
+  setStartIndex: React.Dispatch<React.SetStateAction<number>>,
+  hasMore: boolean,
+  setHasMore: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
-export const Home = ({ favorites, setFavorites, setBookClicked }: HomeProps) => {
+export const Home = ({
+  favorites,
+  setFavorites,
+  setBookClicked,
+  filter,
+  startIndex,
+  setStartIndex,
+  hasMore,
+  setHasMore
+}: HomeProps) => {
+
+  const { t } = useTranslation();
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchInput, setSearchInput] = useState("JavaScript");
   const [query, setQuery] = useState("JavaScript");
-  const [startIndex, setStartIndex] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
-  const [filter, setFilter] = useState("");
   const maxResult = 20;
 
   const BASE_URL: string = import.meta.env.VITE_BASE_URL;
@@ -32,20 +47,20 @@ export const Home = ({ favorites, setFavorites, setBookClicked }: HomeProps) => 
       const fetchPromise = fetchJSON<SearchResponse>(url, 'No books found');
 
       toast.promise(fetchPromise, {
-        pending: "Loading...",
+        pending: t("toast.pendingBooks"),
         success: {
           render({ data }) {
             if (!data.items) {
-              return "No books found";
+              return t("toast.noBooksFound");
             }
             return data.items.length > 1
-              ? `${data.items.length} books have been loaded`
-              : `1 book has been loaded`;
+              ? t("toast.successManyBooks", { count: data.items.length })
+              : t("toast.successOneBooks");
           },
         },
         error: {
           render({ data }: { data: Error }) {
-            return data?.message || "Failed to load books. Please try again";
+            return data?.message || t("toast.errorBook");
           },
         },
       });
@@ -70,55 +85,50 @@ export const Home = ({ favorites, setFavorites, setBookClicked }: HomeProps) => 
     } finally {
       setLoading(false);
     }
-  }, [BASE_URL]);
+  }, [BASE_URL, t, setHasMore]);
 
   useEffect(() => {
     fetchData(query, startIndex);
   }, [fetchData, query, startIndex]);
 
-const processedBooks = useMemo(() => {
-  let result = [...books];
+  const processedBooks = useMemo(() => {
+    let result = [...books];
 
-  if (filter) {
-    result = result.filter(book => {
-      if (filter === FILTER_TYPES.EBOOKS) {
-        return book.accessInfo?.epub?.isAvailable || book.accessInfo?.pdf?.isAvailable;
-      }
-      if (filter === FILTER_TYPES.FREE_EBOOKS) {
-        return book.saleInfo?.saleability === "FREE";
-      }
-      if (filter === FILTER_TYPES.PAID_EBOOKS) {
-        return book.saleInfo?.saleability === "FOR_SALE";
-      }
-      if (filter === FILTER_TYPES.FULL) {
-        return book.accessInfo?.viewability === "ALL_PAGES";
-      }
-      if (filter === FILTER_TYPES.PARTIAL) {
-        return book.accessInfo?.viewability === "PARTIAL";
-      }
-      return true;
-    });
-  }
-  return result; 
-}, [books, filter]);
+    if (filter) {
+      result = result.filter(book => {
+        if (filter === FILTER_TYPES.EBOOKS) {
+          return book.accessInfo?.epub?.isAvailable || book.accessInfo?.pdf?.isAvailable;
+        }
+        if (filter === FILTER_TYPES.FREE_EBOOKS) {
+          return book.saleInfo?.saleability === "FREE";
+        }
+        if (filter === FILTER_TYPES.PAID_EBOOKS) {
+          return book.saleInfo?.saleability === "FOR_SALE";
+        }
+        if (filter === FILTER_TYPES.FULL) {
+          return book.accessInfo?.viewability === "ALL_PAGES";
+        }
+        if (filter === FILTER_TYPES.PARTIAL) {
+          return book.accessInfo?.viewability === "PARTIAL";
+        }
+        return true;
+      });
+    }
+    return result;
+  }, [books, filter]);
 
-const handleSubmit = useCallback((e: React.FormEvent) => {
-  e.preventDefault();
-  setBooks([]);
-  setStartIndex(0);
-  setHasMore(true);
-  if (searchInput !== query) {
-    setQuery(searchInput);
-  } else {
-    fetchData(query, 0);
-  }
-}, [searchInput, query, fetchData]);
+  const handleSubmit = useCallback((e: React.FormEvent) => {
+    e.preventDefault();
+    setBooks([]);
+    setStartIndex(0);
+    setHasMore(true);
+    if (searchInput !== query) {
+      setQuery(searchInput);
+    } else {
+      fetchData(query, 0);
+    }
+  }, [searchInput, query, fetchData, setHasMore, setStartIndex]);
 
-const handleSelect = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-  setStartIndex(0);
-  setHasMore(true);
-  setFilter(e.target.value);
-}, []);
 
   return (
     <div>
@@ -133,23 +143,8 @@ const handleSelect = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
           />
         </label>
 
-        <button type="submit">Search</button>
+        <button type="submit">{t("common.search")}</button>
       </form>
-      <label htmlFor="book-filter" className="visually-hidden">
-        <select
-          id="book-filter"
-          value={filter}
-          onChange={handleSelect}
-          title="Filter books by type"
-        >
-          <option value="">all</option>
-          <option value="ebooks">ebooks</option>
-          <option value="free-ebooks">free-ebooks</option>
-          <option value="full">full</option>
-          <option value="paid-ebooks">paid-ebooks</option>
-          <option value="partial">partial</option>
-        </select>
-      </label>
       <BookList
         loading={loading}
         hasMore={hasMore}
@@ -170,7 +165,7 @@ const handleSelect = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
               setBookClicked={setBookClicked}
             />
           ))
-          : !loading && <div className="no-books-message">No books found</div>}
+          : !loading && <div className="no-books-message">{t("toast.booksNotFound")}</div>}
 
       </BookList>
     </div>
