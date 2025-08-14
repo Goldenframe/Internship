@@ -151,12 +151,6 @@
         font-size: 1.05rem;
     }
 
-    .action-button {
-        @media (max-width: 480px) {
-            padding: var(--gap) var(--gap-lg);
-            font-size: var(--text-sm);
-        }
-    }
 }
 
 .modal {
@@ -188,7 +182,8 @@
     }
 }
 
-.action-button {
+.action-button,
+.back-button {
     padding: var(--gap-sm) var(--gap-lg);
     border-radius: var(--radius);
     border: none;
@@ -200,4 +195,19 @@
     display: flex;
     align-items: center;
     gap: var(--gap-sm);
+}
+
+.action-button {
+    padding: var(--gap) var(--gap-lg);
+    font-size: var(--text);
+
+    @media (max-width: 480px) {
+        padding: var(--gap) var(--gap-lg);
+        font-size: var(--text-sm);
+    }
+}
+
+.back-button:hover {
+    background-color: #f8f9fa;
+    border-color: #ccc;
 }

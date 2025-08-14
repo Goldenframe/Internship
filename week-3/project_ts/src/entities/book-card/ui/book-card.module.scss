@@ -96,6 +96,17 @@
     }
 
     &-button {
+        padding: var(--gap-sm) var(--gap-lg);
+        border-radius: var(--radius);
+        border: none;
+        background-color: var(--blue);
+        color: var(--white);
+        font-size: 80px;
+        cursor: pointer;
+        transition: background-color var(--transition);
+        display: flex;
+        align-items: center;
+        gap: var(--gap-sm);
         width: 100%;
         justify-content: center;
 
