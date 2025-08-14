@@ -59,8 +59,8 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      <LangContext value={{ lang, toggleLang }}>
-        <ThemeContext value={{ toggleTheme }}>
+      <LangContext.Provider value={{ lang, toggleLang }}>
+        <ThemeContext.Provider value={{ toggleTheme }}>
           <div className='App'>
 
             <Header isLogging={isLogging} setIsLogging={setIsLogging} />
@@ -102,8 +102,8 @@ const App = () => {
             )
           }
 
-        </ThemeContext>
-      </LangContext>
+        </ThemeContext.Provider>
+      </LangContext.Provider>
     </BrowserRouter >
 
   );
