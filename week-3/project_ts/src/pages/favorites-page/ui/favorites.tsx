@@ -1,5 +1,6 @@
-import { BookCard } from "@/components/book-card";
-import { Book } from "@/types/books";
+import { BookCard } from "@/entities/book-card/ui/book-card";
+import { Book } from "@/shared/model/types/books";
+import { BooksContainer } from "@/shared/ui/books-container/books-container";
 
 
 
@@ -17,7 +18,7 @@ export const Favorites = ({ favorites, setFavorites, setBookClicked }: Favorites
   }
 
   return (
-    <div className="books-container">
+    <BooksContainer>
       {favorites && Array.isArray(favorites) ? (
         favorites.map((book) => {
           return (
@@ -33,6 +34,6 @@ export const Favorites = ({ favorites, setFavorites, setBookClicked }: Favorites
       ) : (
         <></>
       )}
-    </div>
+    </BooksContainer>
   );
 }
