@@ -32,8 +32,27 @@
   --transition: 0.3s ease;
 }
 
+.dark-theme {
+  --blue: #4da3ff;
+  --dark-blue: #1a3d66;
+  --red: #ff6b81;
+  --dark-red: #ff4757;
+  --white: #1e1e1e;
+  --gray: #121212;
+  --dark: #f1f1f1;
+  --border-color: #444;
+  --text-light: #aaa;
+}
+
 * {
   box-sizing: border-box;
+}
+
+#overlay-root {
+  z-index: 1000;
+  position: fixed;
+  top: 10%;
+  right: 1%;
 }
 
 body {
@@ -51,6 +70,7 @@ nav {
   padding: var(--gap) var(--gap-xl);
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: var(--gap-xl);
   box-shadow: var(--shadow);
   position: fixed;
@@ -116,7 +136,8 @@ form input[type='search']:focus {
 
 form button,
 .book-item-button,
-.action-button {
+.action-button,
+nav button {
   padding: var(--gap-sm) var(--gap-lg);
   border-radius: var(--radius);
   border: none;
@@ -180,6 +201,7 @@ select:focus {
   position: relative;
   overflow: hidden;
   height: 100%;
+  cursor: pointer;
 }
 
 .book-item:hover {
@@ -456,6 +478,99 @@ p {
   padding: var(--gap-xl);
   min-height: 100px;
 }
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  padding: var(--gap-xl);
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+  position: relative;
+  background-color: var(--white);
+  border-radius: var(--radius-lg);
+  max-width: 1200px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease;
+}
+
+.dropdown-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--gap);
+  margin-left: auto;
+}
+
+.dropdown-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-select {
+  padding: var(--gap-sm) var(--gap);
+  padding-right: calc(var(--gap) + 20px); /* Space for arrow */
+  border-radius: var(--radius);
+  border: 1px solid var(--border-color);
+  font-size: var(--text);
+  background-color: var(--white);
+  color: var(--dark);
+  appearance: none;
+  cursor: pointer;
+  transition: all var(--transition);
+  min-width: 180px;
+}
+
+.dropdown-select:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 2px rgba(45, 137, 239, 0.2);
+}
+
+
+.dropdown-label {
+  font-size: var(--text-sm);
+  color: var(--text-light);
+  margin-right: var(--gap-sm);
+}
+
+.theme-toggle-button {
+  background: var(--white);
+  border: 1px solid var(--border-color);
+  color: var(--dark);
+  cursor: pointer;
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 100px;
+}
+
+.theme-toggle-button:hover {
+  background: var(--gray);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
 
 @media (max-width: 992px) {
   .book-details {

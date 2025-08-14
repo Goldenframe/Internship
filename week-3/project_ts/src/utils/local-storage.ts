@@ -1,10 +1,53 @@
 import { Book } from "@/types/books";
+import { Language, Theme } from "@/types/contexts";
 
-enum StorageKey {
-    FAVORITE_BOOKS = 'favoriteBooks',
+const STORAGE_KEY = {
+    FAVORITE_BOOKS: 'favoriteBooks',
+    THEME: 'theme',
+    LANG: 'lang'
+} as const;
+
+const isTheme = (str: string): str is Theme => {
+    return (
+        typeof str === "string" &&
+        (str === 'light' || str === 'dark')
+    );
 }
 
-function isBook(obj: unknown): obj is Book {
+export const getTheme = (): Theme => {
+    const theme = localStorage.getItem(STORAGE_KEY.THEME);
+
+    if (theme && isTheme(theme)) {
+        return theme
+    }
+    return "light"
+}
+
+export const changeTheme = (theme: Theme) => {
+    localStorage.setItem(STORAGE_KEY.THEME, theme);
+}
+
+const isLang = (str: string): str is Language => {
+    return (
+        typeof str === "string" &&
+        (str === 'ru' || str === 'en')
+    );
+}
+
+export const changeLang = (lang: Language) => {
+    localStorage.setItem(STORAGE_KEY.LANG, lang);
+}
+
+export const getLang = (): Language => {
+    const lang = localStorage.getItem(STORAGE_KEY.LANG);
+
+    if (lang && isLang(lang)) {
+        return lang
+    }
+    return "en"
+}
+
+const isBook = (obj: unknown): obj is Book => {
     return (
         typeof obj === "object" &&
         obj !== null &&
@@ -16,9 +59,9 @@ function isBook(obj: unknown): obj is Book {
 }
 
 
-export function getFavorites() {
+export const getFavorites = () => {
     try {
-        const favoriteBooks = localStorage.getItem(StorageKey.FAVORITE_BOOKS);
+        const favoriteBooks = localStorage.getItem(STORAGE_KEY.FAVORITE_BOOKS);
 
         if (!favoriteBooks) return []
         else {
@@ -33,9 +76,9 @@ export function getFavorites() {
     }
 }
 
-export function addFavorites(favorites: Book[]) {
+export const addFavorites = (favorites: Book[]) => {
     try {
-        localStorage.setItem(StorageKey.FAVORITE_BOOKS, JSON.stringify(favorites));
+        localStorage.setItem(STORAGE_KEY.FAVORITE_BOOKS, JSON.stringify(favorites));
     }
     catch (err) {
         console.error('Error while saving favorites to localStorage:', err);
