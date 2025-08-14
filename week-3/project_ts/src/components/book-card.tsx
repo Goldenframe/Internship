@@ -6,8 +6,9 @@ import { toast } from "react-toastify";
 
 const BookDescripton = React.lazy(() => import("@/components/book-description").then(module => ({ default: module.BookDescripton })));
 import { Spinner } from "@/components/spinner";
-import { BookDetails } from "@/modal/book-details-modal";
+const BookDetailsModalBody = React.lazy(() => import("@/modal/book-details-modal-body").then(async module => { await sleep(600); return { default: module.BookDetailsModalBody } }))
 import type { Book, VolumeInfo } from "@/types/books";
+import { sleep } from "@/utils/sleep";
 
 const modalRoot = document.getElementById("modal-root");
 
@@ -64,7 +65,9 @@ export const BookCard = memo(({ book, favorites, setFavorites, setBookClicked }:
           <FaHeart />
         </div>
       )}
-      {showModal && modalRoot && createPortal(<BookDetails favorites={favorites} setFavorites={setFavorites} bookId={book.id} setShowModal={setShowModal} />, modalRoot)}
+      {showModal && modalRoot && createPortal(<Suspense fallback={<div className="modal-overlay">
+        <Spinner />
+      </div>}><BookDetailsModalBody favorites={favorites} setFavorites={setFavorites} bookId={book.id} setShowModal={setShowModal} /></Suspense>, modalRoot)}
 
       <div className="book-item-image-container">
         {bookInfo.imageLinks ? (
