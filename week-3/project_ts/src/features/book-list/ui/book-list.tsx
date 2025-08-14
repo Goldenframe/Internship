@@ -1,6 +1,7 @@
 import { PropsWithChildren } from "react";
 
-import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
+import { useInfiniteScroll } from "@/features/book-list/model/use-infinite-scroll";
+import { BooksContainer } from "@/shared/ui/books-container/books-container";
 
 interface BookListProps {
   loading: boolean,
@@ -21,8 +22,8 @@ export const BookList = ({
   useInfiniteScroll(onLoadMore, startIndex, hasMore, loading);
 
   return (
-    <div className="books-container">
+    <BooksContainer>
       {children}
-    </div>
+    </BooksContainer>
   )
 }

@@ -1,7 +1,9 @@
 import React, { useCallback, useContext } from 'react'
 import { useTranslation } from 'react-i18next';
 
-import { ThemeContext } from '@/contexts/theme-context';
+import { ThemeContext } from '@/shared/lib/contexts/theme-context';
+
+import styles from './portal-dropdown.module.scss'
 
 interface PortalDropdownProps {
     filter: string,
@@ -24,14 +26,14 @@ export const PortalDropdown = ({ filter, setFilter, setStartIndex, setHasMore }:
     }, [setHasMore, setFilter, setStartIndex]);
 
     return (
-        <div className="dropdown-container">
-            <div className="dropdown-wrapper">
+        <div className={styles["dropdown-container"]}>
+            <div className={styles["dropdown-wrapper"]}>
                 <select
                     id="book-filter"
                     value={filter}
                     onChange={handleSelect}
                     title={t("search.filter.title")}
-                    className="dropdown-select"
+                    className={styles["dropdown-select"]}
                 >
                     <option value="">{t("search.filter.all")}</option>
                     <option value="ebooks">{t("search.filter.ebooks")}</option>
@@ -44,7 +46,7 @@ export const PortalDropdown = ({ filter, setFilter, setStartIndex, setHasMore }:
             <button 
                 type="button" 
                 onClick={toggleTheme}
-                className="theme-toggle-button"
+                className={styles["theme-toggle-button"]}
                 aria-label={t("header.changeTheme")}
             >
                 {t("header.changeTheme")}
