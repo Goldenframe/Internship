@@ -14,15 +14,12 @@
     "baseUrl": "src",
     "paths": {
       "@/*": ["*"],
-      "@/components/*": ["components/*"],
-      "@/hooks/*": ["hooks/*"],
+      "@/app/*": ["app/*"],
       "@/pages/*": ["pages/*"],
-      "@/types/*": ["types/*"],
-      "@/utils/*": ["utils/*"],
-      "@/contexts/*": ["contexts/*"],
-      "@/api/*": ["api/*"],
-      "@/locales/*": ["locales/*"],
-      "@/modal/*": ["modal/*"]
+      "@/widgets/*": ["widgets/*"],
+      "@/features/*": ["features/*"],
+      "@/entities/*": ["entities/*"],
+      "@/shared/*": ["shared/*"]
     }
   },
   "include": ["src"]
