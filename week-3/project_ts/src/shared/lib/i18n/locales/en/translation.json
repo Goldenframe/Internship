@@ -58,6 +58,7 @@
     "bookNotFound": "Book not found",
     "booksNotFound": "No books found",
     "addedToFavorites": "Added to favorites",
-    "removedFromFavorites": "Removed from favorites"
+    "removedFromFavorites": "Removed from favorites",
+    "allBooksLoaded": "All books loaded"
   }
 }

@@ -58,6 +58,8 @@
     "bookNotFound": "Книга не найдена",
     "booksNotFound": "Книги не найдены",
     "addedToFavorites": "Добавлено в избранное",
-    "removedFromFavorites": "Удалено из избранного"
+    "removedFromFavorites": "Удалено из избранного",
+    "allBooksLoaded": "Все книги загружены"
+
   }
 }

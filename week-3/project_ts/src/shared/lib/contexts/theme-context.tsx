@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-import { ContextTheme, Theme } from "@/types/contexts";
+import { ContextTheme } from "@/shared/model/types/contexts";
 
 export const ThemeContext = createContext<ContextTheme>({
     toggleTheme: () => {},

@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-import { ContextLang, Language } from "@/types/contexts";
+import { ContextLang } from "@/shared/model/types/contexts";
 
 export const LangContext = createContext<ContextLang>({
     lang: 'en',
