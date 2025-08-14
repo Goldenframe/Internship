@@ -1,11 +1,13 @@
 import { useEffect, useLayoutEffect, useState } from "react";
 import { useTranslation } from 'react-i18next';
 
-import { Book } from "@/types/books";
+import { Book } from "@/shared/model/types/books";
 
 interface EffectLoggerProps {
   bookClicked: Book | null
 }
+
+import styles from './effect-logger.module.scss'
 
 export const EffectLogger = ({ bookClicked }: EffectLoggerProps) => {
   const { t } = useTranslation();
@@ -57,7 +59,7 @@ export const EffectLogger = ({ bookClicked }: EffectLoggerProps) => {
   }, [bookClicked]);
 
   return (
-    <aside className="effect-logger-container">
+    <aside className={styles["effect-logger-container"]}>
       <strong>{t('header.effectLogger')}</strong>
       <label>
         <input

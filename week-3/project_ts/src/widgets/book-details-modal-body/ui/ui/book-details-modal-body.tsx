@@ -2,16 +2,18 @@ import DOMPurify from 'dompurify';
 import React, { useEffect, useState, useCallback } from "react";
 import { useTranslation } from 'react-i18next';
 import {
-  FaHeart,
   FaArrowLeft,
   FaBookOpen,
   FaCalendarAlt,
 } from "react-icons/fa";
 import { toast } from "react-toastify";
 
-import { fetchJSON } from '@/api/book-service';
-import { Spinner } from '@/components/spinner';
-import type { Book, VolumeInfo } from '@/types/books';
+import { fetchJSON } from '@/shared/api/book-service/book-service';
+import type { Book, VolumeInfo } from '@/shared/model/types/books';
+import { FavoriteIcon } from '@/shared/ui/favorite-icon/favorite-icon';
+import { Spinner } from '@/shared/ui/spinner/spinner';
+
+import styles from './book-details-modal-body.module.scss';
 
 interface BookDetailsProps {
   favorites: Book[],
@@ -73,7 +75,7 @@ export const BookDetailsModalBody = ({ favorites, setFavorites, bookId, setShowM
   }, [bookDetails, isFavorite, setFavorites, t]);
 
   if (isLoading) {
-    return <div className="modal-overlay"><Spinner /></div>;
+    return <div className={styles['modal-overlay']}><Spinner /></div>;
   }
 
   if (!bookDetails) {
@@ -83,10 +85,13 @@ export const BookDetailsModalBody = ({ favorites, setFavorites, bookId, setShowM
   const book: Partial<VolumeInfo> = bookDetails.volumeInfo;
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content" onClick={(e: React.MouseEvent<HTMLDivElement>) => { e.stopPropagation(); }}>
-        <div className="book-details">
-          <div className="book-cover">
+    <div className={styles['modal-overlay']}>
+      <div
+        className={styles['modal-content']}
+        onClick={(e: React.MouseEvent<HTMLDivElement>) => { e.stopPropagation(); }}
+      >
+        <div className={styles['book-details']}>
+          <div className={styles['book-cover']}>
             {book.imageLinks ? (
               <img
                 src={book.imageLinks.thumbnail?.replace("http://", "https://")}
@@ -94,45 +99,44 @@ export const BookDetailsModalBody = ({ favorites, setFavorites, bookId, setShowM
                 onError={(e) => {
                   const target = e.target as HTMLImageElement
                   target.onerror = null;
-                  target.parentElement!.innerHTML = '<div class="no-image"><FaBookOpen size="48" /></div>';
+                  target.parentElement!.innerHTML = `<div class="${styles['no-image']}"><FaBookOpen size="48" /></div>`;
                 }}
               />
             ) : (
-              <div className="no-image">
+              <div className={styles['no-image']}>
                 <FaBookOpen size={48} />
               </div>
             )}
           </div>
-          <div className="book-info">
-            <h1 className="book-title">{book.title ? book.title : "No title"}</h1>
+          <div className={styles['book-info']}>
+            <h1 className={styles['book-title']}>{book.title ? book.title : "No title"}</h1>
             {book.authors && book.authors?.length > 0 && (
-              <div className="book-authors">
+              <div className={styles['book-authors']}>
                 {book.authors.map((author, index) => (
-                  <span key={index} className="book-author">
+                  <span key={index} className={styles['book-author']}>
                     {author}
                   </span>
                 ))}
               </div>
             )}
 
-            <div className="book-meta">
+            <div className={styles['book-meta']}>
               {book.publishedDate && (
-                <div className="book-meta-item">
+                <div className={styles['book-meta-item']}>
                   <FaCalendarAlt />
                   <span>{t('bookDetails.published')}: {book.publishedDate}</span>
                 </div>
-
               )}
 
               {book.pageCount && (
-                <div className="book-meta-item">
+                <div className={styles['book-meta-item']}>
                   <FaBookOpen />
                   <span>{book.pageCount} {t('common.pages')}</span>
                 </div>
               )}
 
               {book.averageRating && (
-                <div className="book-meta-item">
+                <div className={styles['book-meta-item']}>
                   <span>⭐ {book.averageRating}/5</span>
                 </div>
               )}
@@ -140,27 +144,27 @@ export const BookDetailsModalBody = ({ favorites, setFavorites, bookId, setShowM
 
             {book.description ? (
               <div
-                className="book-description"
+                className={styles['book-description']}
                 dangerouslySetInnerHTML={{
                   __html: DOMPurify.sanitize(book.description),
                 }}
               />
             ) : (
-              <div className="book-description">{t("common.noDescription")}.</div>
+              <div className={styles['book-description']}>{t("common.noDescription")}.</div>
             )}
 
-            <div className="book-actions">
+            <div className={styles['book-actions']}>
               <button
-                className={`action-button like-button ${isFavorite ? `${t("bookCard.liked")}` : ""
+                className={`${styles['action-button']} ${styles['like-button']} ${isFavorite ? styles['liked'] : ''
                   }`}
                 onClick={handleFavoriteClick}
               >
-                <FaHeart className="favorite-icon" />
+                <FavoriteIcon />
                 {isFavorite ? `${t("bookCard.removeFromFavorites")}` : `${t("bookCard.addToFavorites")}`}
               </button>
 
               <button
-                className="action-button back-button"
+                className={`${styles['action-button']} ${styles['back-button']}`}
                 onClick={() => setShowModal(false)}
               >
                 <FaArrowLeft />

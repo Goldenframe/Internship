@@ -3,8 +3,9 @@ import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
-import { LangContext } from '@/contexts/lang-context';
-import { ThemeContext } from '@/contexts/theme-context';
+import { LangContext } from '@/shared/lib/contexts/lang-context';
+
+import './header.module.scss'
 
 interface HeaderProps {
     isLogging: boolean,
@@ -14,12 +15,11 @@ interface HeaderProps {
 export const Header = ({ isLogging, setIsLogging }: HeaderProps) => {
     const { t } = useTranslation();
 
-    const { toggleTheme } = useContext(ThemeContext);
     const { lang, toggleLang } = useContext(LangContext);
 
     return (
         <nav>
-            <button onClick={() => { toggleLang(lang) }}>{t("header.changeLanguage")}</button>
+            <button type='button' onClick={() => { toggleLang(lang) }}>{t("header.changeLanguage")}</button>
             <Link to={'/'}>{t("header.home")}</Link>
             <Link to={'/favorites'}>{t("header.favorites")}</Link>
             <label>
