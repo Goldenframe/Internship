@@ -1,6 +1,6 @@
 import React, { PropsWithChildren, useEffect, useState } from 'react'
 
-import { LangContext } from '@/shared/lib/contexts/lang-context'
+import { LangContext } from '@/shared/lib/contexts/lang'
 import i18n from '@/shared/lib/i18n/i18n';
 import { changeLang, getLang } from '@/shared/lib/utils/local-storage/language';
 import { Language } from '@/shared/model/types/contexts';

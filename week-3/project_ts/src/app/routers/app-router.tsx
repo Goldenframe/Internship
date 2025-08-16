@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 
-import { Favorites } from "@/pages/favorites-page/ui/favorites";
-import { Home } from "@/pages/home-page/ui/home";
+import { Favorites } from "@/pages/favorites";
+import { Home } from "@/pages/home/ui/home";
 import { Book } from "@/shared/model/types/books";
 
 interface AppRouterProps {

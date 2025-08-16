@@ -3,15 +3,13 @@ import { createPortal } from 'react-dom';
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 
+import { PortalDropdown } from '@/features/portal-dropdown';
+import { EffectLogger } from '@/shared/lib/effect-logger';
 import { getFavorites, addFavorites } from '@/shared/lib/utils/local-storage/favorites';
 import { Book } from '@/shared/model/types/books';
-import { EffectLogger } from '@/widgets/effect-logger/ui/effect-logger';
-import { Header } from '@/widgets/header/ui/header';
+import { Header } from '@/widgets/header/ui';
 
-import { PortalDropdown } from '../features/portal-dropdown/portal-dropdown';
-
-import { LangProvider } from './providers/lang-provider/lang-provider';
-import { ThemeProvider } from './providers/theme-provider/theme-provider';
+import { LangProvider, ThemeProvider } from './providers';
 import { AppRouter } from './routers/app-router';
 
 const overlayRoot = document.getElementById("overlay-root");
@@ -73,7 +71,7 @@ const App = () => {
           }
 
         </LangProvider>
-      </ThemeProvider>
+      </ThemeProvider >
     </BrowserRouter >
 
   );

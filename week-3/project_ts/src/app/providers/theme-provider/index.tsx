@@ -1,6 +1,6 @@
 import React, { PropsWithChildren, useState, useEffect } from 'react'
 
-import { ThemeContext } from '@/shared/lib/contexts/theme-context'
+import { ThemeContext } from '@/shared/lib/contexts/theme'
 import { getTheme, changeTheme } from '@/shared/lib/utils/local-storage/theme'
 import { Theme } from '@/shared/model/types/contexts';
 
