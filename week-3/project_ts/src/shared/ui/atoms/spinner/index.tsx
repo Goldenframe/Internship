@@ -1,9 +1,9 @@
 import { ClipLoader } from 'react-spinners';
 
-import styles from './spinner.module.scss'
+import styles from './styles.module.scss'
 
 export const Spinner = () => (
-  <div className={styles["spinner-container"]}>
+  <div className={styles.spinnerContainer}>
     <ClipLoader
       color="var(--blue)"
       size={50}
