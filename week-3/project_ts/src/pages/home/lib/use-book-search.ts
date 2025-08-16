@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
-import { fetchJSON } from "@/shared/api/book-service/book-service";
+import { fetchJSON } from "@/shared/api/book-service";
 import { Book, SearchResponse } from "@/shared/model/types/books";
 
 interface UseBookSearchProps {

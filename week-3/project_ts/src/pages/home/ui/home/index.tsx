@@ -1,14 +1,14 @@
 import { useTranslation } from "react-i18next";
 
 import { BookCard } from "@/entities/book-card/ui/book-card";
-import { BookList } from "@/features/book-list/ui/book-list";
-import { SearchForm } from "@/features/book-search/ui/search-form";
+import { BookList } from "@/pages/home/ui/book-list";
+import { SearchForm } from "@/pages/home/ui/book-search";
 import { type Book } from "@/shared/model/types/books";
 
-import { useBookFilter } from "../lib/use-book-filter";
-import { useBookSearch } from "../lib/use-book-search";
+import { useBookFilter } from "../../lib/use-book-filter";
+import { useBookSearch } from "../../lib/use-book-search";
 
-import styles from './home.module.scss'
+import styles from './styles.module.scss'
 
 interface HomeProps {
   favorites: Book[],

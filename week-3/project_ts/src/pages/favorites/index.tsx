@@ -1,6 +1,6 @@
 import { BookCard } from "@/entities/book-card/ui/book-card";
 import { Book } from "@/shared/model/types/books";
-import { BooksContainer } from "@/shared/ui/books-container/books-container";
+import { BooksContainer } from "@/shared/ui/templates/books-container";
 
 
 
