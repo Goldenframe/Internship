@@ -1,6 +1,6 @@
 import DOMPurify from "dompurify";
 
-import styles from './book-card.module.scss'
+import styles from './styles.module.scss'
 
 interface BookDescriptonProps {
     shortDescription: string;
@@ -9,7 +9,7 @@ interface BookDescriptonProps {
 export const BookDescripton = ({ shortDescription }: BookDescriptonProps) =>
 (
     <div
-        className={styles["book-item-description"]}
+        className={styles.bookItemDescription}
         dangerouslySetInnerHTML={{
             __html: DOMPurify.sanitize(shortDescription),
         }}

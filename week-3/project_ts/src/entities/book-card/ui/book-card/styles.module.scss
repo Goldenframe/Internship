@@ -1,9 +1,7 @@
-.book-item {
+.bookItem {
+    @include card(var(--radius-md), var(--shadow-md));
     border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
     padding: var(--gap);
-    background-color: var(--white);
-    box-shadow: var(--shadow-md);
     transition: all var(--transition);
     display: flex;
     flex-direction: column;
@@ -16,12 +14,12 @@
         transform: translateY(-5px);
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 
-        .book-item-image {
+        .bookItemImage {
             transform: scale(1.05);
         }
     }
 
-    &-link {
+    &Link {
         text-decoration: none;
         color: inherit;
         display: flex;
@@ -29,18 +27,16 @@
         flex-grow: 1;
     }
 
-    &-image {
+    &Image {
         max-width: 100%;
         max-height: 100%;
         object-fit: cover;
         transition: transform var(--transition);
 
-        &-container {
+        &Container {
             height: 200px;
             margin-bottom: var(--gap);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            @include flex-center;
             background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
             border-radius: var(--radius);
             overflow: hidden;
@@ -48,17 +44,16 @@
         }
     }
 
-    &-no-image {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+    &NoImage {
+        @include flex-center;
         height: 100%;
         color: var(--text-light);
         font-size: var(--text);
+        text-align: center;
     }
 
-    &-title {
-        font-size: var(--text-lg);
+    &Title {
+        @include responsive-text(var(--text-lg), var(--text), var(--text));
         margin: 0 0 var(--gap-sm);
         color: var(--dark);
         font-weight: 600;
@@ -66,60 +61,52 @@
         text-align: left;
     }
 
-    &-authors {
+    &Authors {
         font-size: var(--text);
         color: var(--blue);
         margin-bottom: var(--gap-sm);
         font-style: italic;
         text-align: left;
-        display: flex;
+        @include flex-center(row, var(--gap-sm));
         flex-wrap: wrap;
-        gap: var(--gap-sm);
+        justify-content: flex-start;
     }
 
-    &-description {
-        font-size: var(--text-sm);
-        color: var(--text-light);
-        line-height: 1.5;
-        margin-bottom: var(--gap);
-        text-align: left;
-        flex-grow: 1;
-    }
-
-    &-actions {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+    &Actions {
+        @include flex-center(row, var(--gap));
         margin-top: var(--gap);
-        gap: var(--gap);
         flex-wrap: wrap;
     }
 
-    &-button {
-        padding: var(--gap-sm) var(--gap-lg);
-        border-radius: var(--radius);
-        border: none;
-        background-color: var(--blue);
-        color: var(--white);
-        font-size: 80px;
-        cursor: pointer;
-        transition: background-color var(--transition);
-        display: flex;
-        align-items: center;
-        gap: var(--gap-sm);
+    &Button {
+        @include button-base;
         width: 100%;
         justify-content: center;
 
-        .like.liked {
+        &.liked {
             background-color: var(--red);
 
             &:hover {
-                background-color: vvar(--dark-red);
+                background-color: var(--dark-red);
             }
         }
     }
 
-    &-favorite-icon {
+    &Meta {
+        @include flex-center(row, var(--gap));
+        margin-top: auto;
+        padding-top: var(--gap-sm);
+        font-size: var(--text-sm);
+        color: var(--text-light);
+        flex-wrap: wrap;
+        justify-content: space-between;
+
+        &Item {
+            @include flex-center(row, var(--gap-sm));
+        }
+    }
+
+    &FavoriteIcon {
         position: absolute;
         top: var(--gap-sm);
         right: var(--gap-sm);
