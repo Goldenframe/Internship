@@ -4,6 +4,16 @@ import path from 'path'
 
 export default defineConfig({
   plugins: [react()],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `
+          @import "@/shared/styles/variables";
+          @import "@/shared/styles/mixins";
+        `,
+      },
+    },
+  },
   resolve: {
     alias: {
 
