@@ -1,11 +1,10 @@
 import React, { useContext } from 'react'
-import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
-import { LangContext } from '@/shared/lib/contexts/lang-context';
+import { LangContext } from '@/shared/lib/contexts/lang';
 
-import './header.module.scss'
+import './styles.module.scss'
 
 interface HeaderProps {
     isLogging: boolean,
