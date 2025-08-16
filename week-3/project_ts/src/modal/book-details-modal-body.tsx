@@ -10,6 +10,7 @@ import {
 import { toast } from "react-toastify";
 
 import { fetchJSON } from '@/api/book-service';
+import { Spinner } from '@/components/spinner';
 import type { Book, VolumeInfo } from '@/types/books';
 
 interface BookDetailsProps {
@@ -19,20 +20,21 @@ interface BookDetailsProps {
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
-export const BookDetails = ({ favorites, setFavorites, bookId, setShowModal }: BookDetailsProps) => {
+export const BookDetailsModalBody = ({ favorites, setFavorites, bookId, setShowModal }: BookDetailsProps) => {
   const { t } = useTranslation();
   const [bookDetails, setBookDetails] = useState<Book | null>(null);
   const [isFavorite, setIsFavorite] = useState(
     favorites.some((el) => el.id === bookId)
   );
+  const [isLoading, setIsLoading] = useState(true);
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   const url = `${BASE_URL}${bookId}`
 
   useEffect(() => {
     const fetchBookDetails = async () => {
       try {
+        setIsLoading(true);
         const fetchPromise = fetchJSON<Book>(url, t("toast.bookDetailsNotFound"));
-
         toast.promise(fetchPromise, {
           pending: t("toast.pendingBookDetails"),
           success: t("toast.successBookDetals"),
@@ -46,6 +48,9 @@ export const BookDetails = ({ favorites, setFavorites, bookId, setShowModal }: B
         const data: Book = await fetchPromise;
         setBookDetails(data);
       } catch (err) {
+      }
+      finally {
+        setIsLoading(false);
       }
     };
 
@@ -66,6 +71,10 @@ export const BookDetails = ({ favorites, setFavorites, bookId, setShowModal }: B
     }
     setIsFavorite(willBeFavorite);
   }, [bookDetails, isFavorite, setFavorites, t]);
+
+  if (isLoading) {
+    return <div className="modal-overlay"><Spinner /></div>;
+  }
 
   if (!bookDetails) {
     return null;
