@@ -27,7 +27,7 @@ export const useBookSearch = ({ startIndex, setStartIndex, hasMore, setHasMore }
     const fetchData = useCallback(async (query: string, startIndex: number) => {
         setLoading(true);
         try {
-            let url = `${BASE_URL}?q=${query}&startIndex=${startIndex}&maxResults=${maxResult}`
+            let url = `${BASE_URL}?q=${query}&startIndex=${startIndex}&maxResults=${maxResult}`;
 
             const fetchPromise = fetchJSON<SearchResponse>(url, t("toast.noBooksFound"));
 
@@ -36,10 +36,14 @@ export const useBookSearch = ({ startIndex, setStartIndex, hasMore, setHasMore }
                 success: {
                     render({ data }) {
                         if (!data.items) {
-                            return startIndex > 0 ? t("toast.allBooksLoaded") : t("toast.noBooksFound");
+                            return startIndex > 0
+                                ? t("toast.allBooksLoaded")
+                                : t("toast.noBooksFound");
                         }
-                        return data.items.length > 1
-                            ? t("toast.successManyBooks", { count: data.items.length })
+
+                        const receivedCount = data.items.length;
+                        return receivedCount > 1
+                            ? t("toast.successManyBooks", { count: receivedCount })
                             : t("toast.successOneBooks");
                     },
                 },
@@ -51,15 +55,13 @@ export const useBookSearch = ({ startIndex, setStartIndex, hasMore, setHasMore }
             });
 
             const data = await fetchPromise;
-
             const newBooks = data.items || [];
 
             if (newBooks.length === 0 && startIndex !== 0) {
                 setHasMore(false);
                 return;
             }
-
-            if (newBooks.length < maxResult) setHasMore(false);
+            setHasMore(newBooks.length === maxResult);
 
             setBooks((prev) =>
                 startIndex === 0 ? newBooks : [...prev, ...newBooks]
