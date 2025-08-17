@@ -1,0 +1,58 @@
+@use "@/shared/styles/variables" as *;
+@use "@/shared/styles/mixins" as *;
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding-top: var(--header);
+    font-family:
+        -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+        'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    background-color: var(--gray);
+    color: var(--dark);
+}
+
+#overlay-root {
+    z-index: 1000;
+    position: fixed;
+    top: 10%;
+    right: 1%;
+}
+
+.main-content {
+    padding-top: var(--header);
+}
+
+p {
+    text-align: center;
+    font-size: var(--text-lg);
+    padding: var(--gap-sm);
+}
+
+form {
+    @include flex-center;
+    gap: var(--gap);
+    padding: var(--gap) var(--gap-xl);
+    flex-wrap: wrap;
+
+    input[type='search'] {
+        padding: var(--gap-sm) var(--gap);
+        border-radius: var(--radius);
+        border: 1px solid var(--border-color);
+        font-size: var(--text);
+        width: 250px;
+        transition: border-color var(--transition);
+
+        &:focus {
+            outline: none;
+            border-color: var(--blue);
+        }
+    }
+
+    button {
+        @include button-base(var(--blue), var(--white));
+    }
+}
