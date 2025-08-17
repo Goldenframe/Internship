@@ -1,0 +1,64 @@
+{
+  "common": {
+    "toggle": "Toggle",
+    "toggleDependency": "Toggle Dependency",
+    "noCover": "No Cover",
+    "unknownAuthor": "Author unknown",
+    "noTitle": "No title",
+    "noDescription": "No description available",
+    "pages": "pages",
+    "rating": "⭐ {{rating}}/5",
+    "backToSearch": "Back to Search",
+    "search": "Search",
+    "all": "All",
+    "show": "Show",
+    "hide": "Hide"
+  },
+  "header": {
+    "home": "Home",
+    "favorites": "Favorites",
+    "changeTheme": "Change theme",
+    "changeLanguage": "Change language",
+    "effectLogger": "Effect Logger",
+    "showEffectLogger": "Show Effect Logger",
+    "hideEffectLogger": "Hide Effect Logger"
+  },
+  "bookCard": {
+    "like": "Like",
+    "liked": "Liked",
+    "addToFavorites": "Add to Favorites",
+    "removeFromFavorites": "Remove from Favorites"
+  },
+  "bookDetails": {
+    "published": "Published",
+    "pageCount": "{{count}} pages"
+  },
+  "search": {
+    "placeholder": "Search for books...",
+    "filter": {
+      "all": "All",
+      "ebooks": "E-books",
+      "freeEbooks": "Free e-books",
+      "full": "Full books",
+      "paidEbooks": "Paid e-books",
+      "partial": "Partial content"
+    },
+    "noResults": "No books found"
+  },
+  "toast": {
+    "pendingBookDetails": "Loading book details...",
+    "successBookDetals": "Book loaded successfully",
+    "errorBookDetails": "Failed to load book details",
+    "bookDetailsNotFound": "Book not found",
+    "pendingBooks": "Loading...",
+    "successManyBooks": "{{count}} books have been loaded",
+    "successOneBooks": "1 book has been loaded",
+    "noBooksFound": "No books found",
+    "errorBook": "Failed to load books. Please try again",
+    "bookNotFound": "Book not found",
+    "booksNotFound": "No books found",
+    "addedToFavorites": "Added to favorites",
+    "removedFromFavorites": "Removed from favorites",
+    "allBooksLoaded": "All books loaded"
+  }
+}

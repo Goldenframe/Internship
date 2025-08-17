@@ -1,9 +1,9 @@
-import eslint from 'eslint/use-at-your-own-risk';
 import tsParser from '@typescript-eslint/parser';
 import tsPlugin from '@typescript-eslint/eslint-plugin';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import reactRefreshPlugin from 'eslint-plugin-react-refresh';
 import importPlugin from 'eslint-plugin-import';
+import path from 'path';
 
 export default [
   {
@@ -62,6 +62,18 @@ export default [
         typescript: {
           alwaysTryTypes: true,
           project: './tsconfig.json'
+        },
+        alias: {
+          map: [
+            ['@', path.resolve(__dirname, 'src')],
+            ['@/app', path.resolve(__dirname, 'src/app')],
+            ['@/pages', path.resolve(__dirname, 'src/pages')],
+            ['@/widgets', path.resolve(__dirname, 'src/widgets')],
+            ['@/features', path.resolve(__dirname, 'src/features')],
+            ['@/entities', path.resolve(__dirname, 'src/entities')],
+            ['@/shared', path.resolve(__dirname, 'src/shared')]
+          ],
+          extensions: ['.ts', '.tsx', '.js', '.jsx', '.json']
         }
       }
     },
