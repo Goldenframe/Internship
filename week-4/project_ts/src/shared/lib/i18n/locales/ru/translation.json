@@ -51,7 +51,7 @@
     "errorBookDetails": "Не удалось загрузить детали книги",
     "bookDetailsNotFound": "Книга не найдена",
     "pendingBooks": "Загрузка...",
-    "successManyBooks": "Загружено {{count}} книг",
+    "successManyBooks": " книг загружено",
     "successOneBooks": "Загружена 1 книга",
     "noBooksFound": "Книги не найдены",
     "errorBook": "Ошибка загрузки книг. Пожалуйста, попробуйте снова",
