@@ -1,18 +1,21 @@
 import { useUnit } from 'effector-react';
 import { useTranslation } from "react-i18next";
-import { $query, $searchInput, SearchFormSubmitted, searchInputUpdated, fetchBooksFx } from '@/shared/lib/effector/book-model';
+import { model } from "@/entities/book-card/model/book-model";
 
 export const SearchForm = () => {
     const { t } = useTranslation();
 
-    const [query, searchInput] = useUnit([
-        $query,
-        $searchInput
-        ]);
+    const [query, searchInput, searchFormSubmitted, searchInputUpdated, fetchBooksFx] = useUnit([
+        model.$query,
+        model.$searchInput,
+        model.searchFormSubmitted,
+        model.searchInputUpdated,
+        model.fetchBooksFx,
+    ]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        SearchFormSubmitted();
+        searchFormSubmitted();
         fetchBooksFx({ query, startIndex: 0, t });
     };
 

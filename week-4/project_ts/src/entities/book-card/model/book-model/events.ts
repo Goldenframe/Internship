@@ -1,7 +1,7 @@
 import { createEvent } from "effector";
 
-export const SearchFormSubmitted = createEvent<void>();
-export const LoadedMore = createEvent<number>();
+export const searchFormSubmitted = createEvent<void>();
+export const loadedMore = createEvent<number>();
 export const startIndexUpdated = createEvent<number>();
 export const hasMoreUpdated = createEvent<boolean>();
 export const filterUpdated = createEvent<string>();

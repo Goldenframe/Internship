@@ -3,14 +3,14 @@ import { useTranslation } from 'react-i18next';
 import { useUnit } from 'effector-react';
 
 import { ThemeContext } from '@/shared/lib/contexts/theme';
-import { $filter, resetPagination, filterUpdated } from '@/shared/lib/effector/book-model';
+import { model } from "@/entities/book-card/model/book-model";
 
 import styles from './styles.module.scss'
 
 export const PortalDropdown = () => {
     const { t } = useTranslation();
 
-    const [filter] = useUnit([$filter]);
+    const [filter, resetPagination, filterUpdated] = useUnit([model.$filter, model.resetPagination, model.filterUpdated]);
     const { toggleTheme } = useContext(ThemeContext);
 
     const handleSelect = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {

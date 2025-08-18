@@ -8,3 +8,4 @@ export const $query = createStore<string>("JavaScript");
 export const $startIndex = createStore<number>(0);
 export const $hasMore = createStore<boolean>(true);
 export const $filter = createStore<string>("");
+

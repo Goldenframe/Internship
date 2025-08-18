@@ -1,6 +1,8 @@
+import { BASE_URL } from "@/shared/config/env";
 import { Book } from "@/shared/model/types/books";
 import { createEffect } from "effector";
 import { toast } from "react-toastify";
+import { MAX_RESULT } from "./config";
 
 interface FetchBooksParams {
     query: string;
@@ -8,12 +10,10 @@ interface FetchBooksParams {
     t: (key: string) => string;
 }
 
-const maxResult: number = 20;
-const BASE_URL: string = import.meta.env.VITE_BASE_URL;
 
 export const fetchBooksFx = createEffect<FetchBooksParams, Book[]>(
     async ({ query, startIndex, t }) => {
-        const url = `${BASE_URL}?q=${encodeURIComponent(query)}&startIndex=${startIndex}&maxResults=${maxResult}`;
+        const url = `${BASE_URL}?q=${encodeURIComponent(query)}&startIndex=${startIndex}&maxResults=${MAX_RESULT}`;
 
         try {
             const fetchPromise = fetch(url).then(response => {

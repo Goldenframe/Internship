@@ -8,8 +8,8 @@ import { Book } from "@/shared/model/types/books";
 
 import { useBookFilter } from "../../lib/use-book-filter";
 import styles from './styles.module.scss'
-import { $query, $books, $hasMore, $loading, $filter, $startIndex, fetchBooksFx } from '@/shared/lib/effector/book-model';
 import { useEffect } from 'react';
+import { model } from "@/entities/book-card/model/book-model";
 
 interface HomeProps {
   favorites: Book[],
@@ -24,13 +24,13 @@ export const Home = ({
 }: HomeProps) => {
   const { t } = useTranslation();
 
-  const [query, filter, books, loading, hasMore, startIndex] = useUnit([
-    $query,
-    $filter,
-    $books,
-    $loading,
-    $hasMore,
-    $startIndex,
+  const [query, filter, books, loading, startIndex, fetchBooksFx] = useUnit([
+    model.$query,
+    model.$filter,
+    model.$books,
+    model.$loading,
+    model.$startIndex,
+    model.fetchBooksFx
   ]);
 
   const processedBooks = useBookFilter({ books, filter })
