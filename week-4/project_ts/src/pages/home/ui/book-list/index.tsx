@@ -2,24 +2,14 @@ import { PropsWithChildren } from "react";
 
 import { useInfiniteScroll } from "@/pages/home/ui/book-list/use-infinite-scroll";
 import { BooksContainer } from "@/shared/ui/templates/books-container";
+import { useUnit } from "effector-react";
+import { $hasMore, $loading, $startIndex, LoadedMore } from "@/shared/lib/effector/book-model";
 
-interface BookListProps {
-  loading: boolean,
-  hasMore: boolean,
-  onLoadMore: (startIndex: number) => void,
-  startIndex: number
-}
+export const BookList = ({ children }: PropsWithChildren) => {
 
+  const [startIndex, hasMore, loading] = useUnit([$startIndex, $hasMore, $loading]);
 
-export const BookList = ({
-  loading,
-  hasMore,
-  onLoadMore,
-  startIndex,
-  children
-}: PropsWithChildren<BookListProps>) => {
-
-  useInfiniteScroll(onLoadMore, startIndex, hasMore, loading);
+  useInfiniteScroll(LoadedMore, startIndex, hasMore, loading);
 
   return (
     <BooksContainer>
