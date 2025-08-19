@@ -9,7 +9,6 @@ import { Book } from "@/shared/model/types/books";
 import { useBookFilter } from "../../lib/use-book-filter";
 import styles from './styles.module.scss'
 import { model } from "@/entities/book-card/model/book-model";
-import { HomeGate } from '@/entities/book-card/model/book-model/gates';
 import { useEffect } from 'react';
 
 interface HomeProps {
@@ -39,7 +38,7 @@ export const Home = ({
 
   const processedBooks = useBookFilter({ books, filter })
   
-  useGate(HomeGate, {t});
+  useGate(model.HomeGate, {t});
 
   return (
     <div>
