@@ -1,4 +1,4 @@
-import { useUnit } from 'effector-react';
+import { useGate, useUnit } from 'effector-react';
 import { useTranslation } from "react-i18next";
 
 import { BookCard } from "@/entities/book-card/ui/book-card";
@@ -8,8 +8,9 @@ import { Book } from "@/shared/model/types/books";
 
 import { useBookFilter } from "../../lib/use-book-filter";
 import styles from './styles.module.scss'
-import { useEffect } from 'react';
 import { model } from "@/entities/book-card/model/book-model";
+import { HomeGate } from '@/entities/book-card/model/book-model/gates';
+import { useEffect } from 'react';
 
 interface HomeProps {
   favorites: Book[],
@@ -24,27 +25,26 @@ export const Home = ({
 }: HomeProps) => {
   const { t } = useTranslation();
 
-  const [query, filter, books, loading, startIndex, fetchBooksFx] = useUnit([
-    model.$query,
+  const [filter, books, loading, tStore, tUpdated] = useUnit([
     model.$filter,
     model.$books,
     model.$loading,
-    model.$startIndex,
-    model.fetchBooksFx
+    model.$t, 
+    model.tUpdated, 
   ]);
 
-  const processedBooks = useBookFilter({ books, filter })
-
   useEffect(() => {
-    fetchBooksFx({ query, startIndex, t });
-  }, [query, startIndex]);
+    tUpdated(t);
+  }, [t, tUpdated]);
 
-
+  const processedBooks = useBookFilter({ books, filter })
+  
+  useGate(HomeGate, {t});
 
   return (
     <div>
       <SearchForm />
-      <BookList     >
+      <BookList>
         {processedBooks.length > 0
           ? processedBooks.map((book: Book) => (
             <BookCard
@@ -55,7 +55,9 @@ export const Home = ({
               setBookClicked={setBookClicked}
             />
           ))
-          : !loading && <div className={styles["no-books-message"]}>{t("toast.booksNotFound")}</div>}
+          : !loading && <div className={styles["no-books-message"]}>
+              {t("toast.booksNotFound")} 
+            </div>}
       </BookList>
     </div>
   );

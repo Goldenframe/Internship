@@ -6,4 +6,6 @@ export const startIndexUpdated = createEvent<number>();
 export const hasMoreUpdated = createEvent<boolean>();
 export const filterUpdated = createEvent<string>();
 export const searchInputUpdated = createEvent<string>();
+export const queryUpdated = createEvent<string>();
 export const resetPagination = createEvent<void>();
+export const tUpdated = createEvent<(key: string) => string>();

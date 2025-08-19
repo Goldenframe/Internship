@@ -1,11 +1,14 @@
-import { sample } from "effector";
+import { merge, sample } from "effector";
+import { debug } from 'patronum/debug';
 import { fetchBooksFx } from "./effects";
-import { filterUpdated, hasMoreUpdated, loadedMore, resetPagination, searchFormSubmitted, searchInputUpdated, startIndexUpdated } from "./events";
-import { $books, $filter, $hasMore, $loading, $query, $searchInput, $startIndex } from './stores';
+import { filterUpdated, hasMoreUpdated, loadedMore, resetPagination, searchFormSubmitted, searchInputUpdated, startIndexUpdated, queryUpdated, tUpdated } from "./events";
+import { $books, $filter, $hasMore, $loading, $query, $searchInput, $startIndex, $t } from './stores';
 import { MAX_RESULT } from "./config";
+import { HomeGate } from "./gates";
 
 
 export const model = {
+    HomeGate,
     searchFormSubmitted,
     loadedMore,
     startIndexUpdated,
@@ -13,6 +16,8 @@ export const model = {
     filterUpdated,
     searchInputUpdated,
     resetPagination,
+    queryUpdated,
+    tUpdated,
     $books,
     $loading,
     $searchInput,
@@ -20,8 +25,11 @@ export const model = {
     $startIndex,
     $hasMore,
     $filter,
+    $t,
     fetchBooksFx
 };
+
+debug({ $books });
 
 sample({
     clock: searchFormSubmitted,
@@ -80,11 +88,6 @@ sample({
 });
 
 sample({
-    clock: fetchBooksFx.doneData,
-    fn: (books) => { console.log('books update ', books) }
-})
-
-sample({
     clock: startIndexUpdated,
     target: $startIndex,
 })
@@ -93,15 +96,6 @@ sample({
     clock: resetPagination,
     fn: () => 0,
     target: $startIndex,
-});
-
-sample({
-  clock: $startIndex,
-  fn: (startIndex) => {
-    console.log('startIndex update', startIndex);
-    return startIndex; 
-  },
-  target: $startIndex, 
 });
 
 sample({
@@ -116,30 +110,35 @@ sample({
 });
 
 sample({
-  clock: $hasMore,
-  fn: (hasMore) => {
-    console.log('hasMore update', hasMore);
-    return hasMore; 
-  },
-  target: $hasMore, 
-});
-
-sample({
     clock: filterUpdated,
     target: $filter,
 })
 
 sample({
-  clock: $filter,
-  fn: (filter) => {
-    console.log('filter update', filter);
-    return filter; 
-  },
-  target: $filter, 
-});
-
-
-sample({
     clock: searchInputUpdated,
     target: $searchInput,
 })
+
+sample({
+    clock: tUpdated,
+    target: $t,
+})
+
+sample({
+    clock: HomeGate.open,
+    source: { query: $query, startIndex: $startIndex },
+    filter: ({ query }) => query.length > 0,
+    fn: ({ query, startIndex }, { t }) => ({ query, startIndex, t }),
+    target: fetchBooksFx,
+});
+
+sample({
+    clock: merge([$startIndex, $query]),
+    source: { query: $query, startIndex: $startIndex, t: $t },
+    fn: ({ query, startIndex, t }) => ({
+        query,
+        startIndex,
+        t
+    }),
+    target: fetchBooksFx,
+});
