@@ -1,29 +1,22 @@
 import React, { useCallback, useContext } from 'react'
 import { useTranslation } from 'react-i18next';
+import { useUnit } from 'effector-react';
 
 import { ThemeContext } from '@/shared/lib/contexts/theme';
+import { model } from "@/entities/book-card/model/book-model";
 
 import styles from './styles.module.scss'
 
-interface PortalDropdownProps {
-    filter: string,
-    setFilter: React.Dispatch<React.SetStateAction<string>>,
-    setStartIndex: React.Dispatch<React.SetStateAction<number>>,
-    setHasMore: React.Dispatch<React.SetStateAction<boolean>>
-
-}
-
-export const PortalDropdown = ({ filter, setFilter, setStartIndex, setHasMore }: PortalDropdownProps) => {
-
+export const PortalDropdown = () => {
     const { t } = useTranslation();
 
+    const [filter, resetPagination, filterUpdated] = useUnit([model.$filter, model.resetPagination, model.filterUpdated]);
     const { toggleTheme } = useContext(ThemeContext);
 
     const handleSelect = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-        setStartIndex(0);
-        setHasMore(true);
-        setFilter(e.target.value);
-    }, [setHasMore, setFilter, setStartIndex]);
+        resetPagination();
+        filterUpdated(e.target.value);
+    }, []);
 
     return (
         <div className={styles.dropdownContainer}>
@@ -43,8 +36,8 @@ export const PortalDropdown = ({ filter, setFilter, setStartIndex, setHasMore }:
                     <option value="partial">{t("search.filter.partial")}</option>
                 </select>
             </div>
-            <button 
-                type="button" 
+            <button
+                type="button"
                 onClick={toggleTheme}
                 className={styles.themeToggleButton}
                 aria-label={t("header.changeTheme")}
@@ -54,4 +47,3 @@ export const PortalDropdown = ({ filter, setFilter, setStartIndex, setHasMore }:
         </div>
     )
 }
-

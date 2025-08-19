@@ -51,7 +51,7 @@
     "errorBookDetails": "Failed to load book details",
     "bookDetailsNotFound": "Book not found",
     "pendingBooks": "Loading...",
-    "successManyBooks": "{{count}} books have been loaded",
+    "successManyBooks": " books have been loaded",
     "successOneBooks": "1 book has been loaded",
     "noBooksFound": "No books found",
     "errorBook": "Failed to load books. Please try again",

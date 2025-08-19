@@ -1,5 +1,5 @@
-@use "@/shared/styles/variables" as *;
-@use "@/shared/styles/mixins" as *;
+@use "./variables" as *;
+@use "./mixins" as *;
 
 * {
     box-sizing: border-box;
@@ -33,7 +33,6 @@ p {
 }
 
 form {
-    @include flex-center;
     gap: var(--gap);
     padding: var(--gap) var(--gap-xl);
     flex-wrap: wrap;
@@ -55,4 +54,6 @@ form {
     button {
         @include button-base(var(--blue), var(--white));
     }
+
+    @include flex-center;
 }

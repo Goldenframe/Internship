@@ -18,15 +18,10 @@ const App = () => {
   const [favorites, setFavorites] = useState<Book[]>(getFavorites());
   const [isLogging, setIsLogging] = useState(false);
   const [bookClicked, setBookClicked] = useState<Book | null>(null);
-  const [filter, setFilter] = useState("");
-  const [startIndex, setStartIndex] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
     addFavorites(favorites);
   }, [favorites]);
-
-
 
   return (
     <BrowserRouter>
@@ -39,11 +34,6 @@ const App = () => {
             favorites={favorites}
             setFavorites={setFavorites}
             setBookClicked={setBookClicked}
-            filter={filter}
-            startIndex={startIndex}
-            setStartIndex={setStartIndex}
-            hasMore={hasMore}
-            setHasMore={setHasMore}
           />
 
           {isLogging && <EffectLogger bookClicked={bookClicked} />}
@@ -60,21 +50,13 @@ const App = () => {
           />
           {overlayRoot &&
             createPortal(
-              <PortalDropdown
-                filter={filter}
-                setFilter={setFilter}
-                setHasMore={setHasMore}
-                setStartIndex={setStartIndex}
-              />,
+              <PortalDropdown />,
               overlayRoot
             )
           }
-
         </LangProvider>
-      </ThemeProvider >
-    </BrowserRouter >
-
+      </ThemeProvider>
+    </BrowserRouter>
   );
 }
-
 export default App;

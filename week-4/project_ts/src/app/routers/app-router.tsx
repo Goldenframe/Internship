@@ -8,22 +8,12 @@ interface AppRouterProps {
     favorites: Book[];
     setFavorites: React.Dispatch<React.SetStateAction<Book[]>>,
     setBookClicked: React.Dispatch<React.SetStateAction<Book | null>>,
-    filter: string;
-    startIndex: number;
-    setStartIndex: React.Dispatch<React.SetStateAction<number>>,
-    hasMore: boolean;
-    setHasMore: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
 export const AppRouter = ({
     favorites,
     setFavorites,
     setBookClicked,
-    filter,
-    startIndex,
-    setStartIndex,
-    hasMore,
-    setHasMore,
 }: AppRouterProps) => {
     return (
         <Routes>
@@ -34,11 +24,6 @@ export const AppRouter = ({
                         favorites={favorites}
                         setFavorites={setFavorites}
                         setBookClicked={setBookClicked}
-                        filter={filter}
-                        startIndex={startIndex}
-                        setStartIndex={setStartIndex}
-                        hasMore={hasMore}
-                        setHasMore={setHasMore}
                     />
                 }
             />

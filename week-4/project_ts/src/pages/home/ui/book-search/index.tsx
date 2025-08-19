@@ -1,17 +1,23 @@
+import { useUnit } from 'effector-react';
 import { useTranslation } from "react-i18next";
+import { model } from "@/entities/book-card/model/book-model";
 
-interface SearchFormProps {
-    searchInput: string;
-    setSearchInput: React.Dispatch<React.SetStateAction<string>>,
-    handleSubmit: (e: React.FormEvent) => void;
-}
-
-export const SearchForm = ({
-    searchInput,
-    setSearchInput,
-    handleSubmit
-}: SearchFormProps) => {
+export const SearchForm = () => {
     const { t } = useTranslation();
+
+    const [query, searchInput, searchFormSubmitted, searchInputUpdated, fetchBooksFx] = useUnit([
+        model.$query,
+        model.$searchInput,
+        model.searchFormSubmitted,
+        model.searchInputUpdated,
+        model.fetchBooksFx,
+    ]);
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        searchFormSubmitted();
+        fetchBooksFx({ query, startIndex: 0, t });
+    };
 
     return (
         <form onSubmit={handleSubmit}>
@@ -22,7 +28,7 @@ export const SearchForm = ({
                 id="search-input"
                 type="search"
                 value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
+                onChange={(e) => searchInputUpdated(e.target.value)}
                 placeholder={t("search.placeholder")}
             />
             <button type="submit">{t("common.search")}</button>
