@@ -2,7 +2,7 @@ import { merge, sample } from "effector";
 import { debug } from 'patronum/debug';
 import { fetchBooksFx } from "./effects";
 import { filterUpdated, hasMoreUpdated, loadedMore, resetPagination, searchFormSubmitted, searchInputUpdated, startIndexUpdated, queryUpdated, tUpdated } from "./events";
-import { $books, $filter, $hasMore, $loading, $query, $searchInput, $startIndex, $t } from './stores';
+import { $books, $filter, $hasMore, $loading, $processedBooks, $query, $searchInput, $startIndex, $t } from './stores';
 import { MAX_RESULT } from "./config";
 import { HomeGate } from "./gates";
 
@@ -26,6 +26,7 @@ export const model = {
     $hasMore,
     $filter,
     $t,
+    $processedBooks,
     fetchBooksFx
 };
 

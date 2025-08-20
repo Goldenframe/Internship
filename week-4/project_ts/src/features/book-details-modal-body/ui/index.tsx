@@ -13,7 +13,8 @@ import { FavoriteIcon } from '@/shared/ui/atoms/favorite-icon';
 import { Spinner } from '@/shared/ui/atoms/spinner';
 
 import styles from './styles.module.scss';
-import { model } from '../book-modal-model';
+import { model as bookModalModel } from '../book-modal-model';
+import { model as favoritesModel } from "@/shared/model/favorites-model";
 import { useUnit } from 'effector-react';
 
 interface BookDetailsProps {
@@ -27,22 +28,20 @@ export const BookDetailsModalBody = ({ bookId, setShowModal }: BookDetailsProps)
   const [
     bookDetails,
     isLoading,
-    isFavorite,
-    favorites,
     bookDetailsOpened,
     bookDetailsClosed,
-    favoriteToggled,
     tUpdated,
   ] = useUnit([
-    model.$bookDetails,
-    model.$isLoading,
-    model.$isFavorite,
-    model.$favorites,
-    model.bookDetailsOpened,
-    model.bookDetailsClosed,
-    model.favoriteToggled,
-    model.tUpdated
+    bookModalModel.$bookDetails,
+    bookModalModel.$isLoading,
+    bookModalModel.bookDetailsOpened,
+    bookModalModel.bookDetailsClosed,
+    bookModalModel.tUpdated,
   ]);
+  
+  const [favorites, favoriteToggled] = useUnit([favoritesModel.$favorites, favoritesModel.favoriteToggled]);
+
+  const isFavorite = favorites.some((el) => el.id === bookId);
 
   useEffect(() => {
     tUpdated(t);

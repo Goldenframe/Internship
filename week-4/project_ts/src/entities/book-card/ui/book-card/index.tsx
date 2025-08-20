@@ -10,27 +10,40 @@ import { FavoriteIcon } from "@/shared/ui/atoms/favorite-icon";
 import { Spinner } from "@/shared/ui/atoms/spinner";
 const BookDetailsModalBody = React.lazy(() => import("@/features/book-details-modal-body/ui").then(async module => { await sleep(600); return { default: module.BookDetailsModalBody } }))
 
-import { useFavoriteBook } from "../../lib/use-favorite-book";
-
 import styles from './styles.module.scss'
+import { useUnit } from "effector-react";
+import { model } from "@/shared/model/favorites-model";
+import { toast } from "react-toastify";
 
 const modalRoot = document.getElementById("modal-root");
 
 
 interface BookCardProps {
   book: Book,
-  favorites: Book[],
-  setFavorites: React.Dispatch<React.SetStateAction<Book[]>>,
   setBookClicked: React.Dispatch<React.SetStateAction<Book | null>>,
 }
 
 type BookCardInfo = Pick<VolumeInfo, "title" | "authors" | "imageLinks" | "description">
 
-export const BookCard = memo(({ book, favorites, setFavorites, setBookClicked }: BookCardProps) => {
+export const BookCard = memo(({ book, setBookClicked }: BookCardProps) => {
 
   const { t } = useTranslation();
   const [showModal, setShowModal] = useState(false);
-  const { isFavorite, handleClick } = useFavoriteBook({ book, favorites, setFavorites })
+  const [favorites, favoriteToggled] = useUnit([model.$favorites, model.favoriteToggled]);
+
+  const isFavorite = favorites.some((el) => el.id === book.id);
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+
+    if (isFavorite) {
+      favoriteToggled(book);
+      toast.warning(t("toast.removedFromFavorites"));
+    } else {
+      favoriteToggled(book);
+      toast.success(t("toast.addedToFavorites"));
+    }
+  };
 
   const bookInfo: BookCardInfo = {
     title: book.volumeInfo?.title || '',
@@ -54,7 +67,7 @@ export const BookCard = memo(({ book, favorites, setFavorites, setBookClicked }:
       )}
       {showModal && modalRoot && createPortal(<Suspense fallback={<div className={styles.modalOverlay}>
         <Spinner />
-      </div>}><BookDetailsModalBody favorites={favorites} setFavorites={setFavorites} bookId={book.id} setShowModal={setShowModal} /></Suspense>, modalRoot)}
+      </div>}><BookDetailsModalBody bookId={book.id} setShowModal={setShowModal} /></Suspense>, modalRoot)}
 
       <div className={styles.bookItemImageContainer}>
         {bookInfo.imageLinks ? (
