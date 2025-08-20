@@ -1,5 +1,6 @@
 import DOMPurify from 'dompurify';
-import React, { useEffect, useState, useCallback } from "react";
+import { useUnit } from 'effector-react';
+import React, { useEffect, useCallback } from "react";
 import { useTranslation } from 'react-i18next';
 import {
   FaArrowLeft,
@@ -8,71 +9,67 @@ import {
 } from "react-icons/fa";
 import { toast } from "react-toastify";
 
-import { fetchJSON } from '@/shared/api/book-service';
-import type { Book, VolumeInfo } from '@/shared/model/types/books';
-import { FavoriteIcon } from '@/shared/ui/atoms/favorite-icon';
-import { Spinner } from '@/shared/ui/atoms/spinner';
+import { model as favoritesModel } from "@/shared/model/favorites-model";
+import { VolumeInfo } from '@/shared/model/types/books';
+
+import { model as bookModalModel } from '../model';
 
 import styles from './styles.module.scss';
+import { FavoriteIcon, Spinner } from '@/shared/ui/atoms';
 
 interface BookDetailsProps {
-  favorites: Book[],
-  setFavorites: React.Dispatch<React.SetStateAction<Book[]>>,
-  bookId: string,
-  setShowModal: React.Dispatch<React.SetStateAction<boolean>>,
+  bookId: string;
+  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const BookDetailsModalBody = ({ favorites, setFavorites, bookId, setShowModal }: BookDetailsProps) => {
+export const ModalBookDetails = ({ bookId, setShowModal }: BookDetailsProps) => {
   const { t } = useTranslation();
-  const [bookDetails, setBookDetails] = useState<Book | null>(null);
-  const [isFavorite, setIsFavorite] = useState(
-    favorites.some((el) => el.id === bookId)
-  );
-  const [isLoading, setIsLoading] = useState(true);
-  const BASE_URL = import.meta.env.VITE_BASE_URL;
-  const url = `${BASE_URL}${bookId}`
+
+  const [
+    bookDetails,
+    isLoading,
+    bookDetailsOpened,
+    bookDetailsClosed,
+    tUpdated,
+  ] = useUnit([
+    bookModalModel.$bookDetails,
+    bookModalModel.$isLoading,
+    bookModalModel.bookDetailsOpened,
+    bookModalModel.bookDetailsClosed,
+    bookModalModel.tUpdated,
+  ]);
+  
+  const [favorites, favoriteToggled] = useUnit([favoritesModel.$favorites, favoritesModel.favoriteToggled]);
+
+  const isFavorite = favorites.some((el) => el.id === bookId);
 
   useEffect(() => {
-    const fetchBookDetails = async () => {
-      try {
-        setIsLoading(true);
-        const fetchPromise = fetchJSON<Book>(url, t("toast.bookDetailsNotFound"));
-        toast.promise(fetchPromise, {
-          pending: t("toast.pendingBookDetails"),
-          success: t("toast.successBookDetals"),
-          error: {
-            render({ data }: any) {
-              return data?.message || t("toast.errorBookDetails");
-            },
-          },
-        });
+    tUpdated(t);
+    bookDetailsOpened(bookId);
 
-        const data: Book = await fetchPromise;
-        setBookDetails(data);
-      } catch (err) {
-      }
-      finally {
-        setIsLoading(false);
-      }
+    return () => {
+      bookDetailsClosed();
     };
-
-    fetchBookDetails();
-  }, [bookId, url, t]);
+  }, [bookId, t, bookDetailsOpened, bookDetailsClosed, tUpdated]);
 
   const handleFavoriteClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     if (!bookDetails) return;
 
+    favoriteToggled(bookDetails);
+
     const willBeFavorite = !isFavorite;
     if (willBeFavorite) {
-      setFavorites((prev) => [...prev, bookDetails]);
       toast.success(t("toast.addedToFavorites"));
     } else {
-      setFavorites((prev) => prev.filter((el) => el.id !== bookDetails.id));
       toast.info(t("toast.removedFromFavorites"));
     }
-    setIsFavorite(willBeFavorite);
-  }, [bookDetails, isFavorite, setFavorites, t]);
+  }, [bookDetails, isFavorite, t, favoriteToggled]);
+
+  const handleClose = useCallback(() => {
+    setShowModal(false);
+    bookDetailsClosed();
+  }, [setShowModal, bookDetailsClosed]);
 
   if (isLoading) {
     return <div className={styles['modal-overlay']}><Spinner /></div>;
@@ -165,7 +162,7 @@ export const BookDetailsModalBody = ({ favorites, setFavorites, bookId, setShowM
 
               <button
                 className={`${styles.actionButton} ${styles.backButton}`}
-                onClick={() => setShowModal(false)}
+                onClick={handleClose}
               >
                 <FaArrowLeft />
                 {t("common.backToSearch")}

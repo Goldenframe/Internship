@@ -5,14 +5,10 @@ import { Home } from "@/pages/home/ui/home";
 import { Book } from "@/shared/model/types/books";
 
 interface AppRouterProps {
-    favorites: Book[];
-    setFavorites: React.Dispatch<React.SetStateAction<Book[]>>,
     setBookClicked: React.Dispatch<React.SetStateAction<Book | null>>,
 }
 
 export const AppRouter = ({
-    favorites,
-    setFavorites,
     setBookClicked,
 }: AppRouterProps) => {
     return (
@@ -21,8 +17,6 @@ export const AppRouter = ({
                 path="/"
                 element={
                     <Home
-                        favorites={favorites}
-                        setFavorites={setFavorites}
                         setBookClicked={setBookClicked}
                     />
                 }
@@ -31,8 +25,6 @@ export const AppRouter = ({
                 path="/favorites"
                 element={
                     <Favorites
-                        favorites={favorites}
-                        setFavorites={setFavorites}
                         setBookClicked={setBookClicked}
                     />
                 }

@@ -3,7 +3,6 @@ import tsPlugin from '@typescript-eslint/eslint-plugin';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import reactRefreshPlugin from 'eslint-plugin-react-refresh';
 import importPlugin from 'eslint-plugin-import';
-import path from 'path';
 
 export default [
   {
@@ -12,7 +11,6 @@ export default [
       parser: tsParser,
       parserOptions: {
         project: './tsconfig.json',
-        tsconfigRootDir: import.meta.dirname,
         ecmaVersion: 2020,
         sourceType: 'module',
       },
@@ -26,6 +24,9 @@ export default [
     rules: {
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
+      
+      '@typescript-eslint/no-unused-vars': 'error',
+      
       'import/order': [
         'error',
         {
@@ -43,7 +44,6 @@ export default [
             {
               pattern: '@/**',
               group: 'internal',
-              position: 'before'
             }
           ],
           'newlines-between': 'always',
@@ -55,25 +55,12 @@ export default [
       ],
       'import/no-unresolved': 'error',
       'import/named': 'error',
-      'import/no-cycle': 'warn'
+      'import/no-cycle': 'warn',
     },
     settings: {
       'import/resolver': {
         typescript: {
-          alwaysTryTypes: true,
           project: './tsconfig.json'
-        },
-        alias: {
-          map: [
-            ['@', path.resolve(__dirname, 'src')],
-            ['@/app', path.resolve(__dirname, 'src/app')],
-            ['@/pages', path.resolve(__dirname, 'src/pages')],
-            ['@/widgets', path.resolve(__dirname, 'src/widgets')],
-            ['@/features', path.resolve(__dirname, 'src/features')],
-            ['@/entities', path.resolve(__dirname, 'src/entities')],
-            ['@/shared', path.resolve(__dirname, 'src/shared')]
-          ],
-          extensions: ['.ts', '.tsx', '.js', '.jsx', '.json']
         }
       }
     },

@@ -1,13 +1,13 @@
+import { useUnit } from 'effector-react';
 import React, { useCallback, useContext } from 'react'
 import { useTranslation } from 'react-i18next';
-import { useUnit } from 'effector-react';
 
-import { ThemeContext } from '@/shared/lib/contexts/theme';
 import { model } from "@/entities/book-card/model/book-model";
+import { ThemeContext } from '@/shared/lib/contexts/theme';
 
 import styles from './styles.module.scss'
 
-export const PortalDropdown = () => {
+export const ModalDropdown = () => {
     const { t } = useTranslation();
 
     const [filter, resetPagination, filterUpdated] = useUnit([model.$filter, model.resetPagination, model.filterUpdated]);
@@ -16,7 +16,7 @@ export const PortalDropdown = () => {
     const handleSelect = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
         resetPagination();
         filterUpdated(e.target.value);
-    }, []);
+    }, [filterUpdated, resetPagination]);
 
     return (
         <div className={styles.dropdownContainer}>

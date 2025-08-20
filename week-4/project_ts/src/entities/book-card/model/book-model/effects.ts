@@ -1,7 +1,9 @@
-import { BASE_URL } from "@/shared/config/env";
-import { Book } from "@/shared/model/types/books";
 import { createEffect } from "effector";
 import { toast } from "react-toastify";
+
+import { BASE_URL } from "@/shared/config/env";
+import { Book } from "@/shared/model/types/books";
+
 import { MAX_RESULT } from "./config";
 
 interface FetchBooksParams {

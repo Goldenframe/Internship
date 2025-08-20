@@ -90,10 +90,10 @@
     }
 
     &Title {
-        @include responsive-text(var(--text-xxl), 1.8rem, 1.6rem);
         margin-bottom: var(--gap);
         color: var(--dark);
         font-weight: 700;
+        @include responsive-text(var(--text-xxl), 1.8rem, 1.6rem);
 
         @media (max-width: 768px) {
             text-align: center;

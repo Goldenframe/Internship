@@ -1,5 +1,6 @@
-import { Book } from "@/shared/model/types/books";
-import { createStore } from "effector";
+import { combine, createStore } from "effector";
+
+import { Book, FILTER_TYPES } from "@/shared/model/types/books";
 
 export const $books = createStore<Book[]>([]);
 export const $loading = createStore<boolean>(false);
@@ -9,4 +10,29 @@ export const $startIndex = createStore<number>(0);
 export const $hasMore = createStore<boolean>(true);
 export const $filter = createStore<string>("");
 export const $t = createStore<(key: string) => string>(() => "");
+
+export const $processedBooks = combine({ books: $books, filter: $filter }, ({ books, filter }) => {
+    let result = [...books];
+    if (filter) {
+        result = result.filter(book => {
+            if (filter === FILTER_TYPES.EBOOKS) {
+                return book.accessInfo?.epub?.isAvailable || book.accessInfo?.pdf?.isAvailable;
+            }
+            if (filter === FILTER_TYPES.FREE_EBOOKS) {
+                return book.saleInfo?.saleability === "FREE";
+            }
+            if (filter === FILTER_TYPES.PAID_EBOOKS) {
+                return book.saleInfo?.saleability === "FOR_SALE";
+            }
+            if (filter === FILTER_TYPES.FULL) {
+                return book.accessInfo?.viewability === "ALL_PAGES";
+            }
+            if (filter === FILTER_TYPES.PARTIAL) {
+                return book.accessInfo?.viewability === "PARTIAL";
+            }
+            return true;
+        });
+    }
+    return result;
+})
 
