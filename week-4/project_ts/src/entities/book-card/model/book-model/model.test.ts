@@ -1,6 +1,6 @@
 import { allSettled, fork } from "effector"
+
 import { model } from "./model";
-import { MAX_RESULT } from "./config";
 
 describe("Books Model", () => {
     test("startIndexUpdated should update startIndex", async () => {

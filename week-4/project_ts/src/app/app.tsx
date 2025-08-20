@@ -1,20 +1,17 @@
-import { allSettled, fork } from 'effector';
-import { Provider, useGate } from 'effector-react';
-
-import { useEffect, useState } from 'react';
+import { fork } from 'effector';
+import { Provider } from 'effector-react';
+import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 
-import { PortalDropdown } from '@/features/portal-dropdown';
+import { ModalDropdown } from '@/features/modal-dropdown';
 import { EffectLogger } from '@/shared/lib/effect-logger';
-import { getFavorites, addFavorites } from '@/shared/lib/utils/local-storage/favorites';
 import { Book } from '@/shared/model/types/books';
 import { Header } from '@/widgets/header/ui';
 
 import { LangProvider, ThemeProvider } from './providers';
 import { AppRouter } from './routers/app-router';
-import { model } from '@/shared/model/favorites-model';
 
 const rootScope = fork();
 
@@ -30,10 +27,6 @@ const App = () => {
 };
 
 const AppContent = () => {
-  const handleToggleFavorite = (book: Book) => {
-    allSettled(model.favoriteToggled, { scope: rootScope, params: book });
-  };
-  useGate(model.FavoritesGate);
 
   const [isLogging, setIsLogging] = useState(false);
   const [bookClicked, setBookClicked] = useState<Book | null>(null);
@@ -62,7 +55,7 @@ const AppContent = () => {
             pauseOnHover
           />
 
-          {overlayRoot && createPortal(<PortalDropdown />, overlayRoot)}
+          {overlayRoot && createPortal(<ModalDropdown />, overlayRoot)}
         </LangProvider>
       </ThemeProvider>
     </BrowserRouter>

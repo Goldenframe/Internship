@@ -1,14 +1,14 @@
 import { useGate, useList, useUnit } from 'effector-react';
+import { useEffect } from 'react';
 import { useTranslation } from "react-i18next";
 
+import { model } from "@/entities/book-card/model/book-model";
 import { BookCard } from "@/entities/book-card/ui/book-card";
 import { BookList } from "@/pages/home/ui/book-list";
 import { SearchForm } from "@/pages/home/ui/book-search";
 import { Book } from "@/shared/model/types/books";
 
 import styles from './styles.module.scss'
-import { model } from "@/entities/book-card/model/book-model";
-import { useEffect } from 'react';
 
 interface HomeProps {
   setBookClicked: React.Dispatch<React.SetStateAction<Book | null>>,

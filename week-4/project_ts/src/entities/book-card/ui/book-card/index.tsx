@@ -1,23 +1,21 @@
-import React, { useState, Suspense, useCallback, memo } from "react";
+import { useUnit } from "effector-react";
+import React, { useState, Suspense, memo } from "react";
 import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
-
-const BookDescripton = React.lazy(() => import("@/entities/book-card/ui/book-description/index").then(module => ({ default: module.BookDescripton })));
-import { sleep } from "@/shared/lib/utils/sleep";
-import type { Book, VolumeInfo } from "@/shared/model/types/books";
-import { FavoriteIcon } from "@/shared/ui/atoms/favorite-icon";
-import { Spinner } from "@/shared/ui/atoms/spinner";
-const BookDetailsModalBody = React.lazy(() => import("@/features/book-details-modal-body/ui").then(async module => { await sleep(600); return { default: module.BookDetailsModalBody } }))
-
-import styles from './styles.module.scss'
-import { useUnit } from "effector-react";
-import { model } from "@/shared/model/favorites-model";
 import { toast } from "react-toastify";
 
+const BookDescripton = React.lazy(() => import("@/entities/book-card/ui/book-description/index").then(module => ({ default: module.BookDescripton })));
+const ModalBookDetails = React.lazy(() => import("@/features/modal-book-details/ui").then(async module => { await sleep(600); return { default: module.ModalBookDetails } }))
+
+import { sleep } from "@/shared/lib/utils/sleep";
+import { model } from "@/shared/model/favorites-model";
+import type { Book, VolumeInfo } from "@/shared/model/types/books";
+import { FavoriteIcon, Spinner } from "@/shared/ui/atoms";
+
+import styles from './styles.module.scss'
+
 const modalRoot = document.getElementById("modal-root");
-
-
 interface BookCardProps {
   book: Book,
   setBookClicked: React.Dispatch<React.SetStateAction<Book | null>>,
@@ -67,7 +65,7 @@ export const BookCard = memo(({ book, setBookClicked }: BookCardProps) => {
       )}
       {showModal && modalRoot && createPortal(<Suspense fallback={<div className={styles.modalOverlay}>
         <Spinner />
-      </div>}><BookDetailsModalBody bookId={book.id} setShowModal={setShowModal} /></Suspense>, modalRoot)}
+      </div>}><ModalBookDetails bookId={book.id} setShowModal={setShowModal} /></Suspense>, modalRoot)}
 
       <div className={styles.bookItemImageContainer}>
         {bookInfo.imageLinks ? (

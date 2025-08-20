@@ -1,5 +1,6 @@
-import { Book, FILTER_TYPES } from "@/shared/model/types/books";
 import { combine, createStore } from "effector";
+
+import { Book, FILTER_TYPES } from "@/shared/model/types/books";
 
 export const $books = createStore<Book[]>([]);
 export const $loading = createStore<boolean>(false);

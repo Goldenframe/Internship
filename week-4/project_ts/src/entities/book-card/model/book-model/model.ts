@@ -1,34 +1,11 @@
 import { merge, sample } from "effector";
 import { debug } from 'patronum/debug';
+
+import { MAX_RESULT } from "./config";
 import { fetchBooksFx } from "./effects";
 import { filterUpdated, hasMoreUpdated, loadedMore, resetPagination, searchFormSubmitted, searchInputUpdated, startIndexUpdated, queryUpdated, tUpdated } from "./events";
-import { $books, $filter, $hasMore, $loading, $processedBooks, $query, $searchInput, $startIndex, $t } from './stores';
-import { MAX_RESULT } from "./config";
 import { HomeGate } from "./gates";
-
-
-export const model = {
-    HomeGate,
-    searchFormSubmitted,
-    loadedMore,
-    startIndexUpdated,
-    hasMoreUpdated,
-    filterUpdated,
-    searchInputUpdated,
-    resetPagination,
-    queryUpdated,
-    tUpdated,
-    $books,
-    $loading,
-    $searchInput,
-    $query,
-    $startIndex,
-    $hasMore,
-    $filter,
-    $t,
-    $processedBooks,
-    fetchBooksFx
-};
+import { $books, $filter, $hasMore, $loading, $processedBooks, $query, $searchInput, $startIndex, $t } from './stores';
 
 debug({ $books });
 
@@ -143,3 +120,26 @@ sample({
     }),
     target: fetchBooksFx,
 });
+
+export const model = {
+    HomeGate,
+    searchFormSubmitted,
+    loadedMore,
+    startIndexUpdated,
+    hasMoreUpdated,
+    filterUpdated,
+    searchInputUpdated,
+    resetPagination,
+    queryUpdated,
+    tUpdated,
+    $books,
+    $loading,
+    $searchInput,
+    $query,
+    $startIndex,
+    $hasMore,
+    $filter,
+    $t,
+    $processedBooks,
+    fetchBooksFx
+};
