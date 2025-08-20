@@ -1,10 +1,12 @@
+import { fork, sample } from "effector";
+import { debug } from "patronum";
+
 import { tUpdated } from "@/entities/book-card/model/book-model/events";
+import { $t } from "@/entities/book-card/model/book-model/stores";
+
+import { fetchBookDetailsFx } from "./effects";
 import { bookDetailsClosed, bookDetailsOpened, scopeCreated } from "./events";
 import { $bookDetails, $isLoading, $scope, } from "./stores";
-import { $t } from "@/entities/book-card/model/book-model/stores";
-import { fetchBookDetailsFx } from "./effects";
-import { fork, merge, sample } from "effector";
-import { debug } from "patronum";
 
 export const model = {
     bookDetailsOpened,

@@ -1,4 +1,5 @@
 import DOMPurify from 'dompurify';
+import { useUnit } from 'effector-react';
 import React, { useEffect, useCallback } from "react";
 import { useTranslation } from 'react-i18next';
 import {
@@ -8,21 +9,20 @@ import {
 } from "react-icons/fa";
 import { toast } from "react-toastify";
 
+import { model as favoritesModel } from "@/shared/model/favorites-model";
 import { VolumeInfo } from '@/shared/model/types/books';
-import { FavoriteIcon } from '@/shared/ui/atoms/favorite-icon';
-import { Spinner } from '@/shared/ui/atoms/spinner';
+
+import { model as bookModalModel } from '../model';
 
 import styles from './styles.module.scss';
-import { model as bookModalModel } from '../book-modal-model';
-import { model as favoritesModel } from "@/shared/model/favorites-model";
-import { useUnit } from 'effector-react';
+import { FavoriteIcon, Spinner } from '@/shared/ui/atoms';
 
 interface BookDetailsProps {
   bookId: string;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const BookDetailsModalBody = ({ bookId, setShowModal }: BookDetailsProps) => {
+export const ModalBookDetails = ({ bookId, setShowModal }: BookDetailsProps) => {
   const { t } = useTranslation();
 
   const [
