@@ -1,4 +1,5 @@
 import { createEvent } from "effector";
+
 import { Book } from "../types/books";
 
 export const favoriteToggled = createEvent<Book>();

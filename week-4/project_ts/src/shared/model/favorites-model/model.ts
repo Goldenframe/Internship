@@ -1,20 +1,11 @@
-import { createEffect, merge, sample } from "effector";
+import { merge, sample } from "effector";
+
+import { getFavorites } from "@/shared/lib/utils/local-storage/favorites";
+
+import { saveFavoritesFx } from "./effects";
 import { favoritesLoaded, favoritesSaved, favoriteToggled } from "./events";
 import { FavoritesGate } from "./gates";
 import { $favorites } from "./stores";
-import { getFavorites } from "@/shared/lib/utils/local-storage/favorites";
-import { saveFavoritesFx } from "./effects";
-
-
-export const model = {
-    FavoritesGate,
-    $favorites,
-    favoritesLoaded,
-    favoritesSaved,
-    favoriteToggled,
-    saveFavoritesFx
-}
-
 sample({
     clock: favoritesLoaded,
     target: $favorites,
@@ -50,3 +41,12 @@ sample({
     source: $favorites, 
     target: saveFavoritesFx
 });
+
+export const model = {
+    FavoritesGate,
+    $favorites,
+    favoritesLoaded,
+    favoritesSaved,
+    favoriteToggled,
+    saveFavoritesFx
+}
