@@ -9,20 +9,28 @@ import {
 } from "react-icons/fa";
 import { toast } from "react-toastify";
 
-import { model as favoritesModel } from "@/shared/model/favorites-model";
-import { VolumeInfo } from '@/shared/model/types/books';
-
-import { model as bookModalModel } from '../model';
-
-import styles from './styles.module.scss';
+import { Book } from '@/shared/model/types/books';
 import { FavoriteIcon, Spinner } from '@/shared/ui/atoms';
 
-interface BookDetailsProps {
+import styles from './styles.module.scss';
+
+interface BookModalProps {
   bookId: string;
-  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+  isOpen: boolean;
+  onClose: () => void;
+  onFavoriteToggle: (book: Book) => void;
+  isFavorite: boolean;
+  bookModel: ReturnType<typeof import('@/entities/book-card/model/book-model/factories').createBookModel>;
 }
 
-export const ModalBookDetails = ({ bookId, setShowModal }: BookDetailsProps) => {
+export const BookModal = ({
+  bookId,
+  isOpen,
+  onClose,
+  onFavoriteToggle,
+  isFavorite,
+  bookModel
+}: BookModalProps) => {
   const { t } = useTranslation();
 
   const [
@@ -32,31 +40,31 @@ export const ModalBookDetails = ({ bookId, setShowModal }: BookDetailsProps) => 
     bookDetailsClosed,
     tUpdated,
   ] = useUnit([
-    bookModalModel.$bookDetails,
-    bookModalModel.$isLoading,
-    bookModalModel.bookDetailsOpened,
-    bookModalModel.bookDetailsClosed,
-    bookModalModel.tUpdated,
+    bookModel.$bookDetails,
+    bookModel.$isLoading,
+    bookModel.bookDetailsOpened,
+    bookModel.bookDetailsClosed,
+    bookModel.tUpdated,
   ]);
-  
-  const [favorites, favoriteToggled] = useUnit([favoritesModel.$favorites, favoritesModel.favoriteToggled]);
-
-  const isFavorite = favorites.some((el) => el.id === bookId);
 
   useEffect(() => {
-    tUpdated(t);
-    bookDetailsOpened(bookId);
+    if (isOpen && bookId) {
+      tUpdated(t);
+      bookDetailsOpened(bookId);
+    } else {
+      bookDetailsClosed();
+    }
 
     return () => {
       bookDetailsClosed();
     };
-  }, [bookId, t, bookDetailsOpened, bookDetailsClosed, tUpdated]);
+  }, [isOpen, bookId, t, bookDetailsOpened, bookDetailsClosed, tUpdated]);
 
   const handleFavoriteClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     if (!bookDetails) return;
 
-    favoriteToggled(bookDetails);
+    onFavoriteToggle(bookDetails);
 
     const willBeFavorite = !isFavorite;
     if (willBeFavorite) {
@@ -64,113 +72,112 @@ export const ModalBookDetails = ({ bookId, setShowModal }: BookDetailsProps) => 
     } else {
       toast.info(t("toast.removedFromFavorites"));
     }
-  }, [bookDetails, isFavorite, t, favoriteToggled]);
+  }, [bookDetails, isFavorite, t, onFavoriteToggle]);
 
   const handleClose = useCallback(() => {
-    setShowModal(false);
+    onClose();
     bookDetailsClosed();
-  }, [setShowModal, bookDetailsClosed]);
+  }, [onClose, bookDetailsClosed]);
 
-  if (isLoading) {
-    return <div className={styles['modal-overlay']}><Spinner /></div>;
-  }
-
-  if (!bookDetails) {
+  if (!isOpen) {
     return null;
   }
 
-  const book: Partial<VolumeInfo> = bookDetails.volumeInfo;
-
   return (
-    <div className={styles.modalOverlay}>
+    <div className={styles.modalOverlay} onClick={handleClose}>
       <div
         className={styles.modalContent}
         onClick={(e: React.MouseEvent<HTMLDivElement>) => { e.stopPropagation(); }}
       >
-        <div className={styles.bookDetails}>
-          <div className={styles.bookCover}>
-            {book.imageLinks ? (
-              <img
-                src={book.imageLinks.thumbnail?.replace("http://", "https://")}
-                alt={book.title}
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement
-                  target.onerror = null;
-                  target.parentElement!.innerHTML = `<div class="${styles.noImage}"><FaBookOpen size="48" /></div>`;
-                }}
-              />
-            ) : (
-              <div className={styles.noImage}>
-                <FaBookOpen size={48} />
-              </div>
-            )}
-          </div>
-          <div className={styles.bookInfo}>
-            <h1 className={styles.bookTitle}>{book.title ? book.title : "No title"}</h1>
-            {book.authors && book.authors?.length > 0 && (
-              <div className={styles.bookAuthors}>
-                {book.authors.map((author, index) => (
-                  <span key={index} className={styles.bookAuthor}>
-                    {author}
-                  </span>
-                ))}
-              </div>
-            )}
-
-            <div className={styles.bookMeta}>
-              {book.publishedDate && (
-                <div className={styles.bookMetaItem}>
-                  <FaCalendarAlt />
-                  <span>{t('bookDetails.published')}: {book.publishedDate}</span>
-                </div>
-              )}
-
-              {book.pageCount && (
-                <div className={styles.bookMetaItem}>
-                  <FaBookOpen />
-                  <span>{book.pageCount} {t('common.pages')}</span>
-                </div>
-              )}
-
-              {book.averageRating && (
-                <div className={styles.bookMetaItem}>
-                  <span>⭐ {book.averageRating}/5</span>
+        {isLoading ? (
+          <Spinner />
+        ) : bookDetails && (
+          <div className={styles.bookDetails}>
+            <div className={styles.bookCover}>
+              {bookDetails.volumeInfo?.imageLinks ? (
+                <img
+                  src={bookDetails.volumeInfo.imageLinks.thumbnail?.replace("http://", "https://")}
+                  alt={bookDetails.volumeInfo.title}
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement
+                    target.onerror = null;
+                    target.parentElement!.innerHTML = `<div class="${styles.noImage}"><FaBookOpen size="48" /></div>`;
+                  }}
+                />
+              ) : (
+                <div className={styles.noImage}>
+                  <FaBookOpen size={48} />
                 </div>
               )}
             </div>
 
-            {book.description ? (
-              <div
-                className={styles.bookDescription}
-                dangerouslySetInnerHTML={{
-                  __html: DOMPurify.sanitize(book.description),
-                }}
-              />
-            ) : (
-              <div className={styles.bookDescription}>{t("common.noDescription")}.</div>
-            )}
+            <div className={styles.bookInfo}>
+              <h1 className={styles.bookTitle}>{bookDetails.volumeInfo?.title || "No title"}</h1>
 
-            <div className={styles.bookActions}>
-              <button
-                className={`${styles.actionButton} ${styles.likeButton} ${isFavorite ? styles.liked : ''
-                  }`}
-                onClick={handleFavoriteClick}
-              >
-                <FavoriteIcon />
-                {isFavorite ? `${t("bookCard.removeFromFavorites")}` : `${t("bookCard.addToFavorites")}`}
-              </button>
+              {bookDetails.volumeInfo?.authors && bookDetails.volumeInfo.authors.length > 0 && (
+                <div className={styles.bookAuthors}>
+                  {bookDetails.volumeInfo.authors.map((author, index) => (
+                    <span key={index} className={styles.bookAuthor}>
+                      {author}
+                    </span>
+                  ))}
+                </div>
+              )}
 
-              <button
-                className={`${styles.actionButton} ${styles.backButton}`}
-                onClick={handleClose}
-              >
-                <FaArrowLeft />
-                {t("common.backToSearch")}
-              </button>
+              <div className={styles.bookMeta}>
+                {bookDetails.volumeInfo?.publishedDate && (
+                  <div className={styles.bookMetaItem}>
+                    <FaCalendarAlt />
+                    <span>{t('bookDetails.published')}: {bookDetails.volumeInfo.publishedDate}</span>
+                  </div>
+                )}
+
+                {bookDetails.volumeInfo?.pageCount && (
+                  <div className={styles.bookMetaItem}>
+                    <FaBookOpen />
+                    <span>{bookDetails.volumeInfo.pageCount} {t('common.pages')}</span>
+                  </div>
+                )}
+
+                {bookDetails.volumeInfo?.averageRating && (
+                  <div className={styles.bookMetaItem}>
+                    <span>⭐ {bookDetails.volumeInfo.averageRating}/5</span>
+                  </div>
+                )}
+              </div>
+
+              {bookDetails.volumeInfo?.description ? (
+                <div
+                  className={styles.bookDescription}
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(bookDetails.volumeInfo.description),
+                  }}
+                />
+              ) : (
+                <div className={styles.bookDescription}>{t("common.noDescription")}.</div>
+              )}
+
+              <div className={styles.bookActions}>
+                <button
+                  className={`${styles.actionButton} ${styles.likeButton} ${isFavorite ? styles.liked : ''}`}
+                  onClick={handleFavoriteClick}
+                >
+                  <FavoriteIcon />
+                  {isFavorite ? t("bookCard.removeFromFavorites") : t("bookCard.addToFavorites")}
+                </button>
+
+                <button
+                  className={`${styles.actionButton} ${styles.backButton}`}
+                  onClick={handleClose}
+                >
+                  <FaArrowLeft />
+                  {t("common.backToSearch")}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
-}
+};

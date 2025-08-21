@@ -10,13 +10,8 @@ import { Book } from "@/shared/model/types/books";
 
 import styles from './styles.module.scss'
 
-interface HomeProps {
-  setBookClicked: React.Dispatch<React.SetStateAction<Book | null>>,
-}
 
-export const Home = ({
-  setBookClicked,
-}: HomeProps) => {
+export const Home = () => {
   const { t } = useTranslation();
 
   const [processedBooksArr, tUpdated] = useUnit([
@@ -28,13 +23,12 @@ export const Home = ({
     tUpdated(t);
   }, [t, tUpdated]);
 
-  useGate(model.HomeGate, { t });
+  useGate(model.BooksGate, { t });
 
   const bookList = useList(model.$processedBooks, (book: Book) => (
     <BookCard
       key={book.id}
       book={book}
-      setBookClicked={setBookClicked}
     />
   ));
 

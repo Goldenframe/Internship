@@ -1,3 +1,3 @@
 import { createGate } from "effector-react";
 
-export const HomeGate = createGate<{ t: (key: string) => string }>();
+export const BooksGate = createGate<{ t: (key: string) => string }>();
