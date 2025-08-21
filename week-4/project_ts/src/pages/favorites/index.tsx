@@ -5,11 +5,7 @@ import { BookCard } from "@/entities/book-card/ui/book-card";
 import { Book } from "@/shared/model/types/books";
 import { BooksContainer } from "@/shared/ui/templates/books-container";
 
-interface FavoritesProps {
-  setBookClicked: React.Dispatch<React.SetStateAction<Book | null>>;
-}
-
-export const Favorites = ({ setBookClicked }: FavoritesProps) => {
+export const Favorites = () => {
   const favorites = useUnit(model.$favorites);
   useGate(model.BooksGate);
 
@@ -17,7 +13,6 @@ export const Favorites = ({ setBookClicked }: FavoritesProps) => {
     <BookCard
       key={book.id}
       book={book}
-      setBookClicked={setBookClicked}
     />
   ));
 

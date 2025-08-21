@@ -39,7 +39,7 @@ const AppContent = () => {
             <Header isLogging={isLogging} setIsLogging={setIsLogging} />
           </div>
 
-          <AppRouter setBookClicked={setBookClicked} />
+          <AppRouter />
 
           {isLogging && <EffectLogger bookClicked={bookClicked} />}
 
