@@ -28,7 +28,7 @@ export const Home = ({
     tUpdated(t);
   }, [t, tUpdated]);
 
-  useGate(model.BooksGate, { t });
+  useGate(model.HomeGate, { t });
 
   const bookList = useList(model.$processedBooks, (book: Book) => (
     <BookCard

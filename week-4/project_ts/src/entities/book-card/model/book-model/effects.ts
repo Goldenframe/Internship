@@ -2,7 +2,6 @@ import { createEffect } from "effector";
 import { toast } from "react-toastify";
 
 import { BASE_URL } from "@/shared/config/env";
-import { addFavorites } from "@/shared/lib/utils/local-storage/favorites";
 import { Book } from "@/shared/model/types/books";
 
 import { MAX_RESULT } from "./config";
@@ -54,7 +53,3 @@ export const fetchBooksFx = createEffect<FetchBooksParams, Book[]>(
         }
     }
 );
-
-export const saveFavoritesFx = createEffect<Book[], void>((favorites) => {
-    addFavorites(favorites);
-});

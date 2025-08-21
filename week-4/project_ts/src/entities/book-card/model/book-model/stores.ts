@@ -1,7 +1,7 @@
 import { combine, createStore } from "effector";
 
 import { Book, FILTER_TYPES } from "@/shared/model/types/books";
-export const $favorites = createStore<Book[]>([])
+
 export const $books = createStore<Book[]>([]);
 export const $loading = createStore<boolean>(false);
 export const $searchInput = createStore<string>("JavaScript");

@@ -8,8 +8,8 @@ import { toast } from "react-toastify";
 const BookDescripton = React.lazy(() => import("@/entities/book-card/ui/book-description/index").then(module => ({ default: module.BookDescripton })));
 const ModalBookDetails = React.lazy(() => import("@/features/modal-book-details/ui").then(async module => { await sleep(600); return { default: module.ModalBookDetails } }))
 
-import { model } from "@/entities/book-card/model/book-model";
 import { sleep } from "@/shared/lib/utils/sleep";
+import { model } from "@/shared/model/favorites-model";
 import type { Book, VolumeInfo } from "@/shared/model/types/books";
 import { FavoriteIcon, Spinner } from "@/shared/ui/atoms";
 

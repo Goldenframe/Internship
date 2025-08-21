@@ -8,6 +8,19 @@ import { fetchBookDetailsFx } from "./effects";
 import { bookDetailsClosed, bookDetailsOpened, scopeCreated } from "./events";
 import { $bookDetails, $isLoading, $scope, } from "./stores";
 
+export const model = {
+    bookDetailsOpened,
+    bookDetailsClosed,
+    tUpdated,
+    $bookDetails,
+    $isLoading,
+    $scope,
+    $t,
+    fetchBookDetailsFx,
+};
+
+debug({ trace: true }, $scope);
+
 sample({ clock: bookDetailsClosed, fn: () => null, target: $bookDetails });
 sample({ clock: bookDetailsClosed, fn: () => true, target: $isLoading });
 sample({ clock: bookDetailsClosed, fn: () => null, target: $scope });
@@ -34,16 +47,3 @@ sample({
     fn: ({ t }, bookId) => ({ bookId, t }),
     target: fetchBookDetailsFx
 });
-
-debug({ trace: true }, $scope);
-
-export const model = {
-    bookDetailsOpened,
-    bookDetailsClosed,
-    tUpdated,
-    $bookDetails,
-    $isLoading,
-    $scope,
-    $t,
-    fetchBookDetailsFx,
-};

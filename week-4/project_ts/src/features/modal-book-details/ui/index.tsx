@@ -9,13 +9,13 @@ import {
 } from "react-icons/fa";
 import { toast } from "react-toastify";
 
-import { model as bookModel } from "@/entities/book-card/model/book-model";
+import { model as favoritesModel } from "@/shared/model/favorites-model";
 import { VolumeInfo } from '@/shared/model/types/books';
-import { FavoriteIcon, Spinner } from '@/shared/ui/atoms';
 
 import { model as bookModalModel } from '../model';
 
 import styles from './styles.module.scss';
+import { FavoriteIcon, Spinner } from '@/shared/ui/atoms';
 
 interface BookDetailsProps {
   bookId: string;
@@ -39,7 +39,7 @@ export const ModalBookDetails = ({ bookId, setShowModal }: BookDetailsProps) => 
     bookModalModel.tUpdated,
   ]);
   
-  const [favorites, favoriteToggled] = useUnit([bookModel.$favorites, bookModel.favoriteToggled]);
+  const [favorites, favoriteToggled] = useUnit([favoritesModel.$favorites, favoritesModel.favoriteToggled]);
 
   const isFavorite = favorites.some((el) => el.id === bookId);
 
