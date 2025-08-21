@@ -7,6 +7,7 @@ import { Book } from "@/shared/model/types/books";
 import { MAX_RESULT } from "./config";
 import { fetchBooksFx, saveFavoritesFx } from "./effects";
 import { filterUpdated, hasMoreUpdated, loadedMore, resetPagination, searchFormSubmitted, searchInputUpdated, startIndexUpdated, queryUpdated, tUpdated, favoriteToggled } from "./events";
+import { createBookModel } from "./factories";
 import { BooksGate } from "./gates";
 import { $books, $favorites, $filter, $hasMore, $loading, $processedBooks, $query, $searchInput, $startIndex, $t } from './stores';
 
@@ -124,6 +125,7 @@ sample({
 });
 
 export const model = {
+    createBookModel,
     BooksGate,
     searchFormSubmitted,
     loadedMore,
@@ -145,6 +147,4 @@ export const model = {
     $filter,
     $t,
     $processedBooks,
-    fetchBooksFx,
-    saveFavoritesFx
 };

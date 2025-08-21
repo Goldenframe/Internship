@@ -6,18 +6,15 @@ import { model } from "@/entities/book-card/model/book-model";
 export const SearchForm = () => {
     const { t } = useTranslation();
 
-    const [query, searchInput, searchFormSubmitted, searchInputUpdated, fetchBooksFx] = useUnit([
-        model.$query,
+    const [ searchInput, searchFormSubmitted, searchInputUpdated] = useUnit([
         model.$searchInput,
         model.searchFormSubmitted,
         model.searchInputUpdated,
-        model.fetchBooksFx,
     ]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         searchFormSubmitted();
-        fetchBooksFx({ query, startIndex: 0, t });
     };
 
     return (
