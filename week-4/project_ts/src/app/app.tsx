@@ -1,17 +1,27 @@
+import { invoke } from '@withease/factories';
 import { fork } from 'effector';
-import { Provider } from 'effector-react';
-import { useState } from 'react';
+import { Provider, useUnit } from 'effector-react';
+import React, { useMemo, useState, Suspense } from 'react';
 import { createPortal } from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 
+import { model } from '@/entities/book-card/model/book-model';
+import { createBookModel } from '@/entities/book-card/model/book-model/factories';
 import { ModalDropdown } from '@/features/modal-dropdown';
 import { EffectLogger } from '@/shared/lib/effect-logger';
-import { Book } from '@/shared/model/types/books';
+import { sleep } from "@/shared/lib/utils/sleep";
+import { Spinner } from '@/shared/ui/atoms';
 import { Header } from '@/widgets/header/ui';
 
 import { LangProvider, ThemeProvider } from './providers';
 import { AppRouter } from './routers/app-router';
+const ModalBooksDetails = React.lazy(() => import("@/features/modal-book-details/ui").then(async module => {
+  await sleep(600);
+  return { default: module.ModalBooksDetails }
+}));
+
+const modalRoot = document.getElementById("modal-root");
 
 const rootScope = fork();
 
@@ -29,7 +39,9 @@ const App = () => {
 const AppContent = () => {
 
   const [isLogging, setIsLogging] = useState(false);
-  const [bookClicked, setBookClicked] = useState<Book | null>(null);
+  const bookModalModel = useMemo(() => invoke(createBookModel), []);
+  const [isModalOpened, modalClosed, favoriteToggled] = useUnit([model.$isModalOpen, model.modalClosed, model.favoriteToggled]);
+  
 
   return (
     <BrowserRouter>
@@ -41,7 +53,7 @@ const AppContent = () => {
 
           <AppRouter />
 
-          {isLogging && <EffectLogger bookClicked={bookClicked} />}
+          {isLogging && <EffectLogger/>}
 
           <ToastContainer
             position="top-right"
@@ -56,11 +68,20 @@ const AppContent = () => {
           />
 
           {overlayRoot && createPortal(<ModalDropdown />, overlayRoot)}
+          {isModalOpened && modalRoot && createPortal(
+            <Suspense fallback={<Spinner />}>
+              <ModalBooksDetails
+                bookModel={bookModalModel}
+                modalClosed={modalClosed}
+                favoriteToggled={favoriteToggled}
+              />
+            </Suspense>,
+            modalRoot
+          )}
         </LangProvider>
       </ThemeProvider>
     </BrowserRouter>
   );
 };
-
 
 export default App;

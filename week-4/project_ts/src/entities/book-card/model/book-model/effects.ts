@@ -1,4 +1,5 @@
 import { createEffect } from "effector";
+import { delay } from 'patronum/delay'; 
 import { toast } from "react-toastify";
 
 import { BASE_URL } from "@/shared/config/env";
@@ -6,6 +7,7 @@ import { addFavorites } from "@/shared/lib/utils/local-storage/favorites";
 import { Book } from "@/shared/model/types/books";
 
 import { MAX_RESULT } from "./config";
+import { startModalDelay } from "./events";
 
 interface FetchBooksParams {
     query: string;
@@ -25,7 +27,6 @@ export const fetchBooksFx = createEffect<FetchBooksParams, Book[]>(
             });
 
             toast.promise(fetchPromise, {
-                pending: t("toast.pendingBooks"),
                 success: {
                     render({ data }): string {
                         if (!data.items) {
@@ -57,4 +58,14 @@ export const fetchBooksFx = createEffect<FetchBooksParams, Book[]>(
 
 export const saveFavoritesFx = createEffect<Book[], void>((favorites) => {
     addFavorites(favorites);
+});
+
+export const modalDelayedEvent = delay({
+  source: startModalDelay,
+  timeout: 600,
+});
+
+export const loadModalWithDelayFx = createEffect(async () => {
+  startModalDelay();
+  await modalDelayedEvent;
 });
