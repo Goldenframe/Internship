@@ -1,9 +1,13 @@
 import { createFactory } from '@withease/factories';
-import { createEffect, createEvent, createStore, sample } from 'effector';
+import { createEffect, createStore, sample, combine } from 'effector';
+import { status } from 'patronum/status';
 import { toast } from 'react-toastify';
 
 import { BASE_URL } from '@/shared/config/env';
 import { Book } from '@/shared/model/types/books';
+
+import { modalOpened, modalClosed } from './events';
+import { $favorites} from './stores';
 
 interface FetchBookDetailsParams {
   bookId: string;
@@ -12,13 +16,7 @@ interface FetchBookDetailsParams {
 
 export const createBookModel = createFactory(() => {
   const $bookDetails = createStore<Book | null>(null);
-  const $isLoading = createStore<boolean>(false);
-  const $isOpen = createStore<boolean>(false);
-  const $t = createStore<(key: string) => string>((key) => key);
-
-  const bookDetailsOpened = createEvent<string>();
-  const bookDetailsClosed = createEvent();
-  const tUpdated = createEvent<(key: string) => string>();
+  const $errorKey = createStore<string | null>(null);
 
   const fetchBookDetailsFx = createEffect<FetchBookDetailsParams, Book>(
     async ({ bookId, t }) => {
@@ -49,59 +47,40 @@ export const createBookModel = createFactory(() => {
     }
   );
 
-  sample({
-    clock: bookDetailsOpened,
-    fn: () => true,
-    target: $isOpen
-  });
+  const $status = status(fetchBookDetailsFx);
 
-  sample({
-    clock: bookDetailsOpened,
-    source: $t,
-    fn: (t, bookId) => ({ bookId, t }),
-    target: fetchBookDetailsFx
-  });
-
-  sample({
-    clock: bookDetailsClosed,
-    fn: () => false,
-    target: $isOpen
-  });
-
-  sample({
-    clock: bookDetailsClosed,
-    fn: () => null,
-    target: $bookDetails
-  });
-
-  sample({
-    clock: bookDetailsClosed,
-    fn: () => false,
-    target: $isLoading
-  });
-
+sample({
+  clock: modalOpened,
+  fn: ({ bookId, t }) => ({ bookId, t }),
+  target: fetchBookDetailsFx,
+});
   sample({
     clock: fetchBookDetailsFx.doneData,
-    target: $bookDetails
+    target: $bookDetails,
   });
 
-  sample({
-    clock: fetchBookDetailsFx.pending,
-    target: $isLoading
-  });
 
   sample({
-    clock: tUpdated,
-    target: $t
+    clock: modalClosed,
+    fn: () => null,
+    target: $bookDetails,
   });
-  return {
+
+  const $bookDetailsWithFavorite = combine(
     $bookDetails,
-    $isLoading,
-    $isOpen,
-    $t,
+    $favorites,
+    (book, favorites) => {
+      if (!book) return null;
+      return {
+        ...book,
+        isFavorite: favorites.some(f => f.id === book.id),
+      };
+    }
+  );
 
-    bookDetailsOpened,
-    bookDetailsClosed,
-    tUpdated,
+  return {
+    $bookDetailsWithFavorite,
+    $status,
+    $errorKey,
   };
 });
