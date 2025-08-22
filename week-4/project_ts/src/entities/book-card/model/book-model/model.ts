@@ -1,29 +1,42 @@
-import { merge, sample } from "effector";
+import { combine, sample } from "effector";
+import { debounce } from 'patronum/debounce';
 import { debug } from 'patronum/debug';
+import { reset } from 'patronum/reset';
+import { spread } from 'patronum/spread';
+import { status } from 'patronum/status';
+import { toast } from "react-toastify";
 
 import { getFavorites } from "@/shared/lib/utils/local-storage/favorites";
 import { Book } from "@/shared/model/types/books";
 
 import { MAX_RESULT } from "./config";
-import { fetchBooksFx, saveFavoritesFx } from "./effects";
-import { filterUpdated, hasMoreUpdated, loadedMore, resetPagination, searchFormSubmitted, searchInputUpdated, startIndexUpdated, queryUpdated, tUpdated, favoriteToggled } from "./events";
+import { fetchBooksFx, loadModalWithDelayFx, saveFavoritesFx } from "./effects";
+import { filterUpdated, hasMoreUpdated, loadedMore, resetPagination, searchFormSubmitted, searchInputUpdated, startIndexUpdated, queryUpdated, favoriteToggled, modalOpened, modalClosed, clearSearch } from "./events";
 import { createBookModel } from "./factories";
 import { BooksGate } from "./gates";
-import { $books, $favorites, $filter, $hasMore, $loading, $processedBooks, $query, $searchInput, $startIndex, $t } from './stores';
+import { $books, $favorites, $filter, $hasMore, $isModalOpen, $openedBookId, $processedBooks, $query, $searchInput, $startIndex, $t } from './stores';
 
 debug({ $books });
 
+const $status = status({ effect: fetchBooksFx });
+
 sample({
-  clock: favoriteToggled,
-  source: $favorites,
-  fn: (favorites, book: Book) => {
-    const isFavorite = favorites.some(f => f.id === book.id);
-    return isFavorite
-      ? favorites.filter(f => f.id !== book.id)
-      : [...favorites, book];
-  },
-  target: $favorites,
+    clock: favoriteToggled,
+    source: { favorites: $favorites, t: $t },
+    fn: ({ favorites, t }, book: Book) => {
+        const isFavorite = favorites.some(f => f.id === book.id);
+
+        if (isFavorite) {
+            toast.warning(t("toast.removedFromFavorites"));
+            return favorites.filter(f => f.id !== book.id);
+        } else {
+            toast.success(t("toast.addedToFavorites"));
+            return [...favorites, book];
+        }
+    },
+    target: $favorites,
 });
+
 
 
 sample({
@@ -41,61 +54,48 @@ sample({
     target: resetPagination,
 });
 
+
+
 sample({
     clock: loadedMore,
-    source: { hasMore: $hasMore, loading: $loading },
-    filter: ({ hasMore, loading }) => hasMore && !loading,
-    fn: (_, startIndex) => startIndex + MAX_RESULT,
+    source: { hasMore: $hasMore, status: $status, startIndex: $startIndex },
+    filter: ({ hasMore, status }) => hasMore && status !== 'pending',
+    fn: ({ startIndex }) => startIndex + MAX_RESULT,
     target: $startIndex,
 });
 
 sample({
     clock: fetchBooksFx.doneData,
     source: { books: $books, startIndex: $startIndex },
-    fn: ({ books, startIndex }, newBooks) => 
-        startIndex === 0 ? newBooks : [...books, ...newBooks],
-    target: $books,
+    fn: ({ books, startIndex }, newBooks) => ({
+        books: startIndex === 0 ? newBooks : [...books, ...newBooks],
+        hasMore: newBooks.length === MAX_RESULT || (startIndex === 0 && newBooks.length > 0),
+    }),
+    target: spread({
+        books: $books,
+        hasMore: $hasMore,
+    }),
 });
 
-sample({
-    clock: fetchBooksFx.doneData,
-    source: $startIndex,
-    fn: (startIndex, newBooks) => {
-        if (newBooks.length === 0 && startIndex !== 0) {
-            return false;
-        }
-        return newBooks.length === MAX_RESULT;
-    },
-    target: $hasMore,
-});
-
-sample({
-    clock: fetchBooksFx.pending,
-    fn: (pending) => pending,
-    target: $loading,
-});
 
 sample({ clock: startIndexUpdated, target: $startIndex });
 
-sample({
-    clock: resetPagination,
-    fn: () => 0,
-    target: $startIndex,
-});
 
 sample({ clock: hasMoreUpdated, target: $hasMore });
 
 sample({
     clock: resetPagination,
-    fn: () => false,
-    target: $hasMore,
+    fn: () => ({ startIndex: 0, hasMore: false }),
+    target: spread({
+        startIndex: $startIndex,
+        hasMore: $hasMore,
+    }),
 });
 
 sample({ clock: filterUpdated, target: $filter });
 
-sample({ clock: searchInputUpdated, target: $searchInput });
 
-sample({ clock: tUpdated, target: $t });
+sample({ clock: searchInputUpdated, target: $searchInput });
 
 sample({
     clock: BooksGate.open,
@@ -104,12 +104,22 @@ sample({
     fn: ({ query, startIndex }, { t }) => ({ query, startIndex, t }),
     target: fetchBooksFx,
 });
+const $fetchParams = combine(
+    $query,
+    $startIndex,
+    (query, startIndex) => ({ query, startIndex })
+);
+
+const debouncedFetchParams = debounce({
+    source: $fetchParams,
+    timeout: 300,
+});
 
 sample({
-    clock: merge([$startIndex, $query]),
-    source: { query: $query, startIndex: $startIndex, t: $t },
-    fn: ({ query, startIndex, t }) => ({ query, startIndex, t }),
-    target: fetchBooksFx,
+  clock: debouncedFetchParams,
+  source: { query: $query, startIndex: $startIndex, t: $t },
+  fn: ({ query, startIndex, t }) => ({ query, startIndex, t }),
+  target: fetchBooksFx,
 });
 
 sample({
@@ -118,11 +128,38 @@ sample({
   target: $favorites,
 });
 
+
 sample({
     clock: favoriteToggled,
-    source: $favorites, 
+    source: $favorites,
     target: saveFavoritesFx
 });
+
+sample({
+    clock: modalOpened,
+    fn: (params) => params,
+    target: spread({
+        bookId: $openedBookId,
+        t: $t,
+    }),
+});
+
+sample({
+    clock: modalClosed,
+    fn: () => null,
+    target: $openedBookId,
+});
+
+reset({
+  clock: clearSearch,
+  target: [$searchInput, $query]
+});
+
+sample({
+    clock: clearSearch,
+    target: resetPagination,
+});
+
 
 export const model = {
     createBookModel,
@@ -135,11 +172,13 @@ export const model = {
     searchInputUpdated,
     resetPagination,
     queryUpdated,
-    tUpdated,
     favoriteToggled,
+    modalClosed,
+    modalOpened,
+    clearSearch,
     $books,
     $favorites,
-    $loading,
+    $status,
     $searchInput,
     $query,
     $startIndex,
@@ -147,4 +186,6 @@ export const model = {
     $filter,
     $t,
     $processedBooks,
+    $isModalOpen,
+    loadModalWithDelayFx
 };
