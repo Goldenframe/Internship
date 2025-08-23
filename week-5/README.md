@@ -3,16 +3,13 @@
 1. IntersectionObserver
 <https://habr.com/ru/post/494670/>
 <https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API>
-Примеры заданий – «ленивая» или отложенная загрузка изображений, InfinityScroll, подсчёт просмотров блока, оптимизация (например: запуск анимации, только после попадания блока во вьюпорт)
 
 2. ResizeObserver
 <https://habr.com/ru/post/487146/>
 <https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver>
-Примеры заданий – адаптивные блоки с помощью ResizeObserver, хук получения размеров блока при изменении его размеров
 
 3. MutationObserver
 <https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver>
-Пример задания – реагирование на изменения внутри компонентов сторонней библиотеки
 
 4. Встроенные браузерные хранилища. BroadcastChannel API.
 <https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage>
@@ -24,17 +21,14 @@
 <https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API>
 <https://developer.mozilla.org/ru/docs/Web/API/XMLHttpRequest>
 <https://developer.mozilla.org/ru/docs/Web/API/AbortController>
-Пример задания – классический пример загрузки данных на клиенте в React через useEffect с использованием fetch и XMLHttpRequest (во втором случае обернуть в Promise) и отмена запроса при анмаунте через AbortController. Желательно реализовать переиспользуемый хук.
 
 6. Cookies. CSRF, xsrf токены.
 <https://learn.javascript.ru/cookie>
 <https://developer.mozilla.org/en-US/docs/Web/API/Document/cookie>
-Примеры заданий – реализация функций для чтения и записи Cookie, парсинг document.cookie, удаление по ключу.
 
 7. CORS. Preflight-запросы.
 <https://learn.javascript.ru/fetch-crossorigin>
 <https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS>
-Тема больше с упором на теорию. Примеры вопросов – что такое атака с использованием XSS и как от неё защититься, что такое простые запросы, что такое Preflight-запрос, когда он отправляется и когда нет.
 
 Ссылки:
 
