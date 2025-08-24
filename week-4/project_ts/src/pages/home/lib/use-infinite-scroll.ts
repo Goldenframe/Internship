@@ -1,19 +1,19 @@
 import { useEffect } from "react";
 
-export const useInfiniteScroll = <T, >(callback: (arg: T) => void, arg: T, hasMore: boolean, loading: boolean) => {
+export const useInfiniteScroll = (callback: () => void, hasMore: boolean, status: string) => {
     useEffect(() => {
         const handleScroll = () => {
             if (
                 window.innerHeight + window.scrollY >=
                 document.documentElement.offsetHeight - 100 &&
                 hasMore &&
-                !loading
+                status!=="pending"
             ) {
-                callback(arg);
+                callback();
             }
         };
 
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
-    }, [hasMore, loading, callback, arg]);
+    }, [hasMore, status, callback]);
 }

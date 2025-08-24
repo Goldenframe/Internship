@@ -10,8 +10,11 @@ export const $startIndex = createStore<number>(0);
 export const $hasMore = createStore<boolean>(true);
 export const $filter = createStore<string>("");
 export const $t = createStore<(key: string) => string>(() => "");
+export const $openedBookId = createStore<string | null>(null)
 
-export const $processedBooks = combine({ books: $books, filter: $filter }, ({ books, filter }) => {
+export const $isModalOpen = $openedBookId.map((id) => id !== null);
+
+export const $processedBooks = combine({ books: $books, filter: $filter, favorites: $favorites }, ({ books, filter, favorites }) => {
     let result = [...books];
     if (filter) {
         result = result.filter(book => {
@@ -33,6 +36,10 @@ export const $processedBooks = combine({ books: $books, filter: $filter }, ({ bo
             return true;
         });
     }
-    return result;
+
+    return result.map(book => ({
+        ...book,
+        isFavorite: favorites.some(f => f.id === book.id),
+    }));
 })
 

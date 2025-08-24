@@ -12,7 +12,8 @@
     "search": "Search",
     "all": "All",
     "show": "Show",
-    "hide": "Hide"
+    "hide": "Hide",
+    "reset": "Reset"
   },
   "header": {
     "home": "Home",

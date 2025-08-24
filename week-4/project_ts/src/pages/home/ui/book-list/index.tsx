@@ -3,19 +3,18 @@ import { PropsWithChildren } from "react";
 
 import { model } from "@/entities/book-card/model/book-model";
 import { useInfiniteScroll } from "@/pages/home/lib/use-infinite-scroll";
-import { BooksContainer } from "@/shared/ui/templates/books-container";
+import { BooksContainer } from "@/shared/ui/templates";
 
 export const BookList = ({ children }: PropsWithChildren) => {
 
-  const [startIndex, hasMore, loading, loadedMore] = useUnit([
-    model.$startIndex,
+  const [hasMore, status, loadedMore] = useUnit([
     model.$hasMore,
-    model.$loading,
+    model.$status,
     model.loadedMore
   ]);
-  
-  useInfiniteScroll(loadedMore, startIndex, hasMore, loading);
 
+  useInfiniteScroll(loadedMore, hasMore, status); // ← убираем startIndex
+  
   return (
     <BooksContainer>
       {children}

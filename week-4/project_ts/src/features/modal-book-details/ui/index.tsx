@@ -1,97 +1,65 @@
 import DOMPurify from 'dompurify';
 import { useUnit } from 'effector-react';
-import React, { useEffect, useCallback } from "react";
+import React, { useCallback } from "react";
 import { useTranslation } from 'react-i18next';
 import {
   FaArrowLeft,
   FaBookOpen,
   FaCalendarAlt,
 } from "react-icons/fa";
-import { toast } from "react-toastify";
 
+import { model } from '@/entities/book-card/model/book-model';
 import { Book } from '@/shared/model/types/books';
-import { FavoriteIcon, Spinner } from '@/shared/ui/atoms';
+import { FavoriteIcon } from '@/shared/ui/atoms';
 
 import styles from './styles.module.scss';
 
-interface BookModalProps {
-  bookId: string;
-  isOpen: boolean;
-  onClose: () => void;
-  onFavoriteToggle: (book: Book) => void;
-  isFavorite: boolean;
-  bookModel: ReturnType<typeof import('@/entities/book-card/model/book-model/factories').createBookModel>;
+interface ModalBooksDetailsProps {
+  bookModel: ReturnType<typeof model.createBookModel>;
+  modalClosed: () => void;
+  favoriteToggled: (book: Book) => void,
 }
 
-export const BookModal = ({
-  bookId,
-  isOpen,
-  onClose,
-  onFavoriteToggle,
-  isFavorite,
-  bookModel
-}: BookModalProps) => {
+export const ModalBooksDetails = ({
+  bookModel,
+  modalClosed,
+  favoriteToggled,
+}: ModalBooksDetailsProps) => {
   const { t } = useTranslation();
 
   const [
     bookDetails,
-    isLoading,
-    bookDetailsOpened,
-    bookDetailsClosed,
-    tUpdated,
+    status,
+    isModalOpen,
   ] = useUnit([
-    bookModel.$bookDetails,
-    bookModel.$isLoading,
-    bookModel.bookDetailsOpened,
-    bookModel.bookDetailsClosed,
-    bookModel.tUpdated,
+    bookModel.$bookDetailsWithFavorite,
+    bookModel.$status,
+    model.$isModalOpen,
   ]);
-
-  useEffect(() => {
-    if (isOpen && bookId) {
-      tUpdated(t);
-      bookDetailsOpened(bookId);
-    } else {
-      bookDetailsClosed();
-    }
-
-    return () => {
-      bookDetailsClosed();
-    };
-  }, [isOpen, bookId, t, bookDetailsOpened, bookDetailsClosed, tUpdated]);
 
   const handleFavoriteClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     if (!bookDetails) return;
 
-    onFavoriteToggle(bookDetails);
-
-    const willBeFavorite = !isFavorite;
-    if (willBeFavorite) {
-      toast.success(t("toast.addedToFavorites"));
-    } else {
-      toast.info(t("toast.removedFromFavorites"));
-    }
-  }, [bookDetails, isFavorite, t, onFavoriteToggle]);
+    favoriteToggled(bookDetails);
+  }, [bookDetails, favoriteToggled]);
 
   const handleClose = useCallback(() => {
-    onClose();
-    bookDetailsClosed();
-  }, [onClose, bookDetailsClosed]);
+    modalClosed();
+  }, [modalClosed]);
 
-  if (!isOpen) {
+  if (!isModalOpen || !bookDetails) {
     return null;
   }
+
+  const isFavorite = bookDetails.isFavorite;
 
   return (
     <div className={styles.modalOverlay} onClick={handleClose}>
       <div
         className={styles.modalContent}
-        onClick={(e: React.MouseEvent<HTMLDivElement>) => { e.stopPropagation(); }}
       >
-        {isLoading ? (
-          <Spinner />
-        ) : bookDetails && (
+        {status !== "pending" && bookDetails && (
           <div className={styles.bookDetails}>
             <div className={styles.bookCover}>
               {bookDetails.volumeInfo?.imageLinks ? (

@@ -1,15 +1,10 @@
 import { useEffect, useLayoutEffect, useState } from "react";
 import { useTranslation } from 'react-i18next';
 
-import { Book } from "@/shared/model/types/books";
-
-interface EffectLoggerProps {
-  bookClicked: Book | null
-}
 
 import styles from './styles.module.scss'
 
-export const EffectLogger = ({ bookClicked }: EffectLoggerProps) => {
+export const EffectLogger = () => {
   const { t } = useTranslation();
 
   const [dependency, setDependency] = useState(false)
@@ -49,14 +44,6 @@ export const EffectLogger = ({ bookClicked }: EffectLoggerProps) => {
     };
   }, [dependency]);
 
-  useEffect(() => {
-    if (bookClicked) {
-      console.log('Props changed', bookClicked);
-    }
-    return () => {
-      console.log('cleanup Props Changed');
-    };
-  }, [bookClicked]);
 
   return (
     <aside className={styles.effectLoggerContainer}>
