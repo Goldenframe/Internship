@@ -4,7 +4,7 @@ type Options = IntersectionObserverInit & {
     countEachIntersect?: boolean;
 };
 
-export function useIntersectionObserver<T extends Element>(opts?: Options) {
+export const useIntersectionObserver = <T extends Element>(opts?: Options) => {
     const targetRef = useRef<T | null>(null);
     const [isIntersecting, setIsIntersecting] = useState(false);
     const [isViewed, setIsViewed] = useState(false);
