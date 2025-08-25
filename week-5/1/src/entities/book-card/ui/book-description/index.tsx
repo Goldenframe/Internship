@@ -6,7 +6,7 @@ interface BookDescriptonProps {
     shortDescription: string;
 };
 
-export const BookDescripton = ({ shortDescription }: BookDescriptonProps) =>
+export const BookDescription = ({ shortDescription }: BookDescriptonProps) =>
 (
     <div
         className={styles.bookItemDescription}
