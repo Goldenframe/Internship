@@ -10,16 +10,16 @@ import { model } from '@/entities/book-card/model/book-model';
 import { createBookModel } from '@/entities/book-card/model/book-model/factories';
 import { ModalDropdown } from '@/features/modal-dropdown';
 import { EffectLogger } from '@/shared/lib/effect-logger';
-import { sleep } from "@/shared/lib/utils/sleep";
 import { Spinner } from '@/shared/ui/atoms';
 import { Header } from '@/widgets/header/ui';
-
 import { LangProvider, ThemeProvider } from './providers';
 import { AppRouter } from './routers/app-router';
-const ModalBooksDetails = React.lazy(() => import("@/features/modal-book-details/ui").then(async module => {
-  await sleep(600);
-  return { default: module.ModalBooksDetails }
-}));
+const ModalBooksDetails = React.lazy(() =>
+  import("@/features/modal-book-details/ui").then(async module => {
+    await model.loadModalWithDelayFx();
+    return { default: module.ModalBooksDetails };
+  })
+);
 
 const modalRoot = document.getElementById("modal-root");
 
@@ -41,7 +41,7 @@ const AppContent = () => {
   const [isLogging, setIsLogging] = useState(false);
   const bookModalModel = useMemo(() => invoke(createBookModel), []);
   const [isModalOpened, modalClosed, favoriteToggled] = useUnit([model.$isModalOpen, model.modalClosed, model.favoriteToggled]);
-  
+
 
   return (
     <BrowserRouter>
@@ -53,7 +53,7 @@ const AppContent = () => {
 
           <AppRouter />
 
-          {isLogging && <EffectLogger/>}
+          {isLogging && <EffectLogger />}
 
           <ToastContainer
             position="top-right"
