@@ -128,6 +128,11 @@ sample({
   target: $favorites,
 });
 
+sample({
+  clock: BooksGate.open,
+  fn: ({ t }) => t,
+  target: $t,
+});
 
 sample({
     clock: favoriteToggled,

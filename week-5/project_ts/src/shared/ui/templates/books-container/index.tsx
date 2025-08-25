@@ -4,6 +4,6 @@ import styles from './styles.module.scss'
 
 export const BooksContainer = ({children}: PropsWithChildren) => {
   return (
-    <div className={styles.booksContainer}>{children}</div>
+    <div className={styles.booksContainer} id="books-container">{children}</div>
   )
 }

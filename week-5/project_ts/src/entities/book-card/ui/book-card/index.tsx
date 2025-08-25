@@ -1,14 +1,16 @@
 import { useUnit } from "effector-react";
-import React, { Suspense, memo } from "react";
+import React, { Suspense, memo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 
-const BookDescripton = React.lazy(() => import("@/entities/book-card/ui/book-description/index").then(module => ({ default: module.BookDescripton })));
+const BookDescription = React.lazy(() => import("@/entities/book-card/ui/book-description/index").then(module => ({ default: module.BookDescription })));
 
 
 import { model } from "@/entities/book-card/model/book-model";
 import type { Book, VolumeInfo } from "@/shared/model/types/books";
 import { FavoriteIcon, Spinner } from "@/shared/ui/atoms";
+
+import { useIntersectionObserver } from "../../lib/use-intersection-observer ";
 
 import styles from './styles.module.scss'
 
@@ -34,7 +36,10 @@ export const BookCard = memo(({ book, isFavorite }: BookCardProps) => {
     modalOpened({ bookId: book.id, t });
   };
 
+  const itemTargetElement = useRef<HTMLImageElement | null>(null);
 
+
+  const { isIntersecting, views } = useIntersectionObserver(itemTargetElement);
 
   const bookInfo: BookCardInfo = {
     title: book.volumeInfo?.title || '',
@@ -52,7 +57,7 @@ export const BookCard = memo(({ book, isFavorite }: BookCardProps) => {
 
   return (
     <>
-      <div className={styles.bookItem} onClick={handleBookClick}>
+      <div className={styles.bookItem} onClick={handleBookClick} ref={itemTargetElement}>
         {isFavorite && (
           <div className={styles.bookItemFavoriteIcon}>
             <FaHeart />
@@ -60,13 +65,18 @@ export const BookCard = memo(({ book, isFavorite }: BookCardProps) => {
         )}
 
         <div className={styles.bookItemImageContainer}>
-          {bookInfo.imageLinks ? (
+          {bookInfo.imageLinks?.thumbnail ? (
             <img
-              src={bookInfo.imageLinks.thumbnail ? bookInfo.imageLinks.thumbnail.replace("http://", "https://") : ""}
-              alt={bookInfo.title ? bookInfo.title : ""}
+              src={
+                isIntersecting
+                  ? bookInfo.imageLinks.thumbnail.replace("http://", "https://")
+                  : undefined
+              }
+              data-src={bookInfo.imageLinks.thumbnail}
+              alt={bookInfo.title}
               className={styles.bookItemImage}
               onError={(e) => {
-                const target = e.target as HTMLImageElement
+                const target = e.target as HTMLImageElement;
                 target.onerror = null;
                 target.src = "";
                 target.parentElement!.innerHTML = `<div class="book-item-no-image">${t("common.noCover")}</div>`;
@@ -76,7 +86,7 @@ export const BookCard = memo(({ book, isFavorite }: BookCardProps) => {
             <div className={styles.bookItemNoImage}>{t("common.noCover")}</div>
           )}
         </div>
-
+        <div>Просмотры {views}</div>
         <h3 className={styles.bookItemTitle}>{bookInfo.title}</h3>
 
         <p className={styles.bookItemAuthors}>
@@ -84,7 +94,7 @@ export const BookCard = memo(({ book, isFavorite }: BookCardProps) => {
         </p>
 
         <Suspense fallback={<Spinner />}>
-          <BookDescripton shortDescription={shortDescription} />
+          <BookDescription shortDescription={shortDescription} />
         </Suspense>
 
         <div className={styles.bookItemActions}>
