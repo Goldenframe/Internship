@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "jsx": "react-jsx",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "baseUrl": "src",
+    
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "exactOptionalPropertyTypes": true,
+    
+    "paths": {
+      "@/*": ["*"],
+      "@/app/*": ["app/*"],
+      "@/widgets/*": ["widgets/*"],
+      "@/shared/*": ["shared/*"]
+    }
+  },
+  "include": ["src", "src/widgets/resize-demo/resize-box/hooks"]
+}
