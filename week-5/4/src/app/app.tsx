@@ -12,6 +12,8 @@ import { ModalDropdown } from '@/features/modal-dropdown';
 import { EffectLogger } from '@/shared/lib/effect-logger';
 import { Spinner } from '@/shared/ui/atoms';
 import { Header } from '@/widgets/header/ui';
+import { ViewedBooksCounter } from '@/widgets/viewed-books-counter';
+
 import { LangProvider, ThemeProvider } from './providers';
 import { AppRouter } from './routers/app-router';
 const ModalBooksDetails = React.lazy(() =>
@@ -49,6 +51,7 @@ const AppContent = () => {
         <LangProvider>
           <div className="App">
             <Header isLogging={isLogging} setIsLogging={setIsLogging} />
+            <ViewedBooksCounter />
           </div>
 
           <AppRouter />

@@ -11,10 +11,10 @@ import { Book } from "@/shared/model/types/books";
 
 import { MAX_RESULT } from "./config";
 import { fetchBooksFx, loadModalWithDelayFx, saveFavoritesFx } from "./effects";
-import { filterUpdated, hasMoreUpdated, loadedMore, resetPagination, searchFormSubmitted, searchInputUpdated, startIndexUpdated, queryUpdated, favoriteToggled, modalOpened, modalClosed, clearSearch } from "./events";
+import { filterUpdated, hasMoreUpdated, loadedMore, resetPagination, searchFormSubmitted, searchInputUpdated, startIndexUpdated, queryUpdated, favoriteToggled, modalOpened, modalClosed, clearSearch, bookViewed } from "./events";
 import { createBookModel } from "./factories";
 import { BooksGate } from "./gates";
-import { $books, $favorites, $filter, $hasMore, $isModalOpen, $openedBookId, $processedBooks, $query, $searchInput, $startIndex, $t } from './stores';
+import { $books, $favorites, $filter, $hasMore, $isModalOpen, $openedBookId, $processedBooks, $query, $searchInput, $startIndex, $t, $viewedBooks } from './stores';
 
 debug({ $books });
 
@@ -116,22 +116,22 @@ const debouncedFetchParams = debounce({
 });
 
 sample({
-  clock: debouncedFetchParams,
-  source: { query: $query, startIndex: $startIndex, t: $t },
-  fn: ({ query, startIndex, t }) => ({ query, startIndex, t }),
-  target: fetchBooksFx,
+    clock: debouncedFetchParams,
+    source: { query: $query, startIndex: $startIndex, t: $t },
+    fn: ({ query, startIndex, t }) => ({ query, startIndex, t }),
+    target: fetchBooksFx,
 });
 
 sample({
-  clock: BooksGate.open,
-  fn: () => getFavorites(),
-  target: $favorites,
+    clock: BooksGate.open,
+    fn: () => getFavorites(),
+    target: $favorites,
 });
 
 sample({
-  clock: BooksGate.open,
-  fn: ({ t }) => t,
-  target: $t,
+    clock: BooksGate.open,
+    fn: ({ t }) => t,
+    target: $t,
 });
 
 sample({
@@ -156,14 +156,22 @@ sample({
 });
 
 reset({
-  clock: clearSearch,
-  target: [$searchInput, $query]
+    clock: clearSearch,
+    target: [$searchInput, $query]
 });
 
 sample({
     clock: clearSearch,
     target: resetPagination,
 });
+
+sample({
+    clock: bookViewed,
+    source: $viewedBooks,
+    filter: (viewedBooks, bookId) => !viewedBooks.includes(bookId),
+    fn: (viewed, bookId) => [...viewed, bookId],
+    target: $viewedBooks,
+})
 
 
 export const model = {
@@ -181,6 +189,7 @@ export const model = {
     modalClosed,
     modalOpened,
     clearSearch,
+    bookViewed,
     $books,
     $favorites,
     $status,
@@ -192,5 +201,6 @@ export const model = {
     $t,
     $processedBooks,
     $isModalOpen,
+    $viewedBooks,
     loadModalWithDelayFx
 };

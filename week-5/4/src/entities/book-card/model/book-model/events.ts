@@ -15,3 +15,4 @@ export const modalOpened = createEvent<{ bookId: string; t: (key: string) => str
 export const modalClosed = createEvent<void>();
 export const clearSearch =createEvent<void>();
 export const startModalDelay = createEvent();
+export const bookViewed = createEvent<string>();

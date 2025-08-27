@@ -37,7 +37,7 @@ export const BookCard = memo(({ book, isFavorite }: BookCardProps) => {
     useIntersectionObserver<HTMLDivElement>({
       root: null,
       rootMargin: '0px',
-      threshold: 0.8,
+      threshold: 0.5,
       countEachIntersect: false,
     });
 

@@ -13,7 +13,8 @@
     "all": "All",
     "show": "Show",
     "hide": "Hide",
-    "reset": "Reset"
+    "reset": "Reset",
+    "booksViewed": "books viewed"
   },
   "header": {
     "home": "Home",
