@@ -4,7 +4,7 @@ interface UseIntervalAppendProps {
   targetRef: RefObject<HTMLElement | null>;
   isActive: boolean;
   createElement: () => HTMLElement;
-  intervalMs?: number; 
+  intervalMs?: number;
 }
 
 export const useIntervalAppend = ({
@@ -14,6 +14,7 @@ export const useIntervalAppend = ({
   intervalMs = 2000,
 }: UseIntervalAppendProps) => {
   useEffect(() => {
+    if (!isActive) return;
     if (!targetRef.current) return;
 
     const interval = setInterval(() => {

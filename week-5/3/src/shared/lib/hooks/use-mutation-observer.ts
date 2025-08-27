@@ -2,10 +2,17 @@ import { useEffect, useRef, RefObject } from "react";
 
 type Options = MutationObserverInit;
 
-export const useMutationObserver = <T extends HTMLElement = HTMLElement>(
-    targetRef: RefObject<T | null>,
-    opts?: Options
-) => {
+interface UseMutationObserverProps<T extends HTMLElement = HTMLElement> {
+    targetRef: RefObject<T | null>;
+    callback: MutationCallback;
+    opts?: Options;
+}
+
+export const useMutationObserver = <T extends HTMLElement = HTMLElement>({
+    targetRef,
+    callback,
+    opts
+}: UseMutationObserverProps<T>) => {
     const observerRef = useRef<MutationObserver | null>(null);
 
     useEffect(() => {
@@ -19,27 +26,22 @@ export const useMutationObserver = <T extends HTMLElement = HTMLElement>(
             childList: opts?.childList ?? true,
             subtree: opts?.subtree ?? false,
         };
-
-        if (!observerRef.current) {
-            observerRef.current = new MutationObserver((mutationList) => {
-
-                for (const mutation of mutationList) {
-                    if (mutation.type === "childList") {
-                        console.log("A child node has been added or removed.");
-                    } else if (mutation.type === "attributes") {
-                        console.log(`The ${mutation.attributeName} attribute was modified.`);
-                    } else if (mutation.type === "characterData") {
-                        console.log("Character data changed.");
-                    }
-                }
-            });
+        if (observerRef.current) {
+            observerRef.current.disconnect();
+            observerRef.current = null;
         }
+
+        observerRef.current = new MutationObserver(callback);
+
 
         observerRef.current.observe(target, config);
 
         return () => {
-            if (observerRef.current) observerRef.current.disconnect();
+            if (observerRef.current) {
+                observerRef.current.disconnect();
+                observerRef.current = null
+            };
         };
-    }, [opts?.attributes, opts?.childList, opts?.subtree]);
+    }, [opts?.attributes, opts?.childList, opts?.subtree, callback, targetRef]);
 
 };
