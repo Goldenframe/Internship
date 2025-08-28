@@ -10,11 +10,11 @@ import { getFavorites } from "@/shared/lib/utils/local-storage/favorites";
 import { Book } from "@/shared/model/types/books";
 
 import { MAX_RESULT } from "./config";
-import { fetchBooksFx, loadModalWithDelayFx, saveFavoritesFx } from "./effects";
-import { filterUpdated, hasMoreUpdated, loadedMore, resetPagination, searchFormSubmitted, searchInputUpdated, startIndexUpdated, queryUpdated, favoriteToggled, modalOpened, modalClosed, clearSearch, bookViewed } from "./events";
+import { fetchBooksFx, loadModalWithDelayFx, saveFavoritesFx, saveSessionFavoritesFx } from "./effects";
+import { filterUpdated, hasMoreUpdated, loadedMore, resetPagination, searchFormSubmitted, searchInputUpdated, startIndexUpdated, queryUpdated, favoriteToggled, modalOpened, modalClosed, clearSearch, bookViewed, sessionFavoriteToggled } from "./events";
 import { createBookModel } from "./factories";
 import { BooksGate } from "./gates";
-import { $books, $favorites, $filter, $hasMore, $isModalOpen, $openedBookId, $processedBooks, $query, $searchInput, $startIndex, $t, $viewedBooks } from './stores';
+import { $books, $favorites, $sessionFavorites, $filter, $hasMore, $isModalOpen, $openedBookId, $processedBooks, $query, $searchInput, $startIndex, $t, $viewedBooks } from './stores';
 
 debug({ $books });
 
@@ -37,6 +37,20 @@ sample({
     target: $favorites,
 });
 
+sample({
+    clock: sessionFavoriteToggled,
+    source: { sessionFavorites: $sessionFavorites,favorites: $favorites },
+    fn: ({ sessionFavorites, favorites }, book: Book) => {
+        const isFavorite = sessionFavorites.some(f => f.id === book.id) && favorites.some(f => f.id === book.id);
+
+        if (isFavorite) {
+            return sessionFavorites.filter(f => f.id !== book.id);
+        } else {
+            return [...sessionFavorites, book];
+        }
+    },
+    target: $sessionFavorites,
+});
 
 
 sample({
@@ -124,8 +138,14 @@ sample({
 
 sample({
     clock: BooksGate.open,
-    fn: () => getFavorites(),
+    fn: () => getFavorites(localStorage),
     target: $favorites,
+});
+
+sample({
+    clock: BooksGate.open,
+    fn: () => getFavorites(sessionStorage),
+    target: $sessionFavorites,
 });
 
 sample({
@@ -138,6 +158,12 @@ sample({
     clock: favoriteToggled,
     source: $favorites,
     target: saveFavoritesFx
+});
+
+sample({
+    clock: sessionFavoriteToggled,
+    source: $sessionFavorites,
+    target: saveSessionFavoritesFx
 });
 
 sample({
@@ -186,12 +212,14 @@ export const model = {
     resetPagination,
     queryUpdated,
     favoriteToggled,
+    sessionFavoriteToggled,
     modalClosed,
     modalOpened,
     clearSearch,
     bookViewed,
     $books,
     $favorites,
+    $sessionFavorites,
     $status,
     $searchInput,
     $query,

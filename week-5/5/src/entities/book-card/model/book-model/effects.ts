@@ -57,7 +57,11 @@ export const fetchBooksFx = createEffect<FetchBooksParams, Book[]>(
 );
 
 export const saveFavoritesFx = createEffect<Book[], void>((favorites) => {
-    addFavorites(favorites);
+    addFavorites(localStorage, favorites);
+});
+
+export const saveSessionFavoritesFx = createEffect<Book[], void>((sessionFavorites) => {
+    addFavorites(sessionStorage, sessionFavorites);
 });
 
 export const modalDelayedEvent = delay({

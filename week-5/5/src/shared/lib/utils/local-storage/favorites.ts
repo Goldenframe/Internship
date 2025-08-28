@@ -2,7 +2,7 @@ import { Book } from "@/shared/model/types/books";
 
 import { STORAGE_KEY } from "./constants";
 
-const isBook = (obj: unknown): obj is Book => {
+export const isBook = (obj: unknown): obj is Book => {
     return (
         typeof obj === "object" &&
         obj !== null &&
@@ -10,33 +10,27 @@ const isBook = (obj: unknown): obj is Book => {
         "id" in obj &&
         "etag" in obj &&
         "selfLink" in obj &&
-        "volumeInfo" in obj);
-}
+        "volumeInfo" in obj
+    );
+};
 
-
-export const getFavorites = () => {
+export const getFavorites = (storage: Storage): Book[] => {
     try {
-        const favoriteBooks = localStorage.getItem(STORAGE_KEY.FAVORITE_BOOKS);
+        const favoriteBooks = storage.getItem(STORAGE_KEY.FAVORITE_BOOKS);
 
-        if (!favoriteBooks) return []
-        else {
-            const parsedBooks: Book[] = JSON.parse(favoriteBooks)
-            return parsedBooks.filter((book: unknown): book is Book => isBook(book));
-        }
-
-    }
-    catch (err: unknown) {
-        console.log('Error while getting favorite books ', err);
+        if (!favoriteBooks) return [];
+        const parsedBooks: Book[] = JSON.parse(favoriteBooks);
+        return parsedBooks.filter((book: unknown): book is Book => isBook(book));
+    } catch (err: unknown) {
+        console.log("Error while getting favorite books ", err);
         return [];
     }
-}
+};
 
-export const addFavorites = (favorites: Book[]) => {
+export const addFavorites = (storage: Storage, favorites: Book[]) => {
     try {
-        localStorage.setItem(STORAGE_KEY.FAVORITE_BOOKS, JSON.stringify(favorites));
+        storage.setItem(STORAGE_KEY.FAVORITE_BOOKS, JSON.stringify(favorites));
+    } catch (err) {
+        console.error("Error while saving favorites:", err);
     }
-    catch (err) {
-        console.error('Error while saving favorites to localStorage:', err);
-        return [];
-    }
-}
+};

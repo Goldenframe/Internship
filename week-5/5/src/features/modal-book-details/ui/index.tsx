@@ -9,6 +9,7 @@ import {
 } from "react-icons/fa";
 
 import { model } from '@/entities/book-card/model/book-model';
+import { useBroadcastChannel } from '@/shared/lib/hooks/use-broadcast-channel';
 import { Book } from '@/shared/model/types/books';
 import { FavoriteIcon } from '@/shared/ui/atoms';
 
@@ -18,12 +19,15 @@ interface ModalBooksDetailsProps {
   bookModel: ReturnType<typeof model.createBookModel>;
   modalClosed: () => void;
   favoriteToggled: (book: Book) => void,
+  sessionFavoriteToggled: (book: Book) => void,
+
 }
 
 export const ModalBooksDetails = ({
   bookModel,
   modalClosed,
   favoriteToggled,
+  sessionFavoriteToggled
 }: ModalBooksDetailsProps) => {
   const { t } = useTranslation();
 
@@ -37,12 +41,17 @@ export const ModalBooksDetails = ({
     model.$isModalOpen,
   ]);
 
+  const { sendMessage } = useBroadcastChannel<Book>({ channelName: "favorites", onMessage: (data) => favoriteToggled(data) })
+  const { sendMessage: sendSessionMessage } = useBroadcastChannel<Book>({ channelName: "favorites", onMessage: (data) => sessionFavoriteToggled(data) })
+
+
   const handleFavoriteClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     if (!bookDetails) return;
-
+    sendMessage(bookDetails);
+    sendSessionMessage(bookDetails);
     favoriteToggled(bookDetails);
-  }, [bookDetails, favoriteToggled]);
+  }, [bookDetails, sendMessage, sendSessionMessage, favoriteToggled]);
 
   const handleClose = useCallback(() => {
     modalClosed();

@@ -25,6 +25,7 @@ export const Header = ({ isLogging, setIsLogging }: HeaderProps) => {
             <button type='button' onClick={() => { toggleLang(lang) }}>{t("header.changeLanguage")}</button>
             <Link to={'/'}>{t("header.home")}</Link>
             <Link to={'/favorites'}>{t("header.favorites")}</Link>
+            <Link to={'/session-favorites'}>Session Favorites</Link>
             <label>
                 <input
                     type="checkbox"

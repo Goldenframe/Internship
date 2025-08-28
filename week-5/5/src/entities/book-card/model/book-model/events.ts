@@ -11,6 +11,7 @@ export const searchInputUpdated = createEvent<string>();
 export const queryUpdated = createEvent<string>();
 export const resetPagination = createEvent<void>();
 export const favoriteToggled = createEvent<Book>();
+export const sessionFavoriteToggled = createEvent<Book>();
 export const modalOpened = createEvent<{ bookId: string; t: (key: string) => string }>();
 export const modalClosed = createEvent<void>();
 export const clearSearch =createEvent<void>();

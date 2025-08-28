@@ -6,6 +6,7 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 const BookDescription = React.lazy(() => import("@/entities/book-card/ui/book-description/index").then(module => ({ default: module.BookDescription })));
 
 import { model } from "@/entities/book-card/model/book-model";
+import { useBroadcastChannel } from "@/shared/lib/hooks/use-broadcast-channel";
 import type { Book, VolumeInfo } from "@/shared/model/types/books";
 import { FavoriteIcon, Spinner } from "@/shared/ui/atoms";
 
@@ -22,11 +23,17 @@ type BookCardInfo = Pick<VolumeInfo, "title" | "authors" | "imageLinks" | "descr
 
 export const BookCard = memo(({ book, isFavorite }: BookCardProps) => {
   const { t } = useTranslation();
-  const [favoriteToggled, modalOpened] = useUnit([model.favoriteToggled, model.modalOpened]);
+  const [favoriteToggled, sessionFavoriteToggled, modalOpened] = useUnit([model.favoriteToggled, model.sessionFavoriteToggled, model.modalOpened]);
+  const { sendMessage } = useBroadcastChannel<Book>({ channelName: "favorites", onMessage: (data) => favoriteToggled(data) });
+  const { sendMessage: sendSessionMessage } = useBroadcastChannel<Book>({ channelName: "session-favorites", onMessage: (data) => sessionFavoriteToggled(data) });
+
 
   const handleFavoriteClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     favoriteToggled(book);
+    sessionFavoriteToggled(book);
+    sendMessage(book);
+    sendSessionMessage(book);
   };
 
   const handleBookClick = () => {
@@ -77,7 +84,7 @@ export const BookCard = memo(({ book, isFavorite }: BookCardProps) => {
         {thumbnail && !imgError ? (
           <img
             loading="lazy"
-            src={isIntersecting ? thumbnail : undefined} 
+            src={isIntersecting ? thumbnail : undefined}
             alt={bookInfo.title}
             className={styles.bookItemImage}
             onError={() => setImgError(true)}
