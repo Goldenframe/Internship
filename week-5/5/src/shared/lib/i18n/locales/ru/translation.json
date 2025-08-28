@@ -1,0 +1,67 @@
+{
+  "common": {
+    "toggle": "Переключить",
+    "toggleDependency": "Переключить Зависимость",
+    "noCover": "Нет обложки",
+    "unknownAuthor": "Автор неизвестен",
+    "noTitle": "Без названия",
+    "noDescription": "Описание отсутствует",
+    "pages": "страниц",
+    "rating": "⭐ {{rating}}/5",
+    "backToSearch": "Назад к поиску",
+    "search": "Поиск",
+    "all": "Все",
+    "show": "Показать",
+    "hide": "Скрыть",
+    "reset": "Сбросить",
+    "booksViewed": "книг просмотрено"
+  },
+  "header": {
+    "home": "Главная",
+    "favorites": "Избранное",
+    "changeTheme": "Сменить тему",
+    "changeLanguage": "Сменить язык",
+    "effectLogger": "Логгер эффектов",
+    "showEffectLogger": "Показать логгер эффектов",
+    "hideEffectLogger": "Скрыть логгер эффектов"
+  },
+  "bookCard": {
+    "like": "Нравится",
+    "liked": "Понравилось",
+    "addToFavorites": "В избранное",
+    "removeFromFavorites": "Удалить из избранного"
+  },
+  "bookDetails": {
+    "published": "Опубликовано",
+    "pageCount": "{{count}} стр."
+  },
+  "search": {
+    "placeholder": "Поиск книг...",
+    "filter": {
+      "all": "Все",
+      "ebooks": "Электронные",
+      "freeEbooks": "Бесплатные",
+      "full": "Полные",
+      "paidEbooks": "Платные",
+      "partial": "Частичные"
+    },
+    "noResults": "Книги не найдены"
+  },
+    "toast": {
+    "pendingBookDetails": "Загружаются детали книги...",
+    "successBookDetals": "Книга успешно загружена",
+    "errorBookDetails": "Не удалось загрузить детали книги",
+    "bookDetailsNotFound": "Книга не найдена",
+    "pendingBooks": "Загрузка...",
+    "successManyBooks": " книг загружено",
+    "successOneBooks": "Загружена 1 книга",
+    "noBooksFound": "Книги не найдены",
+    "errorBook": "Ошибка загрузки книг. Пожалуйста, попробуйте снова",
+    "bookNotFound": "Книга не найдена",
+    "booksNotFound": "Книги не найдены",
+    "addedToFavorites": "Добавлено в избранное",
+    "removedFromFavorites": "Удалено из избранного",
+    "allBooksLoaded": "Все книги загружены"
+
+  }
+}

@@ -1,0 +1,38 @@
+@mixin flex-center($direction: row, $gap: 0) {
+  display: flex;
+  flex-direction: $direction;
+  align-items: center;
+  justify-content: center;
+  gap: $gap;
+}
+
+@mixin button-base($bg: var(--blue), $color: var(--white)) {
+  padding: var(--gap-sm) var(--gap-lg);
+  border-radius: var(--radius);
+  border: none;
+  background-color: $bg;
+  color: $color;
+  font-size: var(--text);
+  cursor: pointer;
+  transition: background-color var(--transition);
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+}
+
+@mixin card($radius: var(--radius-lg), $shadow: var(--shadow-md)) {
+  background-color: var(--white);
+  border-radius: $radius;
+  box-shadow: $shadow;
+}
+
+@mixin responsive-text($lg, $md, $sm) {
+  font-size: $lg;
+
+  @media (max-width: 992px) {
+    font-size: $md;
+  }
+  @media (max-width: 768px) {
+    font-size: $sm;
+  }
+}

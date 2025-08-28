@@ -1,0 +1,69 @@
+.dropdown {
+    &Container {
+        @include flex-center(row, var(--gap));
+        position: relative;
+        margin-left: auto;
+    }
+
+    &Wrapper {
+        position: relative;
+        display: inline-block;
+    }
+
+    &Select {
+        padding: var(--gap-sm) var(--gap);
+        padding-right: calc(var(--gap) + 20px);
+        border-radius: var(--radius);
+        border: 1px solid var(--border-color);
+        font-size: var(--text);
+        background-color: var(--white);
+        color: var(--dark);
+        appearance: none;
+        cursor: pointer;
+        transition: all var(--transition);
+        min-width: 180px;
+
+        &:focus {
+            outline: none;
+            border-color: var(--blue);
+            box-shadow: 0 0 0 2px rgba(45, 137, 239, 0.2);
+        }
+    }
+
+    &Label {
+        font-size: var(--text-sm);
+        color: var(--text-light);
+        margin-right: var(--gap-sm);
+    }
+}
+
+.themeToggleButton {
+    @include button-base(var(--white), var(--dark));
+    border: 1px solid var(--border-color);
+    font-weight: 500;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+    min-width: 100px;
+
+    &:hover {
+        background: var(--gray);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+}
+
+select {
+    display: block;
+    margin: 0 auto;
+    padding: var(--gap-sm) var(--gap);
+    border-radius: var(--radius);
+    font-size: var(--text);
+    border: 1px solid var(--border-color);
+    transition: border-color var(--transition);
+
+    &:focus {
+        outline: none;
+        border-color: var(--blue);
+    }
+}

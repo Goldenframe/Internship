@@ -1,0 +1,61 @@
+import { useEffect, useLayoutEffect, useState } from "react";
+import { useTranslation } from 'react-i18next';
+
+
+import styles from './styles.module.scss'
+
+export const EffectLogger = () => {
+  const { t } = useTranslation();
+
+  const [dependency, setDependency] = useState(false)
+
+
+  console.log(' Render');
+
+  useLayoutEffect(() => {
+    console.log('1 useLayoutEffect no dependency');
+
+    return () => {
+      console.log('1 cleanup useLayoutEffect no dependency');
+    };
+  }, []);
+
+  useEffect(() => {
+    console.log('2 useEffect no dependency');
+
+    return () => {
+      console.log('2 cleanup useEffect no dependency');
+    };
+  }, []);
+
+  useLayoutEffect(() => {
+    console.log('3 useLayoutEffect with dependency');
+
+    return () => {
+      console.log('3 cleanup useLayoutEffect with dependency');
+    };
+  }, [dependency]);
+
+  useEffect(() => {
+    console.log('4 useEffect with dependency');
+
+    return () => {
+      console.log('4 cleanup useEffect with dependency');
+    };
+  }, [dependency]);
+
+
+  return (
+    <aside className={styles.effectLoggerContainer}>
+      <strong>{t('header.effectLogger')}</strong>
+      <label>
+        <input
+          type="checkbox"
+          checked={dependency}
+          onChange={(e) => setDependency(e.target.checked)}
+        />
+        {t('common.toggle')} Dependency
+      </label>
+    </aside>
+  );
+}

@@ -1,0 +1,29 @@
+.bookViews {
+    position: fixed;
+    bottom: var(--gap);
+    right: var(--gap);
+    z-index: 1000;
+
+    background-color: var(--white);
+    padding: var(--gap-sm) var(--gap-lg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: background-color var(--transition), color var(--transition);
+
+    &:hover {
+        background-color: var(--blue);
+        color: var(--white);
+    }
+
+    &Text {
+        display: inline-block;
+        font-size: var(--text);
+        color: var(--blue);
+        font-weight: 500;
+    }
+}
