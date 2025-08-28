@@ -27,7 +27,11 @@ export const useIntersectionObserver = <T extends Element>(opts?: Options) => {
                         setIsIntersecting(true);
 
                         if (!isViewedRef.current) {
-                            console.log(`${entry.target.id} просмотрена`);
+                            console.group('Событие просмотра книги:');
+                            console.log(`Книга: ${entry.target.id}`);
+                            console.log(`Статус: просмотрена`);
+                            console.log(`Аналитика: отправлена`);
+                            console.groupEnd();
                             setIsViewed(true);
                             bookViewed(entry.target.id);
                             isViewedRef.current = true;
