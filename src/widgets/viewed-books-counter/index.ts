@@ -1,1 +1,0 @@
-export { ViewedBooksCounter } from "./ui";
