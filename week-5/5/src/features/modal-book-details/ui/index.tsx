@@ -41,17 +41,16 @@ export const ModalBooksDetails = ({
     model.$isModalOpen,
   ]);
 
-  const { sendMessage } = useBroadcastChannel<Book>({ channelName: "favorites", onMessage: (data) => favoriteToggled(data) })
-  const { sendMessage: sendSessionMessage } = useBroadcastChannel<Book>({ channelName: "favorites", onMessage: (data) => sessionFavoriteToggled(data) })
+  const { sendMessage } = useBroadcastChannel<Book>("favorites")
 
 
   const handleFavoriteClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     if (!bookDetails) return;
     sendMessage(bookDetails);
-    sendSessionMessage(bookDetails);
     favoriteToggled(bookDetails);
-  }, [bookDetails, sendMessage, sendSessionMessage, favoriteToggled]);
+    sessionFavoriteToggled(bookDetails);
+  }, [bookDetails, sendMessage, favoriteToggled, sessionFavoriteToggled]);
 
   const handleClose = useCallback(() => {
     modalClosed();

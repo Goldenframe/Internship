@@ -1,26 +1,11 @@
-import { useEffect } from "react";
+import { useCallback } from "react";
 
-interface UseBroadcastChannelProps<T> {
-    channelName: string;
-    onMessage: (data: T) => void;
-}
-
-export const useBroadcastChannel = <T,>({ channelName, onMessage }: UseBroadcastChannelProps<T>) => {
-    useEffect(() => {
-        const channel = new BroadcastChannel(channelName);
-
-        channel.onmessage = (event: MessageEvent<T>) => {
-            onMessage(event.data);
-        };
-
-        return () => channel.close();
-    }, [channelName, onMessage]);
-
-    const sendMessage = (msg: T) => {
+export const useBroadcastChannel = <T>(channelName: string) => {
+    const sendMessage = useCallback((msg: T) => {
         const channel = new BroadcastChannel(channelName);
         channel.postMessage(msg);
         channel.close();
-    };
+    }, [channelName]);
 
     return { sendMessage };
 };

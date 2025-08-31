@@ -13,7 +13,7 @@ import { MAX_RESULT } from "./config";
 import { fetchBooksFx, loadModalWithDelayFx, saveFavoritesFx, saveSessionFavoritesFx } from "./effects";
 import { filterUpdated, hasMoreUpdated, loadedMore, resetPagination, searchFormSubmitted, searchInputUpdated, startIndexUpdated, queryUpdated, favoriteToggled, modalOpened, modalClosed, clearSearch, bookViewed, sessionFavoriteToggled } from "./events";
 import { createBookModel } from "./factories";
-import { BooksGate } from "./gates";
+import { AppGate } from "./gates";
 import { $books, $favorites, $sessionFavorites, $filter, $hasMore, $isModalOpen, $openedBookId, $processedBooks, $query, $searchInput, $startIndex, $t, $viewedBooks } from './stores';
 
 debug({ $books });
@@ -112,7 +112,7 @@ sample({ clock: filterUpdated, target: $filter });
 sample({ clock: searchInputUpdated, target: $searchInput });
 
 sample({
-    clock: BooksGate.open,
+    clock: AppGate.open,
     source: { query: $query, startIndex: $startIndex },
     filter: ({ query }) => query.length > 0,
     fn: ({ query, startIndex }, { t }) => ({ query, startIndex, t }),
@@ -137,19 +137,19 @@ sample({
 });
 
 sample({
-    clock: BooksGate.open,
+    clock: AppGate.open,
     fn: () => getFavorites(localStorage),
     target: $favorites,
 });
 
 sample({
-    clock: BooksGate.open,
+    clock: AppGate.open,
     fn: () => getFavorites(sessionStorage),
     target: $sessionFavorites,
 });
 
 sample({
-    clock: BooksGate.open,
+    clock: AppGate.open,
     fn: ({ t }) => t,
     target: $t,
 });
@@ -202,7 +202,7 @@ sample({
 
 export const model = {
     createBookModel,
-    BooksGate,
+    AppGate,
     searchFormSubmitted,
     loadedMore,
     startIndexUpdated,

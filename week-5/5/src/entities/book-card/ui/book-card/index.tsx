@@ -23,17 +23,14 @@ type BookCardInfo = Pick<VolumeInfo, "title" | "authors" | "imageLinks" | "descr
 
 export const BookCard = memo(({ book, isFavorite }: BookCardProps) => {
   const { t } = useTranslation();
-  const [favoriteToggled, sessionFavoriteToggled, modalOpened] = useUnit([model.favoriteToggled, model.sessionFavoriteToggled, model.modalOpened]);
-  const { sendMessage } = useBroadcastChannel<Book>({ channelName: "favorites", onMessage: (data) => favoriteToggled(data) });
-  const { sendMessage: sendSessionMessage } = useBroadcastChannel<Book>({ channelName: "session-favorites", onMessage: (data) => sessionFavoriteToggled(data) });
+  const [sessionFavoriteToggled, modalOpened] = useUnit([model.sessionFavoriteToggled, model.modalOpened]);
+  const { sendMessage } = useBroadcastChannel<Book>("favorites");
 
 
   const handleFavoriteClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    favoriteToggled(book);
     sessionFavoriteToggled(book);
-    sendMessage(book);
-    sendSessionMessage(book);
+    sendMessage(book)
   };
 
   const handleBookClick = () => {

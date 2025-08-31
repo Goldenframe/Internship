@@ -1,4 +1,4 @@
-import { useGate, useList, useUnit } from 'effector-react';
+import { useList, useUnit } from 'effector-react';
 import { useTranslation } from "react-i18next";
 
 import { model } from "@/entities/book-card/model/book-model";
@@ -17,8 +17,6 @@ export const Home = () => {
   const [processedBooksArr, status, hasMore, startIndex] = useUnit([
     model.$processedBooks, model.$status, model.$hasMore, model.$startIndex
   ]);
-
-  useGate(model.BooksGate, { t });
 
   const bookList = useList(model.$processedBooks, (book: Book & { isFavorite: boolean }) => (
     <BookCard

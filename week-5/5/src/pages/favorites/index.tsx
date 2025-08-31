@@ -1,5 +1,4 @@
-import { useGate, useList, useUnit } from "effector-react";
-import { useTranslation } from "react-i18next";
+import { useList, useUnit } from "effector-react";
 
 import { model } from "@/entities/book-card/model/book-model";
 import { BookCard } from "@/entities/book-card/ui/book-card";
@@ -8,9 +7,6 @@ import { BooksContainer } from "@/shared/ui/templates";
 
 export const Favorites = () => {
   const favorites = useUnit(model.$favorites);
-
-  const {t} = useTranslation();
-  useGate(model.BooksGate, { t });
 
   const favoritesList = useList(model.$favorites, (book: Book) => (
     <BookCard

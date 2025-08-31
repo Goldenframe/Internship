@@ -1,8 +1,9 @@
 import { invoke } from '@withease/factories';
 import { fork } from 'effector';
-import { Provider, useUnit } from 'effector-react';
+import { Provider, useGate, useUnit } from 'effector-react';
 import React, { useMemo, useState, Suspense } from 'react';
 import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
 import { BrowserRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 
@@ -10,6 +11,8 @@ import { model } from '@/entities/book-card/model/book-model';
 import { createBookModel } from '@/entities/book-card/model/book-model/factories';
 import { ModalDropdown } from '@/features/modal-dropdown';
 import { EffectLogger } from '@/shared/lib/effect-logger';
+import { useCrossTabFavoritesSync } from '@/shared/lib/hooks/use-cross-tab-favorites-sync';
+import { Book } from '@/shared/model/types/books';
 import { Spinner } from '@/shared/ui/atoms';
 import { Header } from '@/widgets/header/ui';
 import { ViewedBooksCounter } from '@/widgets/viewed-books-counter';
@@ -40,9 +43,13 @@ const App = () => {
 
 const AppContent = () => {
 
+
+  useCrossTabFavoritesSync<Book>({ channelName: "favorites", onMessage: (data) => { favoriteToggled(data) } });
+  const { t } = useTranslation();
   const [isLogging, setIsLogging] = useState(false);
   const bookModalModel = useMemo(() => invoke(createBookModel), []);
-  const [isModalOpened, modalClosed, favoriteToggled] = useUnit([model.$isModalOpen, model.modalClosed, model.favoriteToggled]);
+  const [isModalOpened, modalClosed, favoriteToggled, sessionFavoriteToggled] = useUnit([model.$isModalOpen, model.modalClosed, model.favoriteToggled, model.sessionFavoriteToggled]);
+  useGate(model.AppGate, { t });
 
 
   return (
@@ -77,6 +84,7 @@ const AppContent = () => {
                 bookModel={bookModalModel}
                 modalClosed={modalClosed}
                 favoriteToggled={favoriteToggled}
+                sessionFavoriteToggled={sessionFavoriteToggled}
               />
             </Suspense>,
             modalRoot
