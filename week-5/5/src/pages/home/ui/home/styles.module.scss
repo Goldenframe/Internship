@@ -1,0 +1,10 @@
+.no-books-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: var(--text-xl);
+  color: var(--text-light);
+  text-align: center;
+  width: 100%;
+}
