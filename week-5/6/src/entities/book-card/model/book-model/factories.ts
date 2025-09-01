@@ -58,6 +58,11 @@ export const createBookModel = createFactory(() => {
     target: $bookDetails,
   });
 
+  sample({
+    clock: fetchBookDetailsFx.fail,
+    fn: () => null,
+    target: $bookDetails
+  });
 
   sample({
     clock: modalClosed,
