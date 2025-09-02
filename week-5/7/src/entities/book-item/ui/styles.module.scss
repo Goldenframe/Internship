@@ -1,0 +1,71 @@
+.book {
+    &Card {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+    }
+
+
+    &Image {
+        flex-shrink: 0;
+        width: 90px;
+        height: 130px;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #f0f0f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+
+            &:hover {
+                transform: scale(1.05);
+            }
+        }
+    }
+
+    &Info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+
+        &Title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        &Authors {
+            font-size: 14px;
+            font-weight: 400;
+            color: #555;
+            margin: 0;
+        }
+
+        &Description {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.4;
+            max-height: 55px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+
+}
+
+.noImage {
+    font-size: 12px;
+    color: #7f8c8d;
+    text-align: center;
+    padding: 4px;
+}
