@@ -6,18 +6,20 @@ import { toast } from 'react-toastify';
 import { BASE_URL } from '@/shared/config/env';
 import { Book } from '@/shared/model/types/books';
 
-import { modalOpened, modalClosed } from './events';
+import { modalClosed } from './events';
 import { $favorites } from './stores';
 
 interface FetchBookDetailsParams {
   bookId: string;
   t: (key: string) => string;
-  signal?: AbortSignal | null;
+  signal: AbortSignal;
 }
 
 export const createBookModel = createFactory(() => {
   const $bookDetails = createStore<Book | null>(null);
   const $errorKey = createStore<string | null>(null);
+
+  
 
   const fetchBookDetailsFx = createEffect<FetchBookDetailsParams, Book>(
     async ({ bookId, t, signal }) => {
@@ -26,7 +28,7 @@ export const createBookModel = createFactory(() => {
       const url = `${BASE_URL}${bookId}`;
 
       try {
-        const fetchPromise = fetch(url, { signal: signal ?? null }).then((response) => {
+        const fetchPromise = fetch(url, { signal }).then((response) => {
           if (!response.ok) throw new Error('Network response was not ok');
           return response.json();
         });
@@ -48,11 +50,6 @@ export const createBookModel = createFactory(() => {
 
   const $status = status(fetchBookDetailsFx);
 
-  sample({
-    clock: modalOpened,
-    fn: ({ bookId, t }) => ({ bookId, t }),
-    target: fetchBookDetailsFx,
-  });
   sample({
     clock: fetchBookDetailsFx.doneData,
     target: $bookDetails,

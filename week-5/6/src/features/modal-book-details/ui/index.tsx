@@ -21,13 +21,15 @@ interface ModalBooksDetailsProps {
   modalClosed: () => void;
   favoriteToggled: (book: Book) => void,
   sessionFavoriteToggled: (book: Book) => void,
+  openedBookId: string
 }
 
 export const ModalBooksDetails = ({
   bookModel,
   modalClosed,
   favoriteToggled,
-  sessionFavoriteToggled
+  sessionFavoriteToggled,
+  openedBookId
 }: ModalBooksDetailsProps) => {
   const { t } = useTranslation();
 
@@ -57,7 +59,7 @@ export const ModalBooksDetails = ({
     modalClosed();
   }, [modalClosed]);
 
-  useFetch(bookDetails?.id ?? null, fetchBookDetailsFx);
+  useFetch(openedBookId, fetchBookDetailsFx);
 
   if (!isModalOpen) {
     return null;

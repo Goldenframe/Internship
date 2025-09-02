@@ -1,22 +1,21 @@
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
-interface FetchParams {
+interface FetchBookDetailsParams {
   bookId: string;
   t: (key: string) => string;
-  signal: AbortSignal | null;
+  signal: AbortSignal;
 }
 
-export const useFetch = <T>(bookId: string | null, effect: (params: FetchParams) => Promise<T>) => {
+export const useFetch = <T>(bookId: string | null, effect: (params: FetchBookDetailsParams) => Promise<T>) => {
   const { t } = useTranslation();
 
   useEffect(() => {
     if (!bookId) return;
 
     const controller = new AbortController();
-    const signal = controller.signal;
 
-    effect({ bookId, t, signal });
+    effect({ bookId, t, signal: controller.signal });
 
     return () => { controller.abort() }
 

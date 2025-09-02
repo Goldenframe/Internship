@@ -48,7 +48,7 @@ const AppContent = () => {
   const { t } = useTranslation();
   const [isLogging, setIsLogging] = useState(false);
   const bookModalModel = useMemo(() => invoke(createBookModel), []);
-  const [isModalOpened, modalClosed, favoriteToggled, sessionFavoriteToggled] = useUnit([model.$isModalOpen, model.modalClosed, model.favoriteToggled, model.sessionFavoriteToggled]);
+  const [isModalOpened, modalClosed, favoriteToggled, sessionFavoriteToggled, openedBookId] = useUnit([model.$isModalOpen, model.modalClosed, model.favoriteToggled, model.sessionFavoriteToggled, model.$openedBookId]);
   useGate(model.AppGate, { t });
 
 
@@ -85,6 +85,7 @@ const AppContent = () => {
                 modalClosed={modalClosed}
                 favoriteToggled={favoriteToggled}
                 sessionFavoriteToggled={sessionFavoriteToggled}
+                openedBookId={openedBookId}
               />
             </Suspense>,
             modalRoot
