@@ -10,8 +10,9 @@ import {
 
 import { model } from '@/entities/book-card/model/book-model';
 import { useBroadcastChannel } from '@/shared/lib/hooks/use-broadcast-channel';
+import { useFetch } from '@/shared/lib/hooks/use-fetch';
 import { Book } from '@/shared/model/types/books';
-import { FavoriteIcon } from '@/shared/ui/atoms';
+import { FavoriteIcon, Spinner } from '@/shared/ui/atoms';
 
 import styles from './styles.module.scss';
 
@@ -20,29 +21,31 @@ interface ModalBooksDetailsProps {
   modalClosed: () => void;
   favoriteToggled: (book: Book) => void,
   sessionFavoriteToggled: (book: Book) => void,
-
+  openedBookId: string
 }
 
 export const ModalBooksDetails = ({
   bookModel,
   modalClosed,
   favoriteToggled,
-  sessionFavoriteToggled
+  sessionFavoriteToggled,
+  openedBookId
 }: ModalBooksDetailsProps) => {
   const { t } = useTranslation();
 
   const [
     bookDetails,
     status,
+    fetchBookDetailsFx,
     isModalOpen,
   ] = useUnit([
     bookModel.$bookDetailsWithFavorite,
     bookModel.$status,
+    bookModel.fetchBookDetailsFx,
     model.$isModalOpen,
   ]);
 
-  const { sendMessage } = useBroadcastChannel<Book>("favorites")
-
+  const { sendMessage } = useBroadcastChannel<Book>("favorites");
 
   const handleFavoriteClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
@@ -56,17 +59,21 @@ export const ModalBooksDetails = ({
     modalClosed();
   }, [modalClosed]);
 
-  if (!isModalOpen || !bookDetails) {
+  useFetch(openedBookId, fetchBookDetailsFx);
+
+  if (!isModalOpen) {
     return null;
   }
 
-  const isFavorite = bookDetails.isFavorite;
-
   return (
     <div className={styles.modalOverlay} onClick={handleClose}>
-      <div
-        className={styles.modalContent}
-      >
+      <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+        {status === "pending" && (
+          <div className={styles.loader}>
+            <Spinner />
+          </div>
+        )}
+
         {status !== "pending" && bookDetails && (
           <div className={styles.bookDetails}>
             <div className={styles.bookCover}>
@@ -135,11 +142,11 @@ export const ModalBooksDetails = ({
 
               <div className={styles.bookActions}>
                 <button
-                  className={`${styles.actionButton} ${styles.likeButton} ${isFavorite ? styles.liked : ''}`}
+                  className={`${styles.actionButton} ${styles.likeButton} ${bookDetails.isFavorite ? styles.liked : ''}`}
                   onClick={handleFavoriteClick}
                 >
                   <FavoriteIcon />
-                  {isFavorite ? t("bookCard.removeFromFavorites") : t("bookCard.addToFavorites")}
+                  {bookDetails.isFavorite ? t("bookCard.removeFromFavorites") : t("bookCard.addToFavorites")}
                 </button>
 
                 <button

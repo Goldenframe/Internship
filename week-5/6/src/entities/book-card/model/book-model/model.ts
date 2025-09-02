@@ -230,5 +230,6 @@ export const model = {
     $processedBooks,
     $isModalOpen,
     $viewedBooks,
+    $openedBookId,
     loadModalWithDelayFx
 };
