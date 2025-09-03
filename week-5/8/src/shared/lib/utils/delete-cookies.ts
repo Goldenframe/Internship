@@ -1,4 +1,4 @@
-export const deleteCookie = (
+export const deleteCookies = (
     name: string,
     options: { path?: string; domain?: string } = {}
 ) => {
