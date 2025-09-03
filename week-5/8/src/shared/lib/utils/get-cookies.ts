@@ -1,12 +1,13 @@
-export const getCookies = (cookieName: string) => {
+export const getCookies = (name: string): string | null => {
+    if (typeof document === "undefined") return null;
+
     const cookies = document.cookie.split(";");
-    console.log(cookies);
-    console.log(document.cookie);
+
     for (let cookie of cookies) {
-        cookie = cookie.trim();
-        if (cookie.startsWith(cookieName + "=")) {
-            return cookie.substring(cookieName.length + 1);
+        const [rawName, rawValue] = cookie.trim().split("=");
+        if (decodeURIComponent(rawName) === name) {
+            return decodeURIComponent(rawValue ?? "");
         }
     }
     return null;
-}
+};

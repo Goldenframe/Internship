@@ -1,5 +1,9 @@
-export const deleteCookies = (cookieName: string) => {
+export const deleteCookie = (
+    name: string,
+    options: { path?: string; domain?: string } = {}
+) => {
+    if (typeof document === "undefined") return;
 
-    document.cookie = `${cookieName}=; Max-Age=-1;`;
-    console.log(document.cookie)
-}
+    document.cookie = `${encodeURIComponent(name)}=; Max-Age=0; Path=${options.path ?? "/"}${options.domain ? `; Domain=${options.domain}` : ""
+        }`;
+};

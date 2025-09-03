@@ -10,7 +10,14 @@ export const CookieManager = () => {
 
     const handleSet = () => {
         if (!inputValue.trim()) return;
-        setCookies("token", inputValue);
+
+        setCookies("token", inputValue, {
+            path: "/",
+            maxAge: 60 * 60 * 24,
+            sameSite: "Lax",
+            secure: true,
+        });
+
         setToken(inputValue);
         setInputValue("");
     };
@@ -21,9 +28,10 @@ export const CookieManager = () => {
     };
 
     const handleDelete = () => {
-        deleteCookies("token");
+        deleteCookies("token", { path: "/" });
         setToken(null);
     };
+
     return (
         <div className={styles.cookieManager}>
             <input
