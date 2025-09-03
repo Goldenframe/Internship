@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "bundler",
     "jsx": "react-jsx",
     "resolveJsonModule": true,
     "esModuleInterop": true,
@@ -21,7 +21,9 @@
     "paths": {
       "@/*": ["*"],
       "@/app/*": ["app/*"],
+      "@/features/*": ["features/*"],
+      "@/shared/*": ["shared/*"],
+      "@/entities/*": ["entities/*"]
     }
   },
-  "include": ["src", "src/widgets/resize-demo/resize-box/hooks"]
 }

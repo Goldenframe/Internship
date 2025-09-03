@@ -1,6 +1,10 @@
+import { CookieManager } from "@/features/cookie-manager/ui"
+
 const App = () => {
 
-  return (<></>)
+  return (
+    <CookieManager />
+  )
 }
 
 export default App

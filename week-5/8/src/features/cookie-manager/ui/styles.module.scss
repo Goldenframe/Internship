@@ -1,0 +1,52 @@
+.cookie {
+
+    &Manager {
+        max-width: 400px;
+        margin: 20px auto;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    &Input {
+        padding: 8px 12px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: all 0.2s ease;
+
+        &:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+        }
+    }
+
+    &Btn {
+        padding: 10px 16px;
+        border: none;
+        border-radius: 8px;
+        color: #fff;
+        background-color: #3b82f6;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background 0.2s ease;
+    }
+
+}
+
+.token {
+
+    &Display {
+        margin-top: 16px;
+        font-size: 16px;
+    }
+
+    &Span {
+        font-family: monospace;
+        color: #9333ea;
+        font-weight: 500;
+
+    }
+}
