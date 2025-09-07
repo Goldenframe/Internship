@@ -5,4 +5,4 @@
 3. [3 неделя | React](./week-3/README.md)
 4. [4 неделя | effector](./week-4/README.md)
 5. [5–6 недели | Web API, WebSec](./week-5/README.md)
-6. [7–8 неделя | NextJS](./#)
+6. [7–8 неделя | NextJS](./week-7/README.md)
