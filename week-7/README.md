@@ -99,8 +99,6 @@
   - Пробрось `nonce` дальше: положи в `request.headers` (через `request.headers.set`) или в `request.cookies`, а на странице вытащи его в GSSP и вставь в `<script nonce={nonce}>` где нужно
 - Добавь в README: порядок выполнения — **middleware → route → GSSP → render**
 
-*Что должен изучить/применить:* middleware, CSP, nonce, безопасность
-
 ---
 
 ### 6. next/image для обложек
