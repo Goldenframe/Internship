@@ -36,6 +36,7 @@ export const getServerSideProps = (async (context) => {
     if (!('gb_lang' in cookies)) {
       context.res.setHeader('Set-Cookie', `gb_lang=${lang}; Path=/; HttpOnly; SameSite=Lax`);
     }
+
     logsModel.addLog({
       status: 'props',
       resolvedUrl: context.resolvedUrl,
@@ -43,18 +44,23 @@ export const getServerSideProps = (async (context) => {
       uaType,
       lang,
     });
-    return { props: { book, uaType, lang, ref: ref ?? null } };
+
+    return {
+      props: { book, uaType, lang, ref: ref ?? null },
+    };
   } catch (e) {
     console.error('Ошибка при запросе:', e);
     return {
       redirect: { destination: '/', permanent: false },
     };
   }
-}) satisfies GetServerSideProps<{ book: Book; uaType: string }>;
+}) satisfies GetServerSideProps<{ book: Book; uaType: string; lang: string; ref: string | null }>;
 
 export default function Page({
   book,
   uaType,
+  lang,
+  ref,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [imgError, setImgError] = useState(false);
   const bookInfo = book.volumeInfo;
@@ -62,14 +68,14 @@ export default function Page({
   const { toggleFavorite, isFavorite } = useFavorites();
 
   useEffect(() => {
-    console.log('useEffect данные:', { book });
-  }, [book]);
+    console.log('useEffect данные:', { book, lang, ref });
+  }, [book, lang, ref]);
 
   useLayoutEffect(() => {
     if (typeof window !== 'undefined') {
-      console.log('useLayoutEffect компонент отрендерился:', { book });
+      console.log('useLayoutEffect компонент отрендерился:', { book, lang, ref });
     }
-  }, [book]);
+  }, [book, lang, ref]);
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -82,6 +88,9 @@ export default function Page({
   return (
     <main>
       <p className={styles.uaBadge}>Тип устройства: {uaType}</p>
+      <p className={styles.uaBadge}>Язык: {lang}</p>
+      {ref && <p className={styles.uaBadge}>Ref: {ref}</p>}
+
       {book && (
         <div className={styles.bookDetails}>
           <div className={styles.bookCover}>
