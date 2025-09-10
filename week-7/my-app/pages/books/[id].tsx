@@ -1,8 +1,10 @@
+import { parseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 import Image from 'next/image';
 import { useEffect, useLayoutEffect, useState } from 'react';
 
 import { BASE_URL } from '@/config/env';
 import { useFavorites } from '@/lib/hooks/use-favorite';
+import { model as logsModel } from '@/server/logs-model';
 import { Book } from '@/types/books';
 
 import styles from './styles.module.css';
@@ -10,8 +12,7 @@ import styles from './styles.module.css';
 import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 
 export const getServerSideProps = (async (context) => {
-  const { query } = context;
-  const id = query.id;
+  const { id, ref } = { ...context.params, ...context.query } as { id?: string; ref?: string };
   if (!id) {
     return {
       redirect: { destination: '/', permanent: false },
@@ -23,23 +24,38 @@ export const getServerSideProps = (async (context) => {
     if (res.status === 404) {
       return { notFound: true };
     }
-
     if (!res.ok) {
       throw new Error(`Ошибка API: ${res.status}`);
     }
-
     const book: Book = await res.json();
+    const ua = context.req.headers['user-agent'] || '';
+    const uaType = /mobile/i.test(ua) ? 'mobile' : 'desktop';
+    const cookies = parseCookie(context.req.headers.cookie ?? '');
+    const lang = cookies.get('gb_lang') ?? 'ru';
 
-    return { props: { book } };
+    if (!('gb_lang' in cookies)) {
+      context.res.setHeader('Set-Cookie', `gb_lang=${lang}; Path=/; HttpOnly; SameSite=Lax`);
+    }
+    logsModel.addLog({
+      status: 'props',
+      resolvedUrl: context.resolvedUrl,
+      ref,
+      uaType,
+      lang,
+    });
+    return { props: { book, uaType, lang, ref: ref ?? null } };
   } catch (e) {
     console.error('Ошибка при запросе:', e);
     return {
       redirect: { destination: '/', permanent: false },
     };
   }
-}) satisfies GetServerSideProps<{ book: Book }>;
+}) satisfies GetServerSideProps<{ book: Book; uaType: string }>;
 
-export default function Page({ book }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Page({
+  book,
+  uaType,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [imgError, setImgError] = useState(false);
   const bookInfo = book.volumeInfo;
   const thumbnail = bookInfo.imageLinks?.thumbnail;
@@ -65,6 +81,7 @@ export default function Page({ book }: InferGetServerSidePropsType<typeof getSer
 
   return (
     <main>
+      <p className={styles.uaBadge}>Тип устройства: {uaType}</p>
       {book && (
         <div className={styles.bookDetails}>
           <div className={styles.bookCover}>
