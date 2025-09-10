@@ -1,5 +1,5 @@
 export const STORAGE_KEY = {
   FAVORITE_BOOKS: 'favoriteBooks',
   THEME: 'theme',
-  LANG: 'lang'
+  LANG: 'lang',
 } as const;
