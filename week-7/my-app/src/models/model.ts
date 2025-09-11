@@ -1,9 +1,8 @@
-import { createEffect, createEvent, createStore, sample } from 'effector';
+import { createEffect, createStore, sample } from 'effector';
 import { createGate } from 'effector-react';
 
-const $logs = createStore<LogGssp[]>([]);
-
-export interface LogGsspBase {
+export interface LogGssp {
+  time: string;
   resolvedUrl: string;
   ref?: string;
   uaType: string;
@@ -11,22 +10,7 @@ export interface LogGsspBase {
   status: 'props' | 'redirect' | 'notFound';
 }
 
-export interface LogGssp extends LogGsspBase {
-  time: string;
-}
-
-const addLog = createEvent<LogGsspBase>();
-
-sample({
-  clock: addLog,
-  source: $logs,
-  fn: ($logs, log) => {
-    const updated: LogGssp[] = [...$logs, { ...log, time: new Date().toISOString() }];
-    if (updated.length > 10) updated.shift();
-    return updated;
-  },
-  target: $logs,
-});
+const $logs = createStore<LogGssp[]>([]);
 
 const fetchLogsFx = createEffect(async (): Promise<LogGssp[]> => {
   const res = await fetch('/api/logs');
@@ -48,6 +32,5 @@ sample({
 
 export const model = {
   $logs,
-  addLog,
   LogsGate,
 };

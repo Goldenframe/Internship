@@ -1,6 +1,6 @@
-import { useGate, useUnit } from 'effector-react';
+import { useGate, useUnit } from "effector-react";
 
-import { model } from '@/models/model';
+import { model } from "@/models/model";
 
 export default function LogsPage() {
   const logs = useUnit(model.$logs);
