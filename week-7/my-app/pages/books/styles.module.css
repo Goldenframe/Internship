@@ -206,3 +206,10 @@
     border-color 0.2s ease;
   font-size: 1rem;
 }
+
+.uaBadge {
+  display: inline-block;
+  padding: 2px 8px;
+  font-weight: 500;
+  border-radius: 12px;
+}
