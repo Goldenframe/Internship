@@ -4,40 +4,66 @@ import { useEffect, useLayoutEffect, useState } from 'react';
 
 import { BASE_URL } from '@/config/env';
 import { useFavorites } from '@/lib/hooks/use-favorite';
-import { model as logsModel } from '@/server/logs-model';
+import { logGsspFx } from '@/server/logs-effects'; 
 import { Book } from '@/types/books';
 
 import styles from './styles.module.css';
 
 import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 
+function makeOrigin(ctx: Parameters<GetServerSideProps>[0]) {
+  const proto = (ctx.req.headers['x-forwarded-proto'] as string) ?? 'http';
+  const host = ctx.req.headers.host!;
+  return `${proto}://${host}`;
+}
+
 export const getServerSideProps = (async (context) => {
   const { id, ref } = { ...context.params, ...context.query } as { id?: string; ref?: string };
-  if (!id) {
-    return {
-      redirect: { destination: '/', permanent: false },
-    };
+  const origin = makeOrigin(context);
+
+  const ua = context.req.headers['user-agent'] || '';
+  const uaType = /mobile/i.test(ua) ? 'mobile' : 'desktop';
+
+  const cookies = parseCookie(context.req.headers.cookie ?? '');
+  const lang = cookies.get('gb_lang') ?? 'ru';
+  if (!('gb_lang' in cookies)) {
+    context.res.setHeader('Set-Cookie', `gb_lang=${lang}; Path=/; HttpOnly; SameSite=Lax`);
   }
+
+  if (!id) {
+    await logGsspFx({
+      origin,
+      status: 'redirect',
+      resolvedUrl: context.resolvedUrl,
+      ref,
+      uaType,
+      lang,
+    });
+    return { redirect: { destination: '/', permanent: false } };
+  }
+
   try {
     const res = await fetch(`${BASE_URL}/${id}`);
 
     if (res.status === 404) {
+      await logGsspFx({
+        origin,
+        status: 'notFound',
+        resolvedUrl: context.resolvedUrl,
+        ref,
+        uaType,
+        lang,
+      });
       return { notFound: true };
     }
     if (!res.ok) {
       throw new Error(`Ошибка API: ${res.status}`);
     }
+
     const book: Book = await res.json();
-    const ua = context.req.headers['user-agent'] || '';
-    const uaType = /mobile/i.test(ua) ? 'mobile' : 'desktop';
-    const cookies = parseCookie(context.req.headers.cookie ?? '');
-    const lang = cookies.get('gb_lang') ?? 'ru';
 
-    if (!('gb_lang' in cookies)) {
-      context.res.setHeader('Set-Cookie', `gb_lang=${lang}; Path=/; HttpOnly; SameSite=Lax`);
-    }
-
-    logsModel.addLog({
+    await logGsspFx({
+      origin,
       status: 'props',
       resolvedUrl: context.resolvedUrl,
       ref,
@@ -50,11 +76,18 @@ export const getServerSideProps = (async (context) => {
     };
   } catch (e) {
     console.error('Ошибка при запросе:', e);
-    return {
-      redirect: { destination: '/', permanent: false },
-    };
+    await logGsspFx({
+      origin,
+      status: 'notFound',
+      resolvedUrl: context.resolvedUrl,
+      ref,
+      uaType,
+      lang,
+    });
+    return { notFound: true };
   }
 }) satisfies GetServerSideProps<{ book: Book; uaType: string; lang: string; ref: string | null }>;
+
 
 export default function Page({
   book,

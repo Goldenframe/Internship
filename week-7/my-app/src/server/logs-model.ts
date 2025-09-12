@@ -1,39 +1,50 @@
-import { createEvent, createStore, sample } from 'effector';
+import { createStore, createEvent, sample } from 'effector';
 
 export interface LogGsspBase {
   resolvedUrl: string;
   ref?: string;
   uaType: string;
   lang: string;
-  status: 'props' | 'redirect' | 'notFound';
+  status: string;
 }
 
 export interface LogGssp extends LogGsspBase {
   time: string;
 }
 
-const $logs = createStore<LogGssp[]>([]);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const g = globalThis as any;
 
-const addLog = createEvent<LogGsspBase>();
+const $logs =
+  (g.__GSSP_LOGS__ as ReturnType<typeof createStore<LogGssp[]>>) ?? createStore<LogGssp[]>([]);
+const addLog =
+  (g.__GSSP_ADD_LOG__ as ReturnType<typeof createEvent<LogGsspBase>>) ?? createEvent<LogGsspBase>();
 
-sample({
-  clock: addLog,
-  source: $logs,
-  fn: ($logs, log) => {
-    const updated: LogGssp[] = [...$logs, { ...log, time: new Date().toISOString() }];
-    if (updated.length > 10) updated.shift();
+if (!g.__GSSP_LOGS__) {
+  g.__GSSP_LOGS__ = $logs;
+  g.__GSSP_ADD_LOG__ = addLog;
 
-    console.log('GSSP Logs (LRU):');
-    updated.forEach((entry, i) => {
-      console.log(
-        `${i + 1}. [${entry.time}] ${entry.status.toUpperCase()} ${entry.resolvedUrl} | ref=${entry.ref ?? '-'} | ua=${entry.uaType} | lang=${entry.lang}`,
-      );
-    });
+  sample({
+    clock: addLog,
+    source: $logs,
+    fn: (prev, log) => {
+      const updated: LogGssp[] = [...prev, { ...log, time: new Date().toISOString() }];
+      if (updated.length > 10) {
+        updated.shift();
+      }
 
-    return updated;
-  },
-  target: $logs,
-});
+      console.log('GSSP Logs (LRU):');
+      updated.forEach((entry, i) => {
+        console.log(
+          `${i + 1}. [${entry.time}] ${entry.status.toUpperCase()} ${entry.resolvedUrl} | ref=${entry.ref ?? '-'} | ua=${entry.uaType} | lang=${entry.lang}`,
+        );
+      });
+
+      return updated;
+    },
+    target: $logs,
+  });
+}
 
 export const model = {
   $logs,
