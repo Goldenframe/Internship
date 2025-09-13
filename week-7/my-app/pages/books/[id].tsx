@@ -1,10 +1,11 @@
 import { parseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 import Image from 'next/image';
+import Script from 'next/script';
 import { useEffect, useLayoutEffect, useState } from 'react';
 
 import { BASE_URL } from '@/config/env';
 import { useFavorites } from '@/lib/hooks/use-favorite';
-import { logGsspFx } from '@/server/logs-effects'; 
+import { logGsspFx } from '@/server/logs-effects';
 import { Book } from '@/types/books';
 
 import styles from './styles.module.css';
@@ -23,6 +24,9 @@ export const getServerSideProps = (async (context) => {
 
   const ua = context.req.headers['user-agent'] || '';
   const uaType = /mobile/i.test(ua) ? 'mobile' : 'desktop';
+
+  const nonceHeader = context.req.headers['x-nonce'];
+  const nonce = Array.isArray(nonceHeader) ? nonceHeader[0] : (nonceHeader ?? '');
 
   const cookies = parseCookie(context.req.headers.cookie ?? '');
   const lang = cookies.get('gb_lang') ?? 'ru';
@@ -72,7 +76,7 @@ export const getServerSideProps = (async (context) => {
     });
 
     return {
-      props: { book, uaType, lang, ref: ref ?? null },
+      props: { book, uaType, lang, ref: ref ?? null, nonce },
     };
   } catch (e) {
     console.error('Ошибка при запросе:', e);
@@ -86,14 +90,20 @@ export const getServerSideProps = (async (context) => {
     });
     return { notFound: true };
   }
-}) satisfies GetServerSideProps<{ book: Book; uaType: string; lang: string; ref: string | null }>;
-
+}) satisfies GetServerSideProps<{
+  book: Book;
+  uaType: string;
+  lang: string;
+  ref: string | null;
+  nonce: string;
+}>;
 
 export default function Page({
   book,
   uaType,
   lang,
   ref,
+  nonce,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [imgError, setImgError] = useState(false);
   const bookInfo = book.volumeInfo;
@@ -123,6 +133,14 @@ export default function Page({
       <p className={styles.uaBadge}>Тип устройства: {uaType}</p>
       <p className={styles.uaBadge}>Язык: {lang}</p>
       {ref && <p className={styles.uaBadge}>Ref: {ref}</p>}
+
+      <Script
+        id="test-nonce"
+        nonce={nonce}
+        dangerouslySetInnerHTML={{
+          __html: `console.log("Nonce работает:", "${nonce}")`,
+        }}
+      />
 
       {book && (
         <div className={styles.bookDetails}>
