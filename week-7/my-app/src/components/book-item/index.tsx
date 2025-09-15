@@ -9,9 +9,10 @@ interface BookItemProps {
   book: Book;
   isFavorite: boolean;
   onToggleFavorite: (book: Book) => void;
+  index: number;
 }
 
-export const BookItem = ({ book, isFavorite, onToggleFavorite }: BookItemProps) => {
+export const BookItem = ({ book, isFavorite, onToggleFavorite, index }: BookItemProps) => {
   const [imgError, setImgError] = useState(false);
   const bookInfo = book.volumeInfo;
   const thumbnail = bookInfo.imageLinks?.thumbnail;
@@ -27,13 +28,15 @@ export const BookItem = ({ book, isFavorite, onToggleFavorite }: BookItemProps) 
       <div className={styles.bookItemImageContainer}>
         {thumbnail && !imgError ? (
           <Image
-            loading="lazy"
             src={thumbnail}
             alt={bookInfo.title ?? 'Book thumbnail'}
             className={styles.bookItemImage}
             onError={() => setImgError(true)}
-            width={300}
-            height={500}
+            priority={index < 7}
+            fill
+            sizes="120px"
+            placeholder="blur"
+            blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAEklEQVR42mP8z/C/HwAFAwIA0j9c9AAAAABJRU5ErkJggg=="
           />
         ) : (
           <div className={styles.bookItemNoImage}>No Cover</div>
