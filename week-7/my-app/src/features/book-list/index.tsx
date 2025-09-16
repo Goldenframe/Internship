@@ -18,13 +18,14 @@ export default function BookList({ books, toggleFavorite, isFavorite }: BookList
         <p className={styles.empty}>Нет книг</p>
       ) : (
         <ul className={styles.list}>
-          {books.map((book) => (
+          {books.map((book, index) => (
             <li key={book.id} className={styles.item}>
               <Link href={`/books/${book.id}`} className={styles.link}>
                 <BookItem
                   book={book}
                   isFavorite={isFavorite(book.id)}
                   onToggleFavorite={toggleFavorite}
+                  index={index} 
                 />
               </Link>
             </li>
