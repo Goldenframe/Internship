@@ -1,29 +1,33 @@
-import { useEffect, useState } from 'react';
+import { fork, allSettled, serialize, SerializedState } from 'effector';
+import { Provider } from 'effector-react';
+import { GetServerSideProps } from 'next';
 
-import { Spinner } from '@/components/spinner';
-import { BASE_URL } from '@/config/env';
-import BookList from '@/features/book-list';
-import { fetchJSON } from '@/lib/api/fetch-json';
-import { useFavorites } from '@/lib/hooks/use-favorite';
-import { Book, SearchResponse } from '@/types/books';
+import { jsBooks, JsBooksSection } from '@/components/js-books-section';
+import { newBooks, NewBooksSection } from '@/components/new-books-section';
+import { popularBooks, PopularBooksSection } from '@/components/popular-books-section';
 
-export default function Page() {
-  const [books, setBooks] = useState<Book[]>([]);
-  const [loading, setLoading] = useState(true);
-  const { toggleFavorite, isFavorite } = useFavorites();
+export const getServerSideProps = (async () => {
+  const scope = fork();
 
-  useEffect(() => {
-    fetchJSON<SearchResponse>(
-      `${BASE_URL}?q=javascript&startIndex=0&maxResults=20`,
-      'Books were not found',
-    )
-      .then((data) => setBooks(data.items || []))
-      .finally(() => setLoading(false));
-  }, []);
+  await allSettled(popularBooks.loadFx, { scope });
+  await allSettled(newBooks.loadFx, { scope });
+  await allSettled(jsBooks.loadFx, { scope });
 
-  if (loading) {
-    return <Spinner />;
-  }
+  return {
+    props: {
+      initialState: serialize(scope),
+    },
+  };
+}) satisfies GetServerSideProps<{ initialState: SerializedState }>;
 
-  return <BookList books={books} toggleFavorite={toggleFavorite} isFavorite={isFavorite} />;
+export default function Page({ initialState }: { initialState: SerializedState }) {
+  return (
+    <Provider value={fork({ values: initialState })}>
+      <div>
+        <PopularBooksSection />
+        <NewBooksSection />
+        <JsBooksSection />
+      </div>
+    </Provider>
+  );
 }
