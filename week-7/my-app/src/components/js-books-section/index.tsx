@@ -5,7 +5,7 @@ import BookList from '@/features/book-list';
 import { useFavorites } from '@/lib/hooks/use-favorite';
 import { createBookBlock } from '@/models/factory';
 
-export const jsBooks = invoke(createBookBlock,  { query: 'javascript', orderBy: 'relevance' });
+export const jsBooks = invoke(createBookBlock, { query: 'javascript', orderBy: 'relevance' });
 
 export function JsBooksSection() {
   const books = useUnit(jsBooks.$books);

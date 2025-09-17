@@ -19,13 +19,13 @@ export default function BookList({ books, toggleFavorite, isFavorite }: BookList
       ) : (
         <ul className={styles.list}>
           {books.map((book, index) => (
-            <li key={book.id} className={styles.item}>
+            <li key={book.id ?? `${book.volumeInfo.title}-${index}`} className={styles.item}>
               <Link href={`/books/${book.id}`} className={styles.link}>
                 <BookItem
                   book={book}
                   isFavorite={isFavorite(book.id)}
                   onToggleFavorite={toggleFavorite}
-                  index={index} 
+                  index={index}
                 />
               </Link>
             </li>

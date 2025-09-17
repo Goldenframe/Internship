@@ -15,7 +15,7 @@ export const createBookBlock = createFactory((params: Params) => {
   const loadFx = createEffect(async () => {
     const data = await fetchJSON<SearchResponse>(
       `${BASE_URL}?q=${params.query}&orderBy=${params.orderBy ?? 'relevance'}&startIndex=0&maxResults=${params.maxResults ?? 20}`,
-      'Books were not found'
+      'Books were not found',
     );
     return data.items ?? [];
   });
