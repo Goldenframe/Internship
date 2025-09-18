@@ -14,7 +14,7 @@ export function JsBooksSection() {
   return (
     <section>
       <h2>JS-книги</h2>
-      <BookList books={books} toggleFavorite={toggleFavorite} isFavorite={isFavorite} />
+      <BookList books={books} toggleFavorite={toggleFavorite} isFavorite={isFavorite} prefix='js'/>
     </section>
   );
 }

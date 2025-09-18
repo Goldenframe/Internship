@@ -14,7 +14,7 @@ export function PopularBooksSection() {
   return (
     <section>
       <h2>Популярное</h2>
-      <BookList books={books} toggleFavorite={toggleFavorite} isFavorite={isFavorite} />
+      <BookList books={books} toggleFavorite={toggleFavorite} isFavorite={isFavorite} prefix='popular'/>
     </section>
   );
 }
