@@ -1,10 +1,26 @@
 import { fork, allSettled, serialize, SerializedState } from 'effector';
 import { Provider } from 'effector-react';
 import { GetServerSideProps } from 'next';
+import dynamic from 'next/dynamic';
 
-import { jsBooks, JsBooksSection } from '@/components/js-books-section';
-import { newBooks, NewBooksSection } from '@/components/new-books-section';
-import { popularBooks, PopularBooksSection } from '@/components/popular-books-section';
+import { jsBooks } from '@/components/js-books-section';
+import { newBooks } from '@/components/new-books-section';
+import { popularBooks } from '@/components/popular-books-section';
+
+const PopularBooksSection = dynamic(
+  () => import('@/components/popular-books-section').then((mod) => mod.PopularBooksSection),
+  { ssr: false },
+);
+
+const NewBooksSection = dynamic(
+  () => import('@/components/new-books-section').then((mod) => mod.NewBooksSection),
+  { ssr: false },
+);
+
+const JsBooksSection = dynamic(
+  () => import('@/components/js-books-section').then((mod) => mod.JsBooksSection),
+  { ssr: false },
+);
 
 export const getServerSideProps = (async () => {
   const scope = fork();
