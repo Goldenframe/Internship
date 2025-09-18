@@ -21,6 +21,11 @@ export const Header = () => {
             Логи
           </Link>
         </li>
+        <li className={styles.item}>
+          <Link href="/diagnostics" className={styles.link}>
+            Диагностика
+          </Link>
+        </li>
       </ul>
     </nav>
   );
